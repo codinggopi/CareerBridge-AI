@@ -1,0 +1,178 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #0a1324;
+  color: #dae2fa;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #121c2c;
+}
+::-webkit-scrollbar-thumb {
+  background: #3c4a42;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #76daa0;
+}
+
+.card {
+  background: #172030;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.btn-primary {
+  background: #76daa0;
+  color: #003920;
+  font-weight: 600;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.btn-primary:hover {
+  background: #51b57e;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #dae2fa;
+  font-weight: 500;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255,255,255,0.15);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.btn-ghost:hover {
+  border-color: #76daa0;
+  background: rgba(118,218,160,0.05);
+}
+
+input, textarea, select {
+  background: #121c2c;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.5rem;
+  color: #dae2fa;
+  padding: 0.625rem 0.875rem;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: #76daa0;
+  box-shadow: 0 0 0 2px rgba(118,218,160,0.1);
+}
+input::placeholder, textarea::placeholder {
+  color: #bbcabf;
+  opacity: 0.6;
+}
+
+.badge-green {
+  background: rgba(118,218,160,0.15);
+  color: #76daa0;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.badge-blue {
+  background: rgba(126,208,253,0.15);
+  color: #7ed0fd;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.badge-amber {
+  background: rgba(245,158,11,0.15);
+  color: #f59e0b;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.progress-bar-track {
+  background: rgba(255,255,255,0.08);
+  border-radius: 9999px;
+  height: 4px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  background: #76daa0;
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.5s ease;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1rem;
+  border-radius: 0.5rem;
+  color: #bbcabf;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.sidebar-link:hover {
+  background: rgba(255,255,255,0.05);
+  color: #dae2fa;
+}
+.sidebar-link.active {
+  background: rgba(118,218,160,0.1);
+  color: #76daa0;
+  border-left: 2px solid #76daa0;
+}
+
+.glow-green {
+  box-shadow: 0 0 20px rgba(118,218,160,0.15);
+}
+
+.chat-bubble-ai {
+  background: #212a3b;
+  border-radius: 0 1rem 1rem 1rem;
+  padding: 1rem;
+  max-width: 80%;
+}
+.chat-bubble-user {
+  background: rgba(118,218,160,0.15);
+  border: 1px solid rgba(118,218,160,0.3);
+  border-radius: 1rem 1rem 0 1rem;
+  padding: 1rem;
+  max-width: 80%;
+  margin-left: auto;
+}
