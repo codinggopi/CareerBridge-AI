@@ -1,6 +1,5 @@
-CareerBridgeAI — Master Build Prompt
-> Copy everything below into your AI website builder (v0.dev, Lovable, Bolt, Cursor, Claude Code, etc.) along with the attached PDF (product spec) and the 17 UI screenshots. This prompt tells the AI exactly what to build, page by page, using the screenshots as the visual source of truth.
----
+CareerBridgeAI
+
 🎯 PROJECT BRIEF
 Build a full-stack web application called CareerForge AI — an AI-powered placement preparation and career intelligence platform for students. I am attaching:
 A PDF product specification document (features, modules, tech stack, database schema).
