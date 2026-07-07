@@ -1,151 +1,200 @@
-import React from 'react'
-import { Check, Lock, Play, ChevronRight, MessageCircle } from 'lucide-react'
-import AppShell from '../components/AppShell'
-import { roadmapWeeks, selectedResources } from '../data/mockData'
+"use client";
+import React, { useEffect, useState } from 'react';
+import {
+  Check, Lock, Play, Layout, Code, Award, Briefcase,
+  CheckCircle, Star, Settings, ChevronRight, Sparkles, Video
+} from 'lucide-react';
+import Sidebar from '../components/Sidebar';
 
-const statusIcon = status => {
-  if (status === 'completed') return <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center"><Check size={18} className="text-surface" /></div>
-  if (status === 'in-progress') return <div className="w-10 h-10 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center"><Play size={16} className="text-primary" /></div>
-  return <div className="w-10 h-10 rounded-full bg-surface-high border-2 border-outline/40 flex items-center justify-center"><Lock size={16} className="text-on-surface-muted/40" /></div>
-}
+const Icons = {
+  'layout': Layout,
+  'code': Code,
+  'youtube': Video,
+  'award': Award,
+  'briefcase': Briefcase,
+  'check-circle': CheckCircle,
+  'star': Star
+};
 
-const resourceIcons = { red: '🎥', blue: '📘', orange: '🟠', green: '✅' }
+const LearningRoadmap = () => {
+  const [data, setData] = useState(null);
 
-export default function LearningRoadmap() {
+  useEffect(() => {
+    import('../data/mockRoadmap.json').then(module => setData(module.default));
+  }, []);
+
+  if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;
+
   return (
-    <AppShell>
-      {/* Header */}
-      <div className="flex items-start justify-between mb-6 flex-wrap gap-4">
-        <div>
-          <h1 className="text-3xl font-bold mb-1">Full Stack AI Engineer</h1>
-          <p className="text-on-surface-muted text-sm">Your personalized 6-week technical mastery plan. We've identified 4 critical skill gaps based on your target role at OpenAI.</p>
-        </div>
-        <div className="flex items-center gap-3">
+    <div className="min-h-screen bg-[#0B0F17] flex">
+      <Sidebar />
+
+      <main className="flex-1 ml-64 p-8 flex flex-col overflow-y-auto custom-scrollbar h-screen">
+
+        {/* Header */}
+        <div className="flex justify-between items-start mb-10">
           <div>
-            <p className="text-xs text-on-surface-muted uppercase tracking-wider text-right mb-1">Overall Progress</p>
-            <div className="flex items-center gap-2">
-              <div className="relative w-12 h-12">
-                <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-                  <circle cx="18" cy="18" r="15" fill="none" stroke="#3c4a42" strokeWidth="3" />
-                  <circle cx="18" cy="18" r="15" fill="none" stroke="#76daa0" strokeWidth="3"
-                    strokeDasharray="32.06 67.94" strokeLinecap="round" />
-                </svg>
-                <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-primary">34%</span>
-              </div>
+            <h1 className="text-4xl font-bold text-white mb-3 font-serif tracking-tight">{data.title}</h1>
+            <p className="text-sm text-gray-400 max-w-2xl leading-relaxed">{data.desc}</p>
+          </div>
+
+          <div className="flex items-center space-x-4 bg-card border border-white/5 rounded-2xl p-4 pr-6">
+            <div className="text-right">
+              <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1">OVERALL PROGRESS</div>
+              <div className="text-2xl font-bold text-white leading-none">{data.progress}%</div>
+            </div>
+            <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center relative">
+              <svg className="w-full h-full transform -rotate-90 absolute inset-0" viewBox="0 0 36 36">
+                <path className="text-white/5" strokeWidth="2" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <path className="text-primary" strokeDasharray={`${data.progress}, 100`} strokeWidth="2" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              </svg>
+              <Sparkles className="w-4 h-4 text-primary" />
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Timeline */}
-        <div className="lg:col-span-2 space-y-4">
-          {roadmapWeeks.map((week, idx) => (
-            <div key={week.week} className={`card relative ${week.status === 'in-progress' ? 'border-primary/40 glow-green' : week.status === 'locked' ? 'opacity-60' : ''}`}>
-              <div className="flex items-start gap-4">
-                {statusIcon(week.status)}
-                <div className="flex-1">
-                  <div className="flex items-center justify-between flex-wrap gap-2 mb-1">
+        <div className="flex-1 grid grid-cols-1 xl:grid-cols-3 gap-8">
+
+          {/* Main Timeline Column */}
+          <div className="xl:col-span-2 space-y-6 relative before:absolute before:inset-0 before:ml-[19px] before:-translate-x-px before:h-full before:w-0.5 before:bg-white/10">
+            {data.weeks.map((week, i) => (
+              <div key={i} className="relative flex items-start group">
+
+                {/* Timeline Node */}
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 z-10 border-4 border-[#0B0F17]
+                  ${week.state === 'completed' ? 'bg-primary text-[#0B0F17]' :
+                    week.state === 'current' ? 'bg-background border border-blue-400 text-blue-400' :
+                      'bg-background border border-white/10 text-gray-500'}`}
+                >
+                  {week.state === 'completed' ? <Check className="w-5 h-5" /> :
+                    week.state === 'current' ? <Play className="w-4 h-4 ml-0.5" /> :
+                      <Lock className="w-4 h-4" />}
+                </div>
+
+                {/* Content Card */}
+                <div className={`ml-6 w-full bg-card rounded-2xl border transition-colors
+                  ${week.state === 'current' ? 'border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.05)]' :
+                    'border-white/5 hover:border-white/10'}`}
+                >
+                  <div className="p-6 pb-5 border-b border-white/5 flex justify-between items-start">
                     <div>
-                      <p className="text-xs text-on-surface-muted uppercase tracking-wider font-mono">Week {week.week}</p>
-                      {week.status === 'in-progress' && <span className="text-xs text-primary font-semibold">— IN PROGRESS</span>}
+                      <div className="flex items-center space-x-3 mb-2">
+                        <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{week.week}</span>
+                        {week.state === 'current' && <span className="text-[9px] font-bold text-blue-400 border border-blue-400/30 bg-blue-400/10 px-2 py-0.5 rounded uppercase tracking-widest">IN PROGRESS</span>}
+                      </div>
+                      <h3 className="text-xl font-bold text-white mb-2">{week.title}</h3>
+                      <p className="text-sm text-gray-400 leading-relaxed max-w-lg">{week.desc}</p>
                     </div>
-                    {week.status === 'completed' && <span className="badge-green">100% Done</span>}
-                    {week.status === 'in-progress' && <span className="text-xs font-semibold text-primary">{week.completion}% Completion</span>}
-                    {week.status === 'locked' && <span className="text-xs text-on-surface-muted">Locked</span>}
-                  </div>
-                  <h3 className="font-bold text-lg mb-1">{week.title}</h3>
-                  <p className="text-sm text-on-surface-muted mb-3">{week.desc}</p>
 
-                  {week.status === 'in-progress' && (
-                    <div className="progress-bar-track mb-3" style={{ height: 6 }}>
-                      <div className="progress-bar-fill" style={{ width: `${week.completion}%`, height: '100%' }} />
+                    <div className="text-right shrink-0">
+                      <div className="text-xs font-bold text-blue-400 mb-1">{week.progress}%</div>
+                      {week.state === 'current' ? (
+                        <div className="text-[9px] text-gray-500 uppercase font-bold tracking-widest">Completion</div>
+                      ) : week.state === 'completed' ? (
+                        <div className="text-[9px] text-primary uppercase font-bold tracking-widest">Done</div>
+                      ) : (
+                        <div className="bg-white/5 px-3 py-1 rounded text-[10px] font-bold text-gray-500 uppercase tracking-widest">Locked</div>
+                      )}
                     </div>
-                  )}
-
-                  <div className="flex flex-wrap gap-3 text-xs text-on-surface-muted">
-                    {week.hours && <span>⏱ {week.hours} Hours</span>}
-                    {week.lessons && <span>📖 {week.lessons} Lessons</span>}
-                    {week.cert && <span>🏅 {week.cert}</span>}
                   </div>
 
-                  {week.resources && (
-                    <div className="flex flex-wrap gap-2 mt-3">
-                      {week.resources.map(r => (
-                        <span key={r} className="flex items-center gap-1 bg-surface border border-outline/40 rounded-lg px-2 py-1 text-xs text-on-surface-muted hover:border-primary/40 cursor-pointer">
-                          {r === 'RAG Architecture 101' ? '📺' : '<>'} {r}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                  {/* Meta / Modules area */}
+                  <div className="px-6 py-4 bg-background/50 rounded-b-2xl min-h-[60px] flex items-center">
+                    {week.meta && (
+                      <div className="flex items-center space-x-4 text-xs font-medium text-gray-400">
+                        <span>{week.meta}</span>
+                      </div>
+                    )}
+
+                    {week.modules && (
+                      <div className="flex space-x-4 w-full">
+                        {week.modules.map((mod, j) => {
+                          const Icon = Icons[mod.icon];
+                          return (
+                            <div key={j} className="flex-1 bg-card border border-white/5 rounded-xl p-3 flex items-center justify-between cursor-pointer hover:border-white/20 transition-colors">
+                              <div className="flex items-center space-x-3">
+                                <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
+                                  <Icon className="w-4 h-4" />
+                                </div>
+                                <span className="text-xs font-bold text-white">{mod.name}</span>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+
+          {/* Right Panel Column */}
+          <div className="space-y-6">
+
+            {/* AI Career Insights */}
+            <div className="bg-gradient-to-br from-[#15202B] to-[#0d1624] border border-blue-500/20 rounded-2xl p-6 relative overflow-hidden">
+              <Settings className="absolute -top-4 -right-4 w-32 h-32 text-blue-500/5 rotate-45 pointer-events-none" />
+              <h3 className="text-lg font-bold text-white mb-4 relative z-10">AI Career Insights</h3>
+              <p className="text-sm text-gray-300 leading-relaxed mb-6 relative z-10" dangerouslySetInnerHTML={{ __html: data.insights.text }}></p>
+              <button className="w-full bg-background border border-white/10 text-gray-300 py-3 rounded-xl text-xs font-bold hover:bg-white/5 transition-colors relative z-10">
+                Adjust My Roadmap
+              </button>
             </div>
-          ))}
+
+            {/* Selected Resources */}
+            <div className="bg-card border border-white/5 rounded-2xl p-6">
+              <div className="flex items-center space-x-2 mb-6">
+                <Layout className="w-5 h-5 text-gray-400" />
+                <h3 className="text-sm font-bold text-white">Selected Resources</h3>
+              </div>
+              <div className="space-y-3">
+                {data.resources.map((res, i) => {
+                  const Icon = Icons[res.icon];
+                  return (
+                    <div key={i} className="bg-background border border-white/5 rounded-xl p-4 flex items-center justify-between cursor-pointer hover:border-white/20 transition-colors group">
+                      <div className="flex items-center space-x-4">
+                        <div className={`w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center ${res.color}`}>
+                          <Icon className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <div className="text-sm font-bold text-white mb-0.5">{res.title}</div>
+                          <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">{res.meta}</div>
+                        </div>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-white transition-colors" />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Milestones */}
+            <div className="bg-card border border-white/5 rounded-2xl p-6">
+              <h3 className="text-sm font-bold text-white mb-6">Milestones</h3>
+              <div className="space-y-6 relative before:absolute before:inset-0 before:ml-[19px] before:-translate-x-px before:h-full before:w-px before:bg-white/10">
+                {data.milestones.map((mile, i) => {
+                  const Icon = Icons[mile.icon];
+                  return (
+                    <div key={i} className="relative flex items-start">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 z-10 border-2 ${mile.color}`}>
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      <div className="ml-4 pt-1">
+                        <div className="text-sm font-bold text-white mb-1">{mile.title}</div>
+                        <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">{mile.status}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+          </div>
         </div>
+      </main>
+    </div>
+  );
+};
 
-        {/* Right panel */}
-        <div className="space-y-4">
-          {/* AI Career Insights */}
-          <div className="card border-primary/20">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-primary text-sm">✨</span>
-              <h3 className="font-semibold">AI Career Insights</h3>
-            </div>
-            <p className="text-sm text-on-surface-muted mb-4">
-              Based on your progress in <span className="text-primary font-semibold">Week 1</span>, we've updated your path.
-              You skipped the "Basic JS" module — AI suggests adding a "TypeScript Design Patterns" deep-dive in Week 5 to compensate.
-            </p>
-            <button className="btn-ghost w-full justify-center text-sm">Adjust My Roadmap</button>
-          </div>
-
-          {/* Selected Resources */}
-          <div className="card">
-            <h3 className="font-semibold mb-3">Selected Resources</h3>
-            <div className="space-y-2">
-              {selectedResources.map(r => (
-                <div key={r.id} className="flex items-center gap-3 hover:bg-surface-high rounded-lg p-2 -mx-2 cursor-pointer group">
-                  <div className={`w-8 h-8 rounded-md flex items-center justify-center text-sm flex-shrink-0
-                    ${r.color === 'red' ? 'bg-red-500/20' : r.color === 'blue' ? 'bg-tertiary/20' : r.color === 'orange' ? 'bg-amber/20' : 'bg-primary/20'}`}>
-                    {resourceIcons[r.color]}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium">{r.title}</p>
-                    <p className="text-xs text-on-surface-muted font-mono">{r.meta}</p>
-                  </div>
-                  <ChevronRight size={14} className="text-on-surface-muted group-hover:text-primary" />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Milestones */}
-          <div className="card">
-            <h3 className="font-semibold mb-3">Milestones</h3>
-            <div className="space-y-2">
-              <div className="flex items-center gap-3 p-2 bg-primary/10 rounded-lg">
-                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">🎓</div>
-                <div>
-                  <p className="text-xs font-semibold">React Architecture Certificate</p>
-                  <p className="text-xs text-primary">CLAIMED - JUN 12</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-2 opacity-50">
-                <div className="w-8 h-8 rounded-full bg-surface-high border border-outline/30 flex items-center justify-center">🔒</div>
-                <div>
-                  <p className="text-xs font-semibold">AI Engineering Professional</p>
-                  <p className="text-xs text-on-surface-muted">UNLOCKED IN WEEK 3</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Floating chat */}
-      <button className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg hover:bg-primary-dim transition-colors z-50">
-        <MessageCircle size={20} className="text-surface" />
-      </button>
-    </AppShell>
-  )
-}
+export default LearningRoadmap;

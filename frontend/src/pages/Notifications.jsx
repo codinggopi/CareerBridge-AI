@@ -1,100 +1,180 @@
-import React, { useState } from 'react'
-import { FileText, MessageSquare, Zap, Award, Settings, CheckCheck } from 'lucide-react'
-import AppShell from '../components/AppShell'
-import { notificationsData } from '../data/mockData'
+"use client";
+import React, { useEffect, useState } from 'react';
+import { 
+  Bell, Search, Settings, FileText, MessageSquare, TrendingUp, Award
+} from 'lucide-react';
+import Sidebar from '../components/Sidebar';
 
-const iconMap = {
+const Icons = {
   'file-text': FileText,
   'message-square': MessageSquare,
-  zap: Zap,
-  award: Award,
-  settings: Settings,
-}
+  'trending-up': TrendingUp,
+  'award': Award,
+  'settings': Settings
+};
 
-const filters = ['All', 'Resume', 'Learning', 'Interviews', 'Achievements']
+const Notifications = () => {
+  const [data, setData] = useState(null);
+  const [activeFilter, setActiveFilter] = useState('All');
 
-export default function Notifications() {
-  const [activeFilter, setActiveFilter] = useState('All')
-  const [notifs, setNotifs] = useState(notificationsData)
+  useEffect(() => {
+    import('../data/mockNotifications.json').then(module => setData(module.default));
+  }, []);
 
-  const markAllRead = () => setNotifs(prev => prev.map(n => ({ ...n, unread: false })))
-
-  const filtered = activeFilter === 'All' ? notifs : notifs.filter(n => n.category === activeFilter)
-  const groups = ['TODAY', 'THIS WEEK', 'EARLIER']
+  if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;
 
   return (
-    <AppShell>
-      <div className="max-w-3xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
+    <div className="min-h-screen bg-[#0B0F17] flex">
+      <Sidebar />
+
+      <main className="flex-1 ml-64 flex flex-col h-screen overflow-hidden">
+        
+        {/* Header */}
+        <div className="px-8 py-6 border-b border-white/5 bg-background shrink-0 flex justify-between items-start">
           <div>
-            <h1 className="text-2xl font-bold">Notifications</h1>
-            <p className="text-on-surface-muted text-sm mt-1">Stay updated with your AI-powered career journey.</p>
+            <h1 className="text-2xl font-bold text-white mb-2">Notifications</h1>
+            <p className="text-sm text-gray-400">Stay updated with your AI-powered career journey.</p>
           </div>
-          <button onClick={markAllRead} className="flex items-center gap-1.5 text-sm text-primary hover:underline">
-            <CheckCheck size={15} /> Mark all as read
-          </button>
+          <div className="flex items-center space-x-4">
+            <button className="flex items-center space-x-2 text-xs font-bold text-gray-400 hover:text-white transition-colors border border-white/5 bg-card px-4 py-2 rounded-lg">
+              <CheckCircleIcon className="w-4 h-4" />
+              <span>Mark all as read</span>
+            </button>
+          </div>
         </div>
 
-        {/* Filter pills */}
-        <div className="flex gap-2 flex-wrap mb-6">
-          {filters.map(f => (
-            <button key={f} onClick={() => setActiveFilter(f)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all border
-                ${activeFilter === f
-                  ? 'bg-primary text-surface border-primary'
-                  : 'border-outline/40 text-on-surface-muted hover:border-primary/40'}`}>
-              {f}
+        {/* Filters */}
+        <div className="px-8 py-4 border-b border-white/5 bg-background shrink-0 flex space-x-2">
+          {data.filters.map(filter => (
+            <button 
+              key={filter}
+              onClick={() => setActiveFilter(filter)}
+              className={`px-6 py-2 rounded-full text-xs font-bold transition-colors ${
+                activeFilter === filter 
+                  ? 'bg-primary text-[#0B0F17]' 
+                  : 'bg-card border border-white/5 text-gray-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              {filter}
             </button>
           ))}
         </div>
 
-        {/* Grouped notifications */}
-        {groups.map(group => {
-          const items = filtered.filter(n => n.group === group)
-          if (!items.length) return null
-          return (
-            <div key={group} className="mb-6">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-2 h-2 rounded-full bg-primary" />
-                <p className="text-xs font-semibold text-on-surface-muted uppercase tracking-widest">{group}</p>
-              </div>
-              <div className="space-y-3">
-                {items.map(n => {
-                  const Icon = iconMap[n.icon] || FileText
-                  return (
-                    <div key={n.id}
-                      className={`card flex items-start gap-4 relative transition-all ${n.unread ? 'border-primary/20' : ''}`}>
-                      {n.unread && (
-                        <span className="absolute top-4 right-4 w-2 h-2 rounded-full bg-primary" />
-                      )}
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0
-                        ${n.unread ? 'bg-primary/15' : 'bg-surface-high'}`}>
-                        <Icon size={18} className={n.unread ? 'text-primary' : 'text-on-surface-muted'} />
+        {/* List Area */}
+        <div className="flex-1 overflow-y-auto p-8 custom-scrollbar max-w-4xl space-y-10 pb-20">
+          
+          {/* Today */}
+          <div>
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-2 h-2 rounded-full bg-primary"></div>
+              <h2 className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">TODAY</h2>
+            </div>
+            
+            <div className="space-y-4">
+              {data.today.map((notif, i) => {
+                const Icon = Icons[notif.icon];
+                return (
+                  <div key={i} className="bg-card border border-white/5 rounded-2xl p-6 flex items-start space-x-4 hover:border-white/10 transition-colors relative">
+                    {notif.unread && <div className="absolute right-6 top-6 w-2 h-2 rounded-full bg-primary"></div>}
+                    
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border ${notif.color}`}>
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    
+                    <div className="flex-1 pt-1">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-sm font-bold text-white pr-8">{notif.title}</h3>
+                        <span className="text-[10px] font-bold text-gray-500 whitespace-nowrap">{notif.time}</span>
                       </div>
-                      <div className="flex-1 pr-4">
-                        <div className="flex items-start justify-between gap-2">
-                          <p className={`font-semibold text-sm ${n.unread ? 'text-on-surface' : 'text-on-surface-muted'}`}>
-                            {n.title}
-                          </p>
-                          <span className="text-xs text-on-surface-muted flex-shrink-0">{n.time}</span>
-                        </div>
-                        <p className="text-xs text-on-surface-muted mt-0.5 mb-2">{n.desc}</p>
-                        {n.actions?.length > 0 && (
-                          <div className="flex gap-3">
-                            {n.actions.map(a => (
-                              <button key={a} className="text-xs text-primary hover:underline font-medium">{a}</button>
-                            ))}
-                          </div>
+                      <p className="text-xs text-gray-400 leading-relaxed mb-4 max-w-2xl">{notif.desc}</p>
+                      
+                      <div className="flex items-center space-x-4">
+                        {notif.action && (
+                          <button className="text-xs font-bold text-primary hover:text-primary/80 transition-colors">
+                            {notif.action}
+                          </button>
+                        )}
+                        {notif.dismissable && (
+                          <button className="text-xs font-bold text-gray-500 hover:text-gray-300 transition-colors">
+                            Dismiss
+                          </button>
                         )}
                       </div>
                     </div>
-                  )
-                })}
-              </div>
+                  </div>
+                );
+              })}
             </div>
-          )
-        })}
-      </div>
-    </AppShell>
-  )
-}
+          </div>
+
+          {/* This Week */}
+          <div>
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-2 h-2 rounded-full bg-gray-600"></div>
+              <h2 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">THIS WEEK</h2>
+            </div>
+            
+            <div className="space-y-4">
+              {data.thisWeek.map((notif, i) => {
+                const Icon = Icons[notif.icon];
+                return (
+                  <div key={i} className="bg-card border border-white/5 rounded-2xl p-6 flex items-start space-x-4 hover:border-white/10 transition-colors">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border ${notif.color}`}>
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    
+                    <div className="flex-1 pt-1">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-sm font-bold text-white">{notif.title}</h3>
+                        <span className="text-[10px] font-bold text-gray-500 whitespace-nowrap">{notif.time}</span>
+                      </div>
+                      <p className="text-xs text-gray-400 leading-relaxed max-w-2xl">{notif.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Earlier */}
+          <div>
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-2 h-2 rounded-full bg-gray-600"></div>
+              <h2 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">EARLIER</h2>
+            </div>
+            
+            <div className="space-y-4">
+              {data.earlier.map((notif, i) => {
+                const Icon = Icons[notif.icon];
+                return (
+                  <div key={i} className="bg-card border border-white/5 rounded-2xl p-6 flex items-start space-x-4 hover:border-white/10 transition-colors">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border ${notif.color}`}>
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    
+                    <div className="flex-1 pt-1">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-sm font-bold text-white">{notif.title}</h3>
+                        <span className="text-[10px] font-bold text-gray-500 whitespace-nowrap">{notif.time}</span>
+                      </div>
+                      <p className="text-xs text-gray-400 leading-relaxed max-w-2xl">{notif.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          
+        </div>
+      </main>
+    </div>
+  );
+};
+
+const CheckCircleIcon = ({ className }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+  </svg>
+);
+
+export default Notifications;

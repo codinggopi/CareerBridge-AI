@@ -1,178 +1,270 @@
-import React, { useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { Bookmark, Trash2, ChevronRight, BookOpen } from 'lucide-react'
-import AppShell from '../components/AppShell'
-import Topbar from '../components/Topbar'
-import { learningMomentumData, savedResources, aiRecommendations, courseGrid } from '../data/mockData'
+"use client";
+import React, { useEffect, useState } from 'react';
+import {
+  Search, Bell, Activity, Bookmark, Box, PenTool, Cpu, Play, CheckCircle, Plus
+} from 'lucide-react';
+import Sidebar from '../components/Sidebar';
 
-const tagColors = {
-  'High Priority': 'bg-red-400/15 text-red-400 border border-red-400/20',
-  'Missing Skill': 'bg-amber/15 text-amber border border-amber/20',
-  'Career Booster': 'bg-tertiary/15 text-tertiary border border-tertiary/20',
-  'Personalized': 'bg-primary/15 text-primary border border-primary/20',
-}
+const Icons = {
+  'box': Box,
+  'pen-tool': PenTool,
+  'cpu': Cpu
+};
 
-const actionColors = { Continue: 'text-primary', 'Start Course': 'text-tertiary', 'Finish Now': 'text-amber' }
+const LearningResources = () => {
+  const [data, setData] = useState(null);
 
-const filters = ['All Topics', 'Frontend', 'Backend', 'AI/ML', 'System Design']
+  useEffect(() => {
+    import('../data/mockResources.json').then(module => setData(module.default));
+  }, []);
 
-export default function LearningResources() {
-  const [activeFilter, setActiveFilter] = useState('All Topics')
+  if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;
 
   return (
-    <AppShell>
-      {/* Inline topbar search variant */}
-      <div className="flex items-center justify-between mb-5">
-        <div>
-          <h1 className="text-2xl font-bold">Learning Resources</h1>
-          <p className="text-on-surface-muted text-sm mt-1">
-            AI-curated resources personalized for your career goals.
-          </p>
-          <div className="flex gap-2 mt-2 flex-wrap">
-            <span className="badge-green text-xs px-3 py-1">TARGET: SENIOR FRONTEND ENGINEER</span>
-            <span className="badge-blue text-xs px-3 py-1">SKILL READINESS: 74%</span>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#0B0F17] flex">
+      <Sidebar />
 
-      {/* Momentum + Saved */}
-      <div className="grid lg:grid-cols-3 gap-6 mb-6">
-        <div className="card lg:col-span-2">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <span className="text-primary">⚡</span>
-              <h3 className="font-semibold">Learning Momentum</h3>
-            </div>
-            <span className="text-xs text-on-surface-muted">Last 30 Days</span>
-          </div>
-          <ResponsiveContainer width="100%" height={160}>
-            <BarChart data={learningMomentumData}>
-              <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#bbcabf' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: '#bbcabf' }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={{ background: '#212a3b', border: '1px solid #3c4a42', borderRadius: 8, fontSize: 12 }} />
-              <Bar dataKey="hours" fill="#172030" stroke="#76daa0" strokeWidth={1} radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+      <main className="flex-1 ml-64 flex flex-col h-screen overflow-hidden">
 
-        <div className="card">
-          <div className="flex items-center gap-2 mb-3">
-            <Bookmark size={15} className="text-on-surface-muted" />
-            <h3 className="font-semibold">Saved for Later</h3>
+        {/* Top Search Header */}
+        <div className="flex justify-between items-center px-8 py-4 border-b border-white/5 bg-background shrink-0">
+          <div className="flex-1 max-w-2xl relative">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search for courses, certifications, or technologies..."
+              className="w-full bg-card border border-white/5 rounded-full py-2.5 pl-11 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/20 transition-colors"
+            />
           </div>
-          <div className="space-y-3">
-            {savedResources.map(r => (
-              <div key={r.id} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-md bg-surface-high flex items-center justify-center flex-shrink-0">
-                  <BookOpen size={14} className="text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium truncate">{r.title}</p>
-                  <p className="text-xs text-on-surface-muted">{r.meta}</p>
-                </div>
-                <button className="text-on-surface-muted hover:text-red-400 flex-shrink-0">
-                  <Trash2 size={13} />
-                </button>
-              </div>
-            ))}
-          </div>
-          <button className="text-primary text-xs hover:underline mt-3 flex items-center gap-1">
-            View All Bookmarks <ChevronRight size={12} />
-          </button>
-        </div>
-      </div>
 
-      {/* AI Recommendations */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-primary">✨</span>
-          <h3 className="text-lg font-semibold">AI Recommendations</h3>
-        </div>
-        <p className="text-xs text-on-surface-muted mb-4">Based on your Skill Gap Analysis for 'Senior Engineer' roles</p>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {aiRecommendations.map(r => (
-            <div key={r.id} className="card hover:border-primary/30 transition-all">
-              <div className="flex items-center justify-between mb-2">
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${tagColors[r.tag] || 'badge-green'}`}>
-                  {r.tag}
-                </span>
-                <button className="text-on-surface-muted hover:text-primary">
-                  <Bookmark size={14} />
-                </button>
-              </div>
-              <p className="font-semibold text-sm mb-1">{r.title}</p>
-              <p className="text-xs text-on-surface-muted mb-3">{r.desc}</p>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-on-surface-muted">⏱ {r.duration}</span>
-                <button className="btn-primary text-xs py-1 px-2">Start Learning</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Filter row + course grid */}
-      <div>
-        <div className="flex flex-wrap items-center gap-2 mb-4">
-          {filters.map(f => (
-            <button key={f} onClick={() => setActiveFilter(f)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all border
-                ${activeFilter === f
-                  ? 'bg-primary text-surface border-primary'
-                  : 'border-outline/40 text-on-surface-muted hover:border-primary/40'}`}>
-              {f}
+          <div className="flex items-center space-x-6">
+            <button className="text-gray-400 hover:text-white transition-colors relative">
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full border border-background"></span>
             </button>
-          ))}
-          <div className="ml-auto flex gap-2">
-            <select className="text-xs bg-surface-high w-auto px-2 py-1.5 rounded-lg border border-outline/30">
-              <option>Difficulty: All</option>
-              <option>Beginner</option>
-              <option>Intermediate</option>
-              <option>Advanced</option>
-            </select>
-            <select className="text-xs bg-surface-high w-auto px-2 py-1.5 rounded-lg border border-outline/30">
-              <option>Platform: All</option>
-              <option>Coursera</option>
-              <option>Udemy</option>
-              <option>Plural Sight</option>
-            </select>
+            <div className="flex items-center space-x-3 bg-card border border-white/5 rounded-full py-1.5 px-1.5 pr-4">
+              <img src="https://i.pravatar.cc/150?u=alex" alt="Profile" className="w-6 h-6 rounded-full" />
+              <span className="text-xs font-bold text-white">Alex Rivera</span>
+            </div>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {courseGrid.map(c => (
-            <div key={c.id} className="card p-0 overflow-hidden hover:border-primary/30 transition-all">
-              <div className="h-32 bg-surface-high flex items-center justify-center">
-                <BookOpen size={32} className="text-primary/30" />
+        <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
+
+          {/* Main Title Area */}
+          <div className="mb-10">
+            <h1 className="text-3xl font-bold text-primary mb-3">Learning Resources</h1>
+            <p className="text-sm text-gray-300 max-w-2xl leading-relaxed mb-6">
+              AI-curated resources personalized for your career goals. We've matched your Skill Gap Analysis with top industry materials.
+            </p>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 bg-card border border-white/10 rounded-full px-4 py-2">
+                <Activity className="w-3.5 h-3.5 text-gray-400" />
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">TARGET: {data.targetRole}</span>
               </div>
-              <div className="p-4">
-                <span className="text-xs font-semibold text-on-surface-muted uppercase tracking-wider">{c.platform}</span>
-                <p className="font-semibold text-sm mt-1 mb-0.5">{c.title}</p>
-                <p className="text-xs text-on-surface-muted mb-3">{c.instructor}</p>
-                <div className="mb-2">
-                  <div className="flex justify-between text-xs mb-1">
-                    <span className="text-on-surface-muted">Progress</span>
-                    <span className="text-primary font-medium">{c.progress}%</span>
-                  </div>
-                  <div className="progress-bar-track">
-                    <div className="progress-bar-fill" style={{ width: `${c.progress}%` }} />
-                  </div>
+              <div className="flex items-center space-x-2 bg-[#11241C] border border-primary/20 rounded-full px-4 py-2">
+                <CheckCircle className="w-3.5 h-3.5 text-primary" />
+                <span className="text-[10px] font-bold text-primary uppercase tracking-widest">SKILL READINESS: {data.skillReadiness}%</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Top Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+            {/* Learning Momentum */}
+            <div className="lg:col-span-2 bg-card border border-white/5 rounded-2xl p-6 flex flex-col">
+              <div className="flex justify-between items-center mb-8">
+                <div className="flex items-center space-x-2">
+                  <Activity className="w-5 h-5 text-primary" />
+                  <h2 className="text-lg font-bold text-white">Learning Momentum</h2>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-on-surface-muted">⏱ {c.timeLeft}</span>
-                  <button className={`text-xs font-semibold hover:underline ${actionColors[c.action] || 'text-primary'}`}>
-                    {c.action}
+                <button className="text-xs text-gray-400 bg-background border border-white/5 px-3 py-1.5 rounded-lg flex items-center space-x-2">
+                  <span>Last 30 Days</span>
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+              </div>
+
+              <div className="flex-1 flex items-end justify-between px-2 pt-10 relative">
+                {/* Simplified bar chart representation */}
+                {data.momentum.map((m, i) => (
+                  <div key={i} className="flex flex-col items-center space-y-3 w-full">
+                    <div className="w-12 bg-white/5 rounded-t-md hover:bg-white/10 transition-colors cursor-pointer relative group" style={{ height: `${m.value}%` }}>
+                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white text-gray-900 text-[10px] font-bold py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                        {m.value}m
+                      </div>
+                    </div>
+                    <span className="text-[10px] text-gray-500 font-bold uppercase">{m.day}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Saved for Later */}
+            <div className="bg-card border border-white/5 rounded-2xl p-6 flex flex-col">
+              <div className="flex items-center space-x-2 mb-6">
+                <Bookmark className="w-5 h-5 text-gray-400" />
+                <h2 className="text-lg font-bold text-white">Saved for Later</h2>
+              </div>
+
+              <div className="flex-1 space-y-4">
+                {data.saved.map((item, i) => {
+                  const Icon = Icons[item.icon];
+                  return (
+                    <div key={i} className="flex items-center justify-between group">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 rounded-xl bg-background border border-white/5 flex items-center justify-center text-primary group-hover:bg-primary/5 transition-colors">
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <div className="text-sm font-bold text-white mb-0.5 group-hover:text-primary transition-colors cursor-pointer">{item.title}</div>
+                          <div className="text-[10px] text-gray-500">{item.meta}</div>
+                        </div>
+                      </div>
+                      <button className="text-gray-600 hover:text-white transition-colors">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <button className="text-xs font-bold text-primary mt-6 text-left flex items-center space-x-1 hover:text-primary/80 transition-colors">
+                <span>View All Bookmarks</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+
+          {/* AI Recommendations */}
+          <div className="mb-10">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary border border-primary/30">
+                <Bot className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-white">AI Recommendations</h2>
+                <p className="text-[11px] text-gray-400">Based on your Skill Gap Analysis for 'Senior Engineer' roles</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 relative">
+              {data.recommendations.map((rec, i) => (
+                <div key={i} className="bg-background border border-white/5 rounded-2xl p-6 flex flex-col hover:border-white/20 transition-colors">
+                  <div className="flex justify-between items-start mb-4">
+                    <span className={`text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-widest border ${rec.badgeColor}`}>
+                      {rec.badge}
+                    </span>
+                    <button className="text-gray-500 hover:text-white transition-colors"><Bookmark className="w-4 h-4" /></button>
+                  </div>
+                  <h3 className="text-sm font-bold text-white mb-2 leading-tight">{rec.title}</h3>
+                  <p className="text-[11px] text-gray-400 leading-relaxed mb-6 flex-1">{rec.desc}</p>
+
+                  <div className="flex items-center space-x-2 text-[10px] text-gray-500 mb-4">
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <span>{rec.time}</span>
+                  </div>
+                  <button className="w-full bg-card border border-white/10 text-gray-300 py-2.5 rounded-lg text-xs font-bold hover:bg-white/5 transition-colors">
+                    Start Learning
                   </button>
                 </div>
+              ))}
+
+              {/* Floating Plus button on the right */}
+              <div className="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 z-10 hidden xl:flex">
+                <button className="w-12 h-12 rounded-full bg-primary text-[#0B0F17] flex items-center justify-center shadow-lg hover:scale-105 transition-transform">
+                  <Plus className="w-6 h-6" />
+                </button>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
 
-        <div className="text-center mt-6">
-          <button className="btn-ghost text-sm px-8 gap-2">Load More Resources ↓</button>
+          {/* Filters & Grid */}
+          <div>
+            <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
+              <div className="flex space-x-2">
+                <button className="bg-primary text-[#0B0F17] px-4 py-1.5 rounded-full text-xs font-bold">All Topics</button>
+                <button className="bg-card border border-white/5 text-gray-300 px-4 py-1.5 rounded-full text-xs font-medium hover:bg-white/5 transition-colors">Frontend</button>
+                <button className="bg-card border border-white/5 text-gray-300 px-4 py-1.5 rounded-full text-xs font-medium hover:bg-white/5 transition-colors">Backend</button>
+                <button className="bg-card border border-white/5 text-gray-300 px-4 py-1.5 rounded-full text-xs font-medium hover:bg-white/5 transition-colors">AI/ML</button>
+                <button className="bg-card border border-white/5 text-gray-300 px-4 py-1.5 rounded-full text-xs font-medium hover:bg-white/5 transition-colors">System Design</button>
+              </div>
+              <div className="flex space-x-3">
+                <div className="bg-card border border-white/5 rounded-lg px-3 py-1.5 flex items-center space-x-2 text-xs text-gray-400 cursor-pointer">
+                  <span>Difficulty: All</span>
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                </div>
+                <div className="bg-card border border-white/5 rounded-lg px-3 py-1.5 flex items-center space-x-2 text-xs text-gray-400 cursor-pointer">
+                  <span>Platform: All</span>
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
+              {data.courses.map((course, i) => (
+                <div key={i} className="bg-card border border-white/5 rounded-2xl overflow-hidden group">
+                  <div className="h-32 bg-[#1A2234] relative overflow-hidden flex items-center justify-center">
+                    <div className="absolute top-3 left-3 bg-[#0B0F17]/80 backdrop-blur text-[9px] font-bold uppercase tracking-widest text-white px-2 py-1 rounded border border-white/10 z-10">
+                      {course.platform}
+                    </div>
+                    {/* Placeholder for course image */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-blue-900/40 to-purple-900/40 opacity-50 group-hover:opacity-80 transition-opacity"></div>
+                    <div className="text-white/20">
+                      <Code className="w-12 h-12" />
+                    </div>
+                  </div>
+
+                  <div className="p-5">
+                    <h3 className="text-sm font-bold text-white mb-1 line-clamp-2 min-h-[40px] leading-tight group-hover:text-primary transition-colors">{course.title}</h3>
+                    <p className="text-[10px] text-gray-400 mb-4">{course.author}</p>
+
+                    <div className="flex justify-between text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1.5">
+                      <span>{course.progress > 0 ? 'Progress' : 'Not Started'}</span>
+                      <span className="text-white">{course.progress}%</span>
+                    </div>
+                    <div className="w-full bg-background h-1 rounded-full mb-4 overflow-hidden">
+                      <div className="bg-primary h-full" style={{ width: `${course.progress}%` }}></div>
+                    </div>
+
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-gray-500 flex items-center space-x-1.5">
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>{course.timeLeft}</span>
+                      </span>
+                      <button className="font-bold text-primary hover:text-primary/80 transition-colors">
+                        {course.status}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-center mb-8">
+              <button className="bg-card border border-white/10 text-gray-300 px-6 py-2.5 rounded-full text-xs font-bold hover:bg-white/5 transition-colors flex items-center space-x-2">
+                <span>Load More Resources</span>
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+              </button>
+            </div>
+          </div>
+
+          <div className="border-t border-white/5 pt-8 mt-8 pb-4 flex justify-between items-center text-xs text-gray-500">
+            <div>
+              <span className="font-bold text-gray-300">CareerForge AI</span>
+              <br />
+              © 2024 CareerForge AI. Empowering the next generation of talent.
+            </div>
+            <div className="flex space-x-6">
+              <a href="#" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-gray-300 transition-colors">Terms of Service</a>
+              <a href="#" className="hover:text-gray-300 transition-colors">AI Ethics</a>
+              <a href="#" className="hover:text-gray-300 transition-colors">Contact Support</a>
+            </div>
+          </div>
         </div>
-      </div>
-    </AppShell>
-  )
-}
+      </main>
+    </div>
+  );
+};
+
+export default LearningResources;

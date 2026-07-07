@@ -1,185 +1,231 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { Send, Mic, Paperclip, Code, Users, Target, Brain } from 'lucide-react'
-import AppShell from '../components/AppShell'
-import { interviewMessages } from '../data/mockData'
+"use client";
+import React, { useEffect, useState } from 'react';
+import { 
+  Code, Users, Target, PenTool, Play, Mic, Send, Paperclip, 
+  User, Bot, Sparkles, Shield, CheckCircle
+} from 'lucide-react';
+import Sidebar from '../components/Sidebar';
 
-const sessionTypes = [
-  { id: 'technical', icon: Code, label: 'Technical' },
-  { id: 'hr', icon: Users, label: 'HR / Culture' },
-  { id: 'behavioral', icon: Target, label: 'Behavioral' },
-  { id: 'aptitude', icon: Brain, label: 'Aptitude' },
-]
+const MockInterview = () => {
+  const [data, setData] = useState(null);
 
-export default function MockInterview() {
-  const [selected, setSelected] = useState('technical')
-  const [messages, setMessages] = useState(interviewMessages)
-  const [input, setInput] = useState('')
-  const [typing, setTyping] = useState(false)
-  const [sessionActive, setSessionActive] = useState(true)
-  const bottomRef = useRef()
+  useEffect(() => {
+    import('../data/mockInterview.json').then(module => setData(module.default));
+  }, []);
 
-  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages])
-
-  const send = () => {
-    if (!input.trim()) return
-    setMessages(prev => [...prev, { id: Date.now(), from: 'user', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), text: input }])
-    setInput('')
-    setTyping(true)
-    setTimeout(() => {
-      setTyping(false)
-      setMessages(prev => [...prev, {
-        id: Date.now() + 1, from: 'ai', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        text: 'Excellent response! Your structured approach to problem-solving is commendable. Let\'s move to the next question: Can you explain the difference between REST and GraphQL APIs?',
-      }])
-    }, 2000)
-  }
+  if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;
 
   return (
-    <AppShell>
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold">Mock Interview</h1>
-          <p className="text-on-surface-muted text-sm">Master your next career milestone with AI</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-surface-high rounded-xl px-3 py-2">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            <span className="text-xs font-semibold text-primary">IN-SESSION READY</span>
-          </div>
-          <div className="w-9 h-9 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center text-primary text-xs font-bold">AR</div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#0B0F17] flex">
+      <Sidebar />
 
-      <div className="grid lg:grid-cols-5 gap-6">
-        {/* Left panel */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="card">
-            <h3 className="font-semibold mb-3">Select Session</h3>
-            <div className="grid grid-cols-2 gap-2 mb-4">
-              {sessionTypes.map(s => (
-                <button key={s.id} onClick={() => setSelected(s.id)}
-                  className={`p-3 rounded-xl border text-left transition-all ${selected === s.id ? 'border-primary bg-primary/10' : 'border-outline/30 hover:border-primary/30 bg-surface-high'}`}>
-                  <s.icon size={18} className={`mb-1 ${selected === s.id ? 'text-primary' : 'text-on-surface-muted'}`} />
-                  <p className="text-xs font-medium">{s.label}</p>
+      <main className="flex-1 ml-64 p-8 flex flex-col h-screen overflow-hidden custom-scrollbar">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8 shrink-0">
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-1">Mock Interview</h1>
+            <p className="text-sm text-gray-400">Master your next career milestone with AI</p>
+          </div>
+          <div className="flex items-center space-x-4">
+            <div className="text-right">
+              <div className="text-sm font-bold text-white">Alex Rivera</div>
+              <div className="text-[10px] font-bold text-blue-400 uppercase tracking-widest">IN-SESSION READY</div>
+            </div>
+            <img src="https://i.pravatar.cc/150?u=alex" alt="Profile" className="w-10 h-10 rounded-full border-2 border-primary" />
+          </div>
+        </div>
+
+        <div className="flex-1 flex gap-6 min-h-0">
+          {/* Left Panel: Controls & Insights */}
+          <div className="w-[320px] flex flex-col space-y-6 overflow-y-auto custom-scrollbar pr-2 pb-8">
+            
+            {/* Select Session */}
+            <div className="bg-card border border-white/5 rounded-2xl p-6">
+              <h2 className="text-sm font-bold text-white mb-4">Select Session</h2>
+              <div className="grid grid-cols-2 gap-3 mb-6">
+                <button className="bg-[#111827] border border-primary/30 rounded-xl p-4 flex flex-col items-center justify-center text-primary hover:bg-[#152336] transition-colors relative overflow-hidden">
+                  <div className="absolute inset-0 bg-primary/5"></div>
+                  <Code className="w-5 h-5 mb-2" />
+                  <span className="text-xs font-bold">Technical</span>
                 </button>
+                <button className="bg-background border border-white/5 rounded-xl p-4 flex flex-col items-center justify-center text-gray-400 hover:text-white hover:border-white/20 transition-colors">
+                  <Users className="w-5 h-5 mb-2" />
+                  <span className="text-xs font-bold">HR / Culture</span>
+                </button>
+                <button className="bg-background border border-white/5 rounded-xl p-4 flex flex-col items-center justify-center text-gray-400 hover:text-white hover:border-white/20 transition-colors">
+                  <Target className="w-5 h-5 mb-2" />
+                  <span className="text-xs font-bold">Behavioral</span>
+                </button>
+                <button className="bg-background border border-white/5 rounded-xl p-4 flex flex-col items-center justify-center text-gray-400 hover:text-white hover:border-white/20 transition-colors">
+                  <PenTool className="w-5 h-5 mb-2" />
+                  <span className="text-xs font-bold">Aptitude</span>
+                </button>
+              </div>
+              <button className="w-full flex items-center justify-center space-x-2 bg-primary text-[#0B0F17] px-4 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors">
+                <Play className="w-4 h-4 fill-current" />
+                <span>Start Interview Session</span>
+              </button>
+            </div>
+
+            {/* Metrics */}
+            <div className="bg-card border border-white/5 rounded-2xl p-6 space-y-6">
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <div className="flex items-center space-x-2 text-blue-400">
+                    <User className="w-4 h-4" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">COMMUNICATION</span>
+                  </div>
+                  <span className="text-xs font-bold text-blue-400">{data.metrics.communication}%</span>
+                </div>
+                <div className="w-full bg-background h-1.5 rounded-full overflow-hidden">
+                  <div className="bg-blue-400 h-full" style={{ width: `${data.metrics.communication}%` }}></div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <div className="flex items-center space-x-2 text-primary">
+                    <Shield className="w-4 h-4" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">CONFIDENCE</span>
+                  </div>
+                  <span className="text-xs font-bold text-primary">{data.metrics.confidence}%</span>
+                </div>
+                <div className="w-full bg-background h-1.5 rounded-full overflow-hidden">
+                  <div className="bg-primary h-full" style={{ width: `${data.metrics.confidence}%` }}></div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <div className="flex items-center space-x-2 text-orange-300">
+                    <CheckCircle className="w-4 h-4" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">ACCURACY</span>
+                  </div>
+                  <span className="text-xs font-bold text-white">{data.metrics.accuracy}%</span>
+                </div>
+                <div className="w-full bg-background h-1.5 rounded-full overflow-hidden">
+                  <div className="bg-orange-300 h-full" style={{ width: `${data.metrics.accuracy}%` }}></div>
+                </div>
+              </div>
+            </div>
+
+            {/* AI Insights */}
+            <div className="bg-card border border-white/5 rounded-2xl p-6">
+              <div className="flex items-center space-x-2 mb-6">
+                <Sparkles className="w-4 h-4 text-blue-400" />
+                <h2 className="text-sm font-bold text-white">AI Insights</h2>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="border-l-2 border-primary pl-4 py-1">
+                  <div className="text-[11px] font-bold text-primary mb-1">{data.insights.strength.title}</div>
+                  <div className="text-xs text-gray-400 leading-relaxed">{data.insights.strength.desc}</div>
+                </div>
+                <div className="border-l-2 border-orange-300 pl-4 py-1">
+                  <div className="text-[11px] font-bold text-orange-300 mb-1">{data.insights.improvement.title}</div>
+                  <div className="text-xs text-gray-400 leading-relaxed">{data.insights.improvement.desc}</div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+
+          {/* Right Panel: Chat Interface */}
+          <div className="flex-1 bg-card border border-white/5 rounded-2xl flex flex-col overflow-hidden relative">
+            
+            {/* Chat Header */}
+            <div className="px-6 py-4 border-b border-white/5 flex justify-between items-center bg-background/50 backdrop-blur shrink-0">
+              <div className="flex items-center space-x-6">
+                <div className="flex items-center space-x-2 text-[10px] font-bold text-primary border border-primary/20 bg-primary/5 px-3 py-1.5 rounded-full">
+                  <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+                  <span>SESSION ACTIVE</span>
+                </div>
+                <div className="text-xs font-mono text-gray-400 flex items-center space-x-2">
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  <span>12:45 / 30:00</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-4">
+                <div className="flex space-x-1">
+                  <div className="w-5 h-5 rounded-full bg-primary text-[#0B0F17] flex items-center justify-center text-[9px] font-bold">1</div>
+                  <div className="w-5 h-5 rounded-full bg-primary text-[#0B0F17] flex items-center justify-center text-[9px] font-bold">2</div>
+                  <div className="w-5 h-5 rounded-full bg-white/10 text-gray-500 flex items-center justify-center text-[9px] font-bold">3</div>
+                  <div className="w-5 h-5 rounded-full bg-white/10 text-gray-500 flex items-center justify-center text-[9px] font-bold">4</div>
+                </div>
+                <div className="text-xs font-bold text-gray-400">Question 2 of 10</div>
+              </div>
+            </div>
+
+            {/* Chat Messages */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar flex flex-col">
+              {data.chat.map((msg, i) => (
+                <div key={i} className={`flex w-full ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  {msg.sender === 'ai' && (
+                    <div className="w-8 h-8 rounded-lg bg-[#152336] border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0 mr-4 mt-2">
+                      <Bot className="w-4 h-4" />
+                    </div>
+                  )}
+                  
+                  <div className={`max-w-[75%] flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
+                    {msg.time === 'typing' ? (
+                      <div className="bg-[#111827] border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center space-x-1">
+                        <div className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce"></div>
+                        <div className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                        <div className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                      </div>
+                    ) : (
+                      <div className={`px-6 py-4 rounded-2xl text-sm leading-relaxed ${
+                        msg.sender === 'user' 
+                          ? 'bg-primary text-[#0B0F17] rounded-tr-sm font-medium' 
+                          : 'bg-[#111827] border border-white/5 text-gray-300 rounded-tl-sm'
+                      }`}>
+                        {msg.text}
+                      </div>
+                    )}
+                    
+                    {msg.time !== 'typing' && (
+                      <div className="text-[9px] font-mono text-gray-600 mt-2 font-bold uppercase tracking-widest">
+                        {msg.sender === 'user' ? `YOU • ${msg.time}` : `CAREERFORGE AI • ${msg.time}`}
+                      </div>
+                    )}
+                  </div>
+
+                  {msg.sender === 'user' && (
+                    <img src="https://i.pravatar.cc/150?u=alex" alt="User" className="w-8 h-8 rounded-full border border-white/10 shrink-0 ml-4 mt-2" />
+                  )}
+                </div>
               ))}
             </div>
-            <button
-              onClick={() => setSessionActive(true)}
-              className="btn-primary w-full justify-center gap-2">
-              ▶ Start Interview Session
-            </button>
-          </div>
 
-          {/* Metrics */}
-          <div className="card space-y-4">
-            {[
-              { label: 'COMMUNICATION', value: 84, icon: Users },
-              { label: 'CONFIDENCE', value: 92, icon: Target },
-              { label: 'ACCURACY', value: 76, icon: Brain },
-            ].map(m => (
-              <div key={m.label}>
-                <div className="flex items-center justify-between text-xs mb-1.5">
-                  <span className="flex items-center gap-1.5 text-on-surface-muted font-semibold">
-                    <m.icon size={13} /> {m.label}
-                  </span>
-                  <span className="font-bold text-primary">{m.value}%</span>
-                </div>
-                <div className="progress-bar-track" style={{ height: 6 }}>
-                  <div className="progress-bar-fill" style={{ width: `${m.value}%`, height: '100%' }} />
-                </div>
+            {/* Chat Input */}
+            <div className="p-4 bg-background border-t border-white/5 shrink-0 flex items-center space-x-3">
+              <button className="w-12 h-12 rounded-xl bg-card border border-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors shrink-0">
+                <Paperclip className="w-5 h-5" />
+              </button>
+              
+              <div className="flex-1 relative">
+                <input 
+                  type="text" 
+                  placeholder="Type your answer here..."
+                  className="w-full bg-card border border-white/5 rounded-xl py-3.5 pl-4 pr-12 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/20 transition-colors"
+                />
               </div>
-            ))}
-          </div>
-
-          {/* AI Insights */}
-          <div className="card border-primary/20">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-primary text-sm">✨</span>
-              <h3 className="font-semibold">AI Insights</h3>
+              
+              <button className="w-12 h-12 rounded-xl bg-card border border-white/5 flex items-center justify-center text-primary hover:bg-white/5 transition-colors shrink-0">
+                <Mic className="w-5 h-5" />
+              </button>
+              
+              <button className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-[#0B0F17] hover:bg-primary/90 transition-colors shrink-0">
+                <Send className="w-5 h-5 ml-1" />
+              </button>
             </div>
-            <div className="border-l-2 border-primary pl-3 mb-3">
-              <p className="text-xs text-primary font-semibold mb-0.5">Strength Detected</p>
-              <p className="text-xs text-on-surface-muted">Your articulation of technical debt management was exceptionally clear and structured.</p>
-            </div>
-            <div className="border-l-2 border-amber pl-3">
-              <p className="text-xs text-amber font-semibold mb-0.5">Improvement Area</p>
-              <p className="text-xs text-on-surface-muted">Try to use fewer filler words like "um" and "actually" during complex explanations.</p>
-            </div>
+            
           </div>
         </div>
+      </main>
+    </div>
+  );
+};
 
-        {/* Chat panel */}
-        <div className="lg:col-span-3 card flex flex-col" style={{ minHeight: '580px' }}>
-          {/* Session bar */}
-          <div className="flex items-center justify-between border-b border-outline/20 pb-3 mb-4 flex-wrap gap-2">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span className="text-xs font-semibold text-primary uppercase">Session Active</span>
-            </div>
-            <div className="flex items-center gap-3 text-xs text-on-surface-muted">
-              <span>⏱ 12:45 / 30:00</span>
-              <div className="flex gap-1">
-                {[1, 2, 3, 4].map(n => (
-                  <span key={n} className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold
-                    ${n <= 2 ? 'bg-primary text-surface' : 'bg-surface-high text-on-surface-muted border border-outline/40'}`}>{n}</span>
-                ))}
-              </div>
-              <span className="font-medium">Question 2 of 10</span>
-            </div>
-          </div>
-
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto space-y-4 mb-4">
-            {messages.map(msg => (
-              <div key={msg.id} className={`flex ${msg.from === 'user' ? 'justify-end' : 'items-start gap-3'}`}>
-                {msg.from === 'ai' && (
-                  <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center flex-shrink-0">
-                    <Brain size={14} className="text-primary" />
-                  </div>
-                )}
-                <div className={msg.from === 'ai' ? 'chat-bubble-ai' : 'chat-bubble-user'} style={{ maxWidth: '75%' }}>
-                  <p className="text-sm">{msg.text}</p>
-                  <p className="text-xs text-on-surface-muted/60 mt-1 text-right">
-                    {msg.from === 'ai' ? 'CAREERFORGE AI' : 'YOU'} • {msg.time}
-                  </p>
-                </div>
-                {msg.from === 'user' && (
-                  <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center text-primary text-xs font-bold flex-shrink-0">AR</div>
-                )}
-              </div>
-            ))}
-            {typing && (
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center flex-shrink-0">
-                  <Brain size={14} className="text-primary" />
-                </div>
-                <div className="chat-bubble-ai">
-                  <span className="text-lg tracking-widest text-on-surface-muted">•••</span>
-                </div>
-              </div>
-            )}
-            <div ref={bottomRef} />
-          </div>
-
-          {/* Input */}
-          <div className="flex items-center gap-3 bg-surface rounded-xl border border-outline/30 px-4 py-2 focus-within:border-primary/40">
-            <button className="text-on-surface-muted hover:text-on-surface"><Paperclip size={16} /></button>
-            <input
-              className="flex-1 bg-transparent border-none text-sm outline-none"
-              placeholder="Type your answer here..."
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && send()}
-            />
-            <button className="text-on-surface-muted hover:text-on-surface"><Mic size={16} /></button>
-            <button onClick={send} disabled={!input.trim()}
-              className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center hover:bg-primary-dim transition-colors disabled:opacity-40">
-              <Send size={14} className="text-surface" />
-            </button>
-          </div>
-        </div>
-      </div>
-    </AppShell>
-  )
-}
+export default MockInterview;

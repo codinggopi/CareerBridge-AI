@@ -1,0 +1,24 @@
+{
+  "readiness": 75,
+  "targetRole": "Senior AI Engineer",
+  "skillDistribution": [
+    { "name": "Neural Network Architecture", "value": 90, "status": "Mastered" },
+    { "name": "Python & PyTorch", "value": 85, "status": "Mastered" },
+    { "name": "LLM Fine-tuning (Gap)", "value": 40, "status": "In Progress" },
+    { "name": "Kubernetes Orchestration", "value": 15, "status": "In Progress" }
+  ],
+  "criticalGaps": [
+    { "impact": "High Impact", "title": "Distributed Systems Training", "desc": "Required for scaling LLM workloads in enterprise environments." },
+    { "impact": "Medium Impact", "title": "Prompt Engineering (Advanced)", "desc": "Chain-of-thought and few-shot optimization techniques." }
+  ],
+  "benchmarks": [
+    { "metric": "Publication Count", "you": "2", "avg": "3" },
+    { "metric": "Years of Experience", "you": "4.5", "avg": "5.2" },
+    { "metric": "Open Source Contrib.", "you": "Expert", "avg": "Mid" }
+  ],
+  "learningPath": [
+    { "type": "YouTube", "typeColor": "text-red-500", "title": "Deep Learning Specialization: Transformers", "desc": "Master the architecture that changed NLP and Computer Vision forever.", "meta": "12 Hours", "action": "Start Now →" },
+    { "type": "Coursera", "typeColor": "text-blue-500", "title": "Kubernetes for AI Engineers", "desc": "Learn to deploy and scale machine learning models on K8s clusters.", "meta": "Level: Intermediate", "action": "Enroll Free →" },
+    { "type": "AI LAB", "typeColor": "text-primary", "title": "Interactive Fine-Tuning Sandbox", "desc": "Practice LoRA and QLoRA fine-tuning on real datasets with our cloud GPUs.", "meta": "Hands-on Practice", "action": "Launch Lab ↗" }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "filters": ["All", "Resume", "Learning", "Interviews", "Achievements"],
+  "today": [
+    { "type": "resume", "title": "Resume analyzed successfully", "time": "2h ago", "desc": "Our AI has completed the deep-scan of your Software Engineer resume. Your readiness score is now 84%.", "action": "View Report", "dismissable": true, "unread": true, "icon": "file-text", "color": "text-primary bg-primary/10 border-primary/20" },
+    { "type": "interview", "title": "Mock interview completed", "time": "5h ago", "desc": "Great job! You showed 15% improvement in technical articulation. AI feedback is now available.", "action": "Review Feedback", "dismissable": false, "unread": true, "icon": "message-square", "color": "text-blue-400 bg-blue-400/10 border-blue-400/20" }
+  ],
+  "thisWeek": [
+    { "type": "learning", "title": "Skill gap identified", "time": "2 days ago", "desc": "We've identified 'Cloud Architecture' as a missing component for your target roles. Added to learning path.", "action": "", "dismissable": false, "unread": false, "icon": "trending-up", "color": "text-gray-400 bg-white/5 border-white/10" },
+    { "type": "achievement", "title": "New Achievement: Interview Pro", "time": "4 days ago", "desc": "You've successfully completed 5 mock interviews this month! Your badge has been added to your profile.", "action": "", "dismissable": false, "unread": false, "icon": "award", "color": "text-primary bg-primary/10 border-primary/20" }
+  ],
+  "earlier": [
+    { "type": "system", "title": "Security update: Password changed", "time": "1 week ago", "desc": "Your account password was successfully updated. If this wasn't you, please contact support immediately.", "action": "", "dismissable": false, "unread": false, "icon": "settings", "color": "text-gray-400 bg-white/5 border-white/10" }
+  ]
+}

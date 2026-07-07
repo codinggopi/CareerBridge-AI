@@ -1,195 +1,217 @@
-import React, { useState } from 'react'
-import { User, Shield, Bell, Lock, Brain, ChevronRight, Moon } from 'lucide-react'
-import AppShell from '../components/AppShell'
+"use client";
+import React, { useState } from 'react';
+import { 
+  User, Shield, Bell, Lock, Cpu, Globe, Moon, Eye, Info, X, Plus
+} from 'lucide-react';
+import Sidebar from '../components/Sidebar';
 
-const subNav = [
-  { id: 'account', icon: User, label: 'Account' },
-  { id: 'security', icon: Shield, label: 'Security' },
-  { id: 'notifications', icon: Bell, label: 'Notifications' },
-  { id: 'privacy', icon: Lock, label: 'Privacy' },
-  { id: 'ai', icon: Brain, label: 'AI Preferences' },
-]
+const Settings = () => {
+  const [activeTab, setActiveTab] = useState('Account');
 
-export default function Settings() {
-  const [activeSection, setActiveSection] = useState('account')
-  const [form, setForm] = useState({
-    name: 'Alexander Forge', email: 'alexander.f@university.edu',
-    phone: '+1 (555) 012-3456', gradYear: '2025',
-    twoFactor: true, visibility: 'public',
-    adaptiveSkill: true, domains: ['Software Engineering', 'Data Science', 'AI/ML Research'],
-    targetCompanies: '',
-  })
-
-  const set = key => e => setForm(p => ({ ...p, [key]: e.target.type === 'checkbox' ? e.target.checked : e.target.value }))
-  const removeDomain = d => setForm(p => ({ ...p, domains: p.domains.filter(x => x !== d) }))
-  const addDomain = () => {
-    const name = prompt('Enter domain name')
-    if (name?.trim()) setForm(p => ({ ...p, domains: [...p.domains, name.trim()] }))
-  }
+  const tabs = [
+    { id: 'Account', icon: User },
+    { id: 'Security', icon: Shield },
+    { id: 'Notifications', icon: Bell },
+    { id: 'Privacy', icon: Lock },
+    { id: 'AI Preferences', icon: Cpu }
+  ];
 
   return (
-    <AppShell>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold">Settings</h1>
-          <p className="text-on-surface-muted text-sm mt-1">Manage your account preferences and AI career engine.</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <select className="text-sm bg-surface-high w-auto px-3 py-2 rounded-lg text-on-surface-muted">
-            <option>🌐 English (US)</option>
-            <option>🇮🇳 Hindi</option>
-            <option>🇪🇸 Spanish</option>
-          </select>
-          <button className="p-2 rounded-lg bg-surface-high hover:bg-surface-highest transition-colors">
-            <Moon size={16} className="text-on-surface-muted" />
-          </button>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#0B0F17] flex">
+      <Sidebar />
 
-      <div className="grid lg:grid-cols-4 gap-6">
-        {/* Sub-nav */}
-        <div className="card p-2 h-fit">
-          {subNav.map(item => (
-            <button key={item.id} onClick={() => setActiveSection(item.id)}
-              className={`sidebar-link w-full text-left ${activeSection === item.id ? 'active' : ''}`}>
-              <item.icon size={16} />
-              {item.label}
+      <main className="flex-1 ml-64 p-8 flex flex-col h-screen overflow-hidden">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8 shrink-0">
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-1">Settings</h1>
+            <p className="text-sm text-gray-400">Manage your account preferences and AI career engine.</p>
+          </div>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 bg-card border border-white/5 rounded-lg px-3 py-1.5 text-xs font-bold text-gray-300 hover:bg-white/5 cursor-pointer transition-colors">
+              <Globe className="w-4 h-4" />
+              <span>English (US)</span>
+              <svg className="w-3 h-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+            </div>
+            <button className="w-9 h-9 rounded-full bg-card border border-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+              <Moon className="w-4 h-4" />
             </button>
-          ))}
+          </div>
         </div>
 
-        {/* Content */}
-        <div className="lg:col-span-3 space-y-4">
-          {/* Personal Info */}
-          <div className="card">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold">Personal Information</h3>
-              <button className="text-on-surface-muted hover:text-on-surface text-xs">ⓘ</button>
-            </div>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-xs text-on-surface-muted uppercase tracking-wider mb-1.5 block">Full Name</label>
-                <input placeholder="Alexander Forge" value={form.name} onChange={set('name')} />
-              </div>
-              <div>
-                <label className="text-xs text-on-surface-muted uppercase tracking-wider mb-1.5 block">Email Address</label>
-                <input type="email" placeholder="alexander.f@university.edu" value={form.email} onChange={set('email')} />
-              </div>
-              <div>
-                <label className="text-xs text-on-surface-muted uppercase tracking-wider mb-1.5 block">Phone Number</label>
-                <input placeholder="+1 (555) 012-3456" value={form.phone} onChange={set('phone')} />
-              </div>
-              <div>
-                <label className="text-xs text-on-surface-muted uppercase tracking-wider mb-1.5 block">Graduation Year</label>
-                <input value={form.gradYear} onChange={set('gradYear')} />
-              </div>
-            </div>
+        <div className="flex-1 flex gap-8 min-h-0">
+          {/* Left Menu */}
+          <div className="w-56 shrink-0 flex flex-col space-y-1">
+            {tabs.map(tab => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                    isActive 
+                      ? 'bg-[#152336] border border-white/5 text-primary' 
+                      : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{tab.id}</span>
+                </button>
+              );
+            })}
           </div>
 
-          {/* Security + Visibility */}
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="card">
-              <div className="flex items-center gap-2 mb-4">
-                <Lock size={16} className="text-on-surface-muted" />
-                <h3 className="font-semibold">Security</h3>
+          {/* Right Content */}
+          <div className="flex-1 overflow-y-auto custom-scrollbar pr-4 pb-8 space-y-6">
+            
+            {/* Personal Information */}
+            <div className="bg-card border border-white/5 rounded-2xl p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-lg font-bold text-white">Personal Information</h2>
+                <Info className="w-4 h-4 text-gray-500" />
               </div>
-              <div className="flex items-center justify-between py-3 border-b border-outline/20 cursor-pointer hover:bg-surface-high rounded-lg px-2 -mx-2 transition-colors">
+              
+              <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <p className="text-sm font-medium">Change Password</p>
-                  <p className="text-xs text-on-surface-muted">Last updated 3 months ago</p>
+                  <label className="block text-xs font-medium text-gray-400 mb-2">Full Name</label>
+                  <input type="text" defaultValue="Alexander Forge" className="w-full bg-background border border-white/5 rounded-lg py-2.5 px-4 text-sm text-white focus:outline-none focus:border-white/20 transition-colors" />
                 </div>
-                <ChevronRight size={16} className="text-on-surface-muted" />
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-2">Email Address</label>
+                  <input type="email" defaultValue="alexander.f@university.edu" className="w-full bg-background border border-white/5 rounded-lg py-2.5 px-4 text-sm text-gray-300 focus:outline-none focus:border-white/20 transition-colors" />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-2">Phone Number</label>
+                  <input type="tel" defaultValue="+1 (555) 0123-4567" className="w-full bg-background border border-white/5 rounded-lg py-2.5 px-4 text-sm text-white focus:outline-none focus:border-white/20 transition-colors" />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-2">Graduation Year</label>
+                  <input type="text" defaultValue="2025" className="w-full bg-[#111827] border border-white/5 rounded-lg py-2.5 px-4 text-sm text-white focus:outline-none focus:border-white/20 transition-colors" />
+                </div>
               </div>
-              <div className="flex items-center justify-between pt-3">
-                <div>
-                  <p className="text-sm font-medium flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-primary" /> Two-Factor Auth
-                  </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-6">
+              {/* Security */}
+              <div className="bg-card border border-white/5 rounded-2xl p-6">
+                <div className="flex items-center space-x-2 mb-6">
+                  <Lock className="w-4 h-4 text-blue-400" />
+                  <h2 className="text-lg font-bold text-white">Security</h2>
                 </div>
-                <label className="relative inline-flex cursor-pointer">
-                  <input type="checkbox" className="sr-only" checked={form.twoFactor} onChange={set('twoFactor')} />
-                  <div className={`w-11 h-6 rounded-full transition-colors ${form.twoFactor ? 'bg-primary' : 'bg-surface-highest'}`}>
-                    <div className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${form.twoFactor ? 'translate-x-5' : ''}`} />
+                
+                <div className="flex justify-between items-center py-4 border-b border-white/5 cursor-pointer group">
+                  <div>
+                    <div className="text-sm font-medium text-white group-hover:text-primary transition-colors">Change Password</div>
+                    <div className="text-[10px] text-gray-500">Last updated 3 months ago</div>
                   </div>
-                </label>
-              </div>
-            </div>
-
-            <div className="card">
-              <div className="flex items-center gap-2 mb-4">
-                <Lock size={16} className="text-on-surface-muted" />
-                <h3 className="font-semibold">Resume Visibility</h3>
-              </div>
-              <div className="space-y-2">
-                {[
-                  { val: 'public', label: 'Public', desc: 'Open to all network employers' },
-                  { val: 'recruiters', label: 'Recruiters Only', desc: 'Only verified hiring managers' },
-                  { val: 'private', label: 'Private', desc: 'Hidden from search results' },
-                ].map(opt => (
-                  <label key={opt.val} className={`flex items-start gap-3 p-3 rounded-xl cursor-pointer border transition-all
-                    ${form.visibility === opt.val ? 'border-primary bg-primary/5' : 'border-outline/20 hover:border-primary/30'}`}>
-                    <input type="radio" name="visibility" value={opt.val}
-                      checked={form.visibility === opt.val} onChange={set('visibility')}
-                      className="mt-1 accent-primary" />
-                    <div>
-                      <p className="text-sm font-medium">{opt.label}</p>
-                      <p className="text-xs text-on-surface-muted">{opt.desc}</p>
-                    </div>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* AI Preferences */}
-          <div className="card">
-            <div className="flex items-center gap-2 mb-1">
-              <Brain size={16} className="text-primary" />
-              <h3 className="font-semibold">AI Intelligence Preferences</h3>
-            </div>
-            <p className="text-xs text-on-surface-muted mb-4">Customize how CareerForge AI identifies opportunities for you.</p>
-
-            <div className="mb-4">
-              <label className="text-xs text-on-surface-muted uppercase tracking-wider mb-2 block">Preferred Career Domain</label>
-              <div className="flex flex-wrap gap-2">
-                {form.domains.map(d => (
-                  <span key={d} className="badge-green flex items-center gap-1 cursor-pointer hover:bg-red-400/20 transition-colors">
-                    {d}
-                    <button onClick={() => removeDomain(d)} className="ml-0.5 hover:text-red-400">×</button>
-                  </span>
-                ))}
-                <button onClick={addDomain} className="badge-green opacity-60 hover:opacity-100 cursor-pointer">+ Add Domain</button>
-              </div>
-            </div>
-
-            <div className="mb-4">
-              <label className="text-xs text-on-surface-muted uppercase tracking-wider mb-1.5 block">Target Companies (Priority for Matching)</label>
-              <input placeholder="e.g. NVIDIA, OpenAI, Stripe, Tesla..." value={form.targetCompanies} onChange={set('targetCompanies')} />
-              <p className="text-xs text-on-surface-muted mt-1 italic">The AI will prioritize scanning vacancies and networking opportunities at these specific firms.</p>
-            </div>
-
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="font-medium text-sm text-primary">Adaptive Skill Analysis</p>
-                <p className="text-xs text-on-surface-muted mt-0.5">Allow CareerForge to suggest new certifications based on trending target company requirements.</p>
-              </div>
-              <label className="relative inline-flex cursor-pointer flex-shrink-0 mt-1">
-                <input type="checkbox" className="sr-only" checked={form.adaptiveSkill} onChange={set('adaptiveSkill')} />
-                <div className={`w-11 h-6 rounded-full transition-colors ${form.adaptiveSkill ? 'bg-primary' : 'bg-surface-highest'}`}>
-                  <div className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${form.adaptiveSkill ? 'translate-x-5' : ''}`} />
+                  <svg className="w-4 h-4 text-gray-500 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
                 </div>
-              </label>
-            </div>
-          </div>
+                
+                <div className="flex justify-between items-center py-4 cursor-pointer">
+                  <div>
+                    <div className="text-sm font-medium text-white">Two-Factor Authentication</div>
+                    <div className="text-[10px] text-gray-500">Enhanced account security</div>
+                  </div>
+                  <div className="w-10 h-5 bg-primary rounded-full relative cursor-pointer shadow-[0_0_10px_rgba(95,227,160,0.3)]">
+                    <div className="absolute right-1 top-1 w-3 h-3 bg-white rounded-full"></div>
+                  </div>
+                </div>
+              </div>
 
-          {/* Action bar */}
-          <div className="flex items-center justify-between pt-2">
-            <button className="text-on-surface-muted text-sm hover:text-red-400 transition-colors">Discard Changes</button>
-            <button className="btn-primary px-8 py-2.5">Save Changes</button>
+              {/* Resume Visibility */}
+              <div className="bg-card border border-white/5 rounded-2xl p-6">
+                <div className="flex items-center space-x-2 mb-6">
+                  <Eye className="w-4 h-4 text-gray-400" />
+                  <h2 className="text-lg font-bold text-white">Resume Visibility</h2>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-start space-x-4 p-4 rounded-xl border border-primary/30 bg-[#152336] cursor-pointer">
+                    <div className="mt-1 w-4 h-4 rounded-full border-2 border-primary flex items-center justify-center shrink-0">
+                      <div className="w-2 h-2 bg-primary rounded-full"></div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-white mb-0.5">Public</div>
+                      <div className="text-xs text-gray-400 leading-relaxed">Open to all network employers</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-4 p-4 rounded-xl border border-white/5 hover:border-white/10 bg-background cursor-pointer transition-colors opacity-50">
+                    <div className="mt-1 w-4 h-4 rounded-full border-2 border-gray-600 shrink-0"></div>
+                    <div>
+                      <div className="text-sm font-medium text-white mb-0.5">Private</div>
+                      <div className="text-xs text-gray-400 leading-relaxed">Only visible to applied jobs</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* AI Intelligence Preferences */}
+            <div className="bg-gradient-to-br from-[#15202B] to-card border border-white/5 rounded-2xl p-6 relative overflow-hidden">
+              <div className="flex items-center space-x-2 mb-2 relative z-10">
+                <Cpu className="w-5 h-5 text-primary" />
+                <h2 className="text-lg font-bold text-white">AI Intelligence Preferences</h2>
+              </div>
+              <p className="text-[11px] text-gray-400 mb-6 relative z-10">Customize how CareerBridgeAI identifies opportunities for you.</p>
+              
+              <div className="space-y-6 relative z-10">
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">Preferred Career Domain</label>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="flex items-center space-x-1 border border-primary/30 bg-[#11241C] text-primary px-3 py-1.5 rounded-lg text-[11px] font-bold">
+                      <span>Software Engineering</span>
+                      <X className="w-3 h-3 ml-1 cursor-pointer" />
+                    </span>
+                    <span className="flex items-center space-x-1 border border-primary/30 bg-[#11241C] text-primary px-3 py-1.5 rounded-lg text-[11px] font-bold">
+                      <span>Data Science</span>
+                      <X className="w-3 h-3 ml-1 cursor-pointer" />
+                    </span>
+                    <span className="flex items-center space-x-1 border border-primary/30 bg-[#11241C] text-primary px-3 py-1.5 rounded-lg text-[11px] font-bold">
+                      <span>AI/ML Research</span>
+                      <X className="w-3 h-3 ml-1 cursor-pointer" />
+                    </span>
+                    <button className="flex items-center space-x-1 border border-white/10 bg-white/5 text-gray-400 hover:text-white px-3 py-1.5 rounded-lg text-[11px] font-bold transition-colors">
+                      <Plus className="w-3 h-3" />
+                      <span>Add Domain</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Target Companies (Priority for Matching)</label>
+                  <input type="text" placeholder="e.g. NVIDIA, OpenAI, Stripe, Tesla..." className="w-full bg-white text-gray-800 rounded-lg py-2.5 px-4 text-sm focus:outline-none" />
+                  <p className="text-[10px] text-gray-500 italic mt-2">The AI will prioritize scanning vacancies and networking opportunities at these specific firms.</p>
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                  <div>
+                    <div className="text-sm font-bold text-primary mb-1">Adaptive Skill Analysis</div>
+                    <div className="text-[10px] text-gray-400">Allow CareerBridgeAI to suggest new certifications based on trending target company requirements.</div>
+                  </div>
+                  <div className="w-10 h-5 bg-white rounded-full relative cursor-pointer">
+                    <div className="absolute right-1 top-1 w-3 h-3 bg-primary rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Actions */}
+            <div className="flex justify-between items-center pt-4">
+              <button className="text-xs font-bold text-gray-400 hover:text-white transition-colors">
+                Discard Changes
+              </button>
+              <button className="bg-primary text-[#0B0F17] px-8 py-3 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors">
+                Save Changes
+              </button>
+            </div>
+            
           </div>
         </div>
-      </div>
-    </AppShell>
-  )
-}
+      </main>
+    </div>
+  );
+};
+
+export default Settings;

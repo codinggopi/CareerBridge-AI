@@ -1,0 +1,40 @@
+{
+  "insights": {
+    "techSector": {
+      "title": "TECH SECTOR",
+      "desc": "Cloud Architect roles increased 24% this quarter."
+    },
+    "remoteWork": {
+      "title": "REMOTE WORK",
+      "desc": "Hybrid flexibility remains the #1 requested benefit."
+    }
+  },
+  "trendingSkills": ["Generative AI", "Kubernetes", "TypeScript", "Data Ops", "Rust"],
+  "recommended": {
+    "title": "AWS Certified Machine Learning",
+    "desc": "Top choice for cloud pivot."
+  },
+  "marketReadiness": {
+    "score": 82,
+    "trend": "+5% from last month"
+  },
+  "chat": [
+    {
+      "sender": "ai",
+      "text": "aptitude in React and System Design. How can I help you accelerate your career today?",
+      "options": [
+        { "title": "Career Path", "desc": "\"How do I become an AI Engineer?\"" },
+        { "title": "Interview Prep", "desc": "\"Prepare me for Amazon interviews.\"" }
+      ]
+    },
+    {
+      "sender": "user",
+      "text": "I'm interested in transition to Machine Learning. What are the top 3 skills I should focus on this month based on my current background?"
+    },
+    {
+      "sender": "ai",
+      "text": "Excellent choice. Transitioning from Frontend to ML is a high-growth path. Based on your JavaScript mastery, here are your priority pivots:\n\n1. **Python & NumPy**: Since you know JS, focus on the synchronous data manipulation patterns in Python.\n2. **Linear Algebra Foundations**: Essential for understanding how neural networks process weights.\n3. **Scikit-Learn**: Start with classic ML models before diving into Deep Learning.",
+      "actions": ["Deep Dive: Python", "Find Courses"]
+    }
+  ]
+}

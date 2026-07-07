@@ -1,0 +1,34 @@
+{
+  "metrics": {
+    "communication": 84,
+    "confidence": 92,
+    "accuracy": 76
+  },
+  "insights": {
+    "strength": {
+      "title": "Strength Detected",
+      "desc": "Your articulation of technical debt management was exceptionally clear and structured."
+    },
+    "improvement": {
+      "title": "Improvement Area",
+      "desc": "Try to use fewer filler words like \"um\" and \"actually\" during complex explanations."
+    }
+  },
+  "chat": [
+    {
+      "sender": "ai",
+      "time": "11:24 AM",
+      "text": "Great start, Alex. Now, let's dive into a technical scenario. Imagine you're leading a project where the team is divided between two different architectural approaches. How would you facilitate a resolution and ensure the project remains on schedule?"
+    },
+    {
+      "sender": "user",
+      "time": "11:26 AM",
+      "text": "In that situation, my first step would be to organize a formal 'decision matrix' meeting. I'd have both sides present their technical pros and cons, specifically focusing on scalability and maintenance. By moving the conversation from opinions to data-driven trade-offs, we can usually find a middle ground or a clear winner."
+    },
+    {
+      "sender": "ai",
+      "time": "typing",
+      "text": ""
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "profile": {
+    "name": "Alexander Pierce",
+    "title": "Computer Science & Engineering",
+    "avatar": "https://i.pravatar.cc/150?u=alexpierce",
+    "placementScore": 95,
+    "placementRank": "Top 5%"
+  },
+  "metrics": {
+    "resumeScore": 88,
+    "skillScore": 92,
+    "readiness": "Ready"
+  },
+  "coreSkills": [
+    { "name": "Machine Learning", "score": 85 },
+    { "name": "Full-Stack Development", "score": 92 }
+  ],
+  "technologies": ["Python", "React.js", "Node.js", "TensorFlow", "PostgreSQL", "Docker", "AWS", "Tailwind CSS"],
+  "projects": [
+    { "title": "NeuralPath AI", "desc": "Automated career guidance system using GPT-4.", "tags": ["Next.js", "PyTorch"] },
+    { "title": "EduChain", "desc": "Decentralized credential verification on Ethereum.", "tags": ["Solidity", "React"] }
+  ],
+  "achievements": [
+    { "title": "Winner, National AI Hackathon", "desc": "Organized by Google Cloud • 2023" },
+    { "title": "AWS Certified Solutions Architect", "desc": "Validation ID: AWS-88210-CF • 2024" },
+    { "title": "Dean's List Award", "desc": "Academic Excellence • 3 Semesters" }
+  ],
+  "journey": [
+    { "date": "JANUARY 12, 2024", "title": "Resume Uploaded", "desc": "AI Parsed 15+ skills and suggested 4 key improvements for ATS optimization.", "icon": "file-text", "color": "bg-primary text-[#0B0F17]" },
+    { "date": "JANUARY 15, 2024", "title": "Roadmap Generated", "desc": "Personalized Full-Stack Engineer path created with focus on Cloud Architecture.", "icon": "git-merge", "color": "bg-blue-500/20 text-blue-400 border border-blue-500/30" },
+    { "date": "FEBRUARY 02, 2024", "title": "Mock Interview Completed", "desc": "Achieved 82% performance in System Design round. Feedback saved to profile.", "icon": "message-square", "color": "bg-white/5 text-gray-400 border border-white/10" }
+  ]
+}

@@ -1,55 +1,54 @@
-import React from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
-import { Search, Bell, Zap } from 'lucide-react'
+"use client";
+import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-const publicLinks = [
-  { to: '/dashboard', label: 'Dashboard' },
-  { to: '/resume/analyze', label: 'Resume' },
-  { to: '/interview', label: 'Interviews' },
-  { to: '/learning/resources', label: 'Resources' },
-]
+const useLocation = () => ({ pathname: usePathname() });
 
-export default function Topbar({ showSearch = false }) {
-  const navigate = useNavigate()
+const Topbar = () => {
+  const location = useLocation();
+  const navLinks = [
+    { name: 'Dashboard', path: '/dashboard' },
+    { name: 'Resume', path: '/resume/analyze' },
+    { name: 'Interviews', path: '/interview' },
+    { name: 'Resources', path: '/learning/resources' }
+  ];
+
   return (
-    <header className="sticky top-0 z-30 bg-surface border-b border-outline/20 px-6 py-3 flex items-center justify-between">
-      <div className="flex items-center gap-8">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
-          <Zap size={18} className="text-primary" />
-          <span className="font-bold text-primary text-sm">CareerForge AI</span>
-        </div>
-        <nav className="hidden md:flex gap-1">
-          {publicLinks.map(({ to, label }) => (
-            <NavLink
-              key={to}
-              to={to}
-              className={({ isActive }) =>
-                `px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${isActive ? 'text-primary border-b-2 border-primary' : 'text-on-surface-muted hover:text-on-surface'}`
-              }
+    <header className="flex items-center justify-between px-8 py-5 border-b border-white/5">
+      <div className="flex items-center space-x-12">
+        <Link href="/" className="text-xl font-bold">
+          <span className="text-white">CareerBridge </span>
+          <span className="text-primary">AI</span>
+        </Link>
+        <nav className="hidden md:flex space-x-8">
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              href={link.path}
+              className={`text-sm transition-colors ${link.name === 'Dashboard' && location.pathname === '/'
+                ? 'text-primary border-b-2 border-primary pb-1'
+                : 'text-gray-400 hover:text-white pb-1'
+                }`}
             >
-              {label}
-            </NavLink>
+              {link.name}
+            </Link>
           ))}
         </nav>
       </div>
-      <div className="flex items-center gap-3">
-        {showSearch && (
-          <div className="relative hidden md:block">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-muted" />
-            <input className="pl-9 pr-4 py-1.5 text-sm w-64 bg-surface-high" placeholder="Search courses, certifications..." />
-          </div>
-        )}
-        <button className="relative p-2 rounded-lg hover:bg-surface-high transition-colors">
-          <Bell size={18} className="text-on-surface-muted" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full" />
-        </button>
-        <div
-          className="w-8 h-8 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center text-primary text-xs font-bold cursor-pointer"
-          onClick={() => navigate('/profile')}
+      <div className="flex items-center space-x-6">
+        <Link href="/sign-in" className="text-sm text-gray-300 hover:text-white transition-colors">
+          Sign In
+        </Link>
+        <Link
+          href="/register"
+          className="bg-primary text-background px-5 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors"
         >
-          GK
-        </div>
+          Get Started
+        </Link>
       </div>
     </header>
-  )
-}
+  );
+};
+
+export default Topbar;

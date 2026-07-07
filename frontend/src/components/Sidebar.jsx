@@ -1,72 +1,77 @@
-import React from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+"use client";
+import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
-  LayoutDashboard, FileText, BarChart2, MessageSquare,
-  CheckSquare, Settings, HelpCircle, LogOut, Zap
-} from 'lucide-react'
+  LayoutDashboard, FileText, Compass, MessageSquare,
+  Target, Settings, HelpCircle, LogOut
+} from 'lucide-react';
+const useLocation = () => ({ pathname: usePathname() });
 
-const navItems = [
-  { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/resume/analyze', icon: FileText, label: 'Resume AI' },
-  { to: '/skill-gap', icon: BarChart2, label: 'Skill Gap' },
-  { to: '/interview', icon: MessageSquare, label: 'Mock Interview' },
-  { to: '/readiness', icon: CheckSquare, label: 'Readiness' },
-  { to: '/settings', icon: Settings, label: 'Settings' },
-]
+const Sidebar = ({ role = 'Premium Tier' }) => {
+  const location = useLocation();
 
-export default function Sidebar() {
-  const navigate = useNavigate()
+  const navItems = [
+    { name: 'Dashboard', path: role.includes('Admin') ? '/admin' : '/dashboard', icon: LayoutDashboard },
+    { name: 'AI Coach', path: '/coach', icon: MessageSquare },
+    { name: 'Resume AI', path: '/resume/analyze', icon: FileText },
+    { name: 'Skill Gap', path: '/skill-gap', icon: Compass },
+    { name: 'Mock Interview', path: '/interview', icon: MessageSquare },
+    { name: 'Roadmap', path: '/roadmap', icon: Compass },
+    { name: 'Resources', path: '/resources', icon: Target },
+    { name: 'Readiness', path: '/readiness', icon: Target },
+    { name: 'My Profile', path: '/profile', icon: FileText },
+    { name: 'Notifications', path: '/notifications', icon: Settings },
+    { name: 'Settings', path: '/settings', icon: Settings },
+  ];
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-[240px] bg-surface border-r border-outline/30 flex flex-col z-40">
-      {/* Logo */}
-      <div className="px-5 py-5 border-b border-outline/20">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/dashboard')}>
-          <div className="w-7 h-7 rounded-md bg-primary/20 flex items-center justify-center">
-            <Zap size={15} className="text-primary" />
-          </div>
-          <span className="font-bold text-primary text-base leading-tight">CareerForge AI</span>
-        </div>
-        <p className="text-on-surface-muted text-xs mt-1 pl-9">Premium Tier</p>
+    <div className="w-64 bg-background border-r border-white/5 flex flex-col h-screen fixed left-0 top-0 overflow-y-auto">
+      <div className="p-6">
+        <Link href="/" className="text-xl font-bold font-serif tracking-wide text-primary block">
+          CareerBridge AI
+        </Link>
+        <div className="text-xs text-gray-500 mt-1">{role}</div>
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {navItems.map(({ to, icon: Icon, label }) => (
-          <NavLink
-            key={to}
-            to={to}
-            className={({ isActive }) =>
-              `sidebar-link ${isActive ? 'active' : ''}`
-            }
-          >
-            <Icon size={17} />
-            <span>{label}</span>
-          </NavLink>
-        ))}
+      <nav className="flex-1 mt-4">
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.name}
+              href={item.path}
+              className={`flex items-center space-x-3 px-6 py-3.5 mb-1 transition-colors relative ${isActive
+                ? 'text-primary bg-primary/5'
+                : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
+                }`}
+            >
+              {isActive && (
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r"></div>
+              )}
+              <Icon className="w-5 h-5" />
+              <span className="text-sm font-medium">{item.name}</span>
+            </Link>
+          );
+        })}
       </nav>
 
-      {/* Bottom */}
-      <div className="px-3 pb-4 space-y-1">
-        <button
-          onClick={() => navigate('/resume/analyze')}
-          className="btn-primary w-full justify-center text-sm mb-3"
-        >
-          <Zap size={15} />
+      <div className="p-6 space-y-4">
+        <button className="w-full bg-primary text-[#0B0F17] rounded-lg py-3 text-sm font-bold hover:bg-primary/90 transition-colors">
           Analyze Resume
         </button>
-        <button className="sidebar-link w-full text-left">
-          <HelpCircle size={17} />
-          <span>Help Center</span>
-        </button>
-        <button
-          onClick={() => navigate('/sign-in')}
-          className="sidebar-link w-full text-left text-red-400"
-        >
-          <LogOut size={17} />
-          <span>Logout</span>
-        </button>
+        <Link href="/help" className="flex items-center space-x-3 text-gray-400 hover:text-gray-200 transition-colors">
+          <HelpCircle className="w-5 h-5" />
+          <span className="text-sm font-medium">Help Center</span>
+        </Link>
+        <Link href="/sign-in" className="flex items-center space-x-3 text-red-400 hover:text-red-300 transition-colors">
+          <LogOut className="w-5 h-5" />
+          <span className="text-sm font-medium">Logout</span>
+        </Link>
       </div>
-    </aside>
-  )
-}
+    </div>
+  );
+};
+
+export default Sidebar;

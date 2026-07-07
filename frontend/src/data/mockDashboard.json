@@ -1,0 +1,43 @@
+{
+  "user": {
+    "name": "Gopinath",
+    "fullName": "Gopinath K.",
+    "role": "Senior Student",
+    "avatar": "https://i.pravatar.cc/150?u=gopinath"
+  },
+  "stats": [
+    { "title": "Resume Score", "value": "84", "suffix": "/100", "change": "+5%", "icon": "file-text", "color": "text-primary" },
+    { "title": "Skill Score", "value": "72", "suffix": "/100", "change": "+2%", "icon": "code", "color": "text-blue-400" },
+    { "title": "Placement Readiness", "value": "91%", "suffix": "", "change": "High", "icon": "rocket", "color": "text-orange-400", "isHighlighted": true },
+    { "title": "Interview Score", "value": "68", "suffix": "/100", "change": "-1%", "icon": "message-square", "color": "text-red-400" },
+    { "title": "Learning Progress", "value": "4.2", "suffix": " hrs/day", "change": "Fast", "icon": "trending-up", "color": "text-purple-400" }
+  ],
+  "skillDistribution": [
+    { "name": "A", "core": 40, "soft": 0 },
+    { "name": "B", "core": 85, "soft": 0 },
+    { "name": "C", "core": 55, "soft": 0 },
+    { "name": "D", "core": 0, "soft": 60 },
+    { "name": "E", "core": 0, "soft": 35 }
+  ],
+  "recentActivities": [
+    { "title": "Node.js Mastery Assessment", "description": "Completed with 92% score", "time": "2h ago", "icon": "check-square", "iconColor": "text-primary", "iconBg": "bg-primary/10" },
+    { "title": "Resume Updated", "description": "AI suggestions applied to 'Experience'", "time": "Yesterday", "icon": "edit-3", "iconColor": "text-blue-400", "iconBg": "bg-blue-400/10" }
+  ],
+  "upcomingInterviews": {
+    "date": "24",
+    "month": "OCT",
+    "title": "Frontend Engineer Mock",
+    "interviewer": "With Senior AI Interviewer"
+  },
+  "recommendedRoles": [
+    { "title": "Full Stack Engineer", "company": "Hyperion Tech", "match": 98, "color": "bg-primary" },
+    { "title": "Frontend Developer", "company": "Nexus Labs", "match": 86, "color": "bg-blue-400" },
+    { "title": "Backend Engineer", "company": "Aether Systems", "match": 72, "color": "bg-purple-400" },
+    { "title": "DevOps Specialist", "company": "CloudCore", "match": 68, "color": "bg-gray-400" }
+  ],
+  "aiSmartPick": {
+    "title": "Master Docker in 48h",
+    "description": "Your match with 'CloudCore' will jump to 84% by completing this module.",
+    "tags": ["JS", "CL"]
+  }
+}

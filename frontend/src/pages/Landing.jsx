@@ -1,171 +1,256 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Zap, ArrowRight, Upload, Play, Star, ChevronRight } from 'lucide-react'
-import Footer from '../components/Footer'
+"use client";
+import React from 'react';
+import Topbar from '../components/Topbar';
+import Footer from '../components/Footer';
+import { 
+  Zap, Play, FileText, CheckCircle, Map, 
+  MessageSquare, User, TrendingUp, Compass, Target, BadgeCheck
+} from 'lucide-react';
+import Link from 'next/link';
 
-const tools = [
-  { icon: '📄', title: 'AI Resume Analyzer', desc: 'Deep-scan your resume against industry benchmarks and ATS algorithms to optimize every word.' },
-  { icon: '📊', title: 'Skill Gap Analysis', desc: 'Instantly identify skills you\'re missing for your dream job and get a ranked plan to bridge the gap.' },
-  { icon: '🗺️', title: 'Learning Roadmap', desc: 'Personalized learning paths tailored to your pace and goals, integrating the best courses and projects.' },
-  { icon: '🎤', title: 'AI Mock Interview', desc: 'Simulate real-world interviews with an AI that provides real-time feedback on tone, clarity, and content.' },
-  { icon: '💼', title: 'Career Recommendations', desc: 'AI-matched job roles that align with your skills, aspirations, and market demand.' },
-  { icon: '🚀', title: 'Placement Readiness', desc: 'Certification of interview readiness.', featured: true },
-]
-
-const stats = [
-  { value: '50k+', label: 'Students Helped' },
-  { value: '1.2M', label: 'Resumes Analyzed' },
-  { value: '200k+', label: 'Mock Interviews' },
-  { value: '94%', label: 'Success Rate' },
-]
-
-const testimonials = [
-  { quote: "The AI Mock Interview tool was a game-changer. It spotted filler words I didn't even know I was using, landed my role at a Fortune 500 company within 2 weeks!", name: 'Susan Jenkins', role: 'Software Engineer at Cloudbase' },
-  { quote: "I was struggling to switch careers into Data Science. The Skill Gap Analysis showed me exactly what I needed to learn. The roadmap made it manageable.", name: 'Nicholas Chen', role: 'Data Analyst at Veritas' },
-  { quote: 'The resume analyzer helped me identify my experience in a way that actively caught the attention of recruiters. Highly recommend for any student.', name: 'Priya Sharma', role: 'Product Manager at Milestone' },
-]
-
-export default function Landing() {
-  const navigate = useNavigate()
-
+const Landing = () => {
   return (
-    <div className="min-h-screen bg-surface text-on-surface">
-      {/* Navbar */}
-      <header className="sticky top-0 z-30 bg-surface/90 backdrop-blur border-b border-outline/20 px-8 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Zap size={20} className="text-primary" />
-          <span className="font-bold text-primary text-lg">CareerForge AI</span>
-        </div>
-        <nav className="hidden md:flex gap-1">
-          {['Dashboard', 'Resume', 'Interviews', 'Resources'].map(l => (
-            <button key={l} onClick={() => navigate('/dashboard')} className="px-4 py-2 text-sm text-on-surface-muted hover:text-on-surface rounded-md transition-colors">{l}</button>
-          ))}
-        </nav>
-        <div className="flex gap-3">
-          <button onClick={() => navigate('/sign-in')} className="btn-ghost text-sm">Sign In</button>
-          <button onClick={() => navigate('/register')} className="btn-primary text-sm">Get Started</button>
-        </div>
-      </header>
+    <div className="flex flex-col min-h-screen bg-background">
+      <Topbar />
 
-      {/* Hero */}
-      <section className="max-w-7xl mx-auto px-8 pt-20 pb-16 flex flex-col md:flex-row gap-12 items-center">
-        <div className="flex-1">
-          <div className="badge-green mb-4 inline-block">AI-Powered Career Platform</div>
-          <h1 className="text-5xl md:text-6xl font-extrabold leading-tight mb-6">
-            Forge Your Future<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-tertiary">with AI</span>
-          </h1>
-          <p className="text-on-surface-muted text-lg mb-8 max-w-lg">
-            AI-powered placement preparation, resume intelligence, career guidance, mock interviews, and personalized learning paths.
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <button onClick={() => navigate('/register')} className="btn-primary">Get Started <ArrowRight size={16} /></button>
-            <button onClick={() => navigate('/resume/analyze')} className="btn-ghost"><Upload size={16} /> Upload Resume</button>
-            <button className="btn-ghost"><Play size={14} /> Watch Demo</button>
-          </div>
-        </div>
-        {/* Hero visual */}
-        <div className="flex-1 relative">
-          <div className="card border-primary/20 glow-green p-0 overflow-hidden">
-            <div className="bg-surface-high px-5 py-3 border-b border-outline/20 flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-400/60" />
-              <div className="w-3 h-3 rounded-full bg-amber/60" />
-              <div className="w-3 h-3 rounded-full bg-primary/60" />
-              <span className="text-xs text-on-surface-muted ml-2">Career Dashboard</span>
+      <main className="flex-1 w-full max-w-[1400px] mx-auto px-6 py-12">
+        {/* Hero Section */}
+        <div className="flex flex-col lg:flex-row items-center justify-between mt-12 mb-32 gap-12">
+          <div className="w-full lg:w-1/2 space-y-8">
+            <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+              <Zap className="w-4 h-4 text-primary" />
+              <span className="text-xs font-semibold uppercase tracking-wider text-gray-300">AI-Powered Career Intelligence</span>
             </div>
-            <div className="p-5 space-y-3">
-              {[{ label: 'Resume Score', val: 84, color: 'primary' }, { label: 'Skill Match', val: 91, color: 'tertiary' }, { label: 'Readiness', val: 78, color: 'primary' }].map(item => (
-                <div key={item.label}>
-                  <div className="flex justify-between text-xs mb-1">
-                    <span className="text-on-surface-muted">{item.label}</span>
-                    <span className="text-primary font-semibold">{item.val}%</span>
-                  </div>
-                  <div className="progress-bar-track">
-                    <div className="progress-bar-fill" style={{ width: `${item.val}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-            {/* Floating tooltip */}
-            <div className="absolute -bottom-3 -right-3 bg-surface-high border border-primary/30 rounded-xl px-4 py-2 text-xs shadow-lg">
-              <span className="text-primary font-semibold">✨ AI Suggestion</span>
-              <p className="text-on-surface-muted mt-0.5">Add quantified achievements to boost score by +12pts</p>
+            
+            <h1 className="text-6xl md:text-7xl font-bold leading-tight">
+              <span className="text-white">Forge Your<br/>Future </span>
+              <span className="italic text-primary">with AI</span>
+            </h1>
+            
+            <p className="text-lg text-gray-400 max-w-lg leading-relaxed">
+              AI-powered placement preparation, resume intelligence, career guidance, mock interviews, and personalized learning paths.
+            </p>
+            
+            <div className="flex items-center space-x-4 pt-4">
+              <Link href="/register" className="bg-primary text-background px-8 py-3.5 rounded-xl font-semibold hover:bg-primary/90 transition-colors">
+                Get Started
+              </Link>
+              <button className="bg-card border border-white/10 text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-white/5 transition-colors">
+                Upload Resume
+              </button>
+              <button className="flex items-center justify-center w-12 h-12 rounded-full border border-white/10 text-white hover:bg-white/5 transition-colors">
+                <Play className="w-5 h-5 fill-current" />
+              </button>
+              <span className="text-sm text-gray-400 font-medium">Watch Demo</span>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Trusted by */}
-      <section className="border-y border-outline/20 py-6 px-8">
-        <p className="text-center text-xs text-on-surface-muted uppercase tracking-widest mb-4">Trusted by leading institutions</p>
-        <div className="flex justify-center gap-10 flex-wrap">
-          {['UNIVERSITY_ALPHA', 'TECH_INSTITUTE', 'GLOBAL_ACADEMY', 'NEXUS_LEARNING', 'CORE_VARSITY'].map(name => (
-            <span key={name} className="text-on-surface-muted/40 text-sm font-mono tracking-wider">{name}</span>
-          ))}
-        </div>
-      </section>
-
-      {/* Intelligent Toolkit */}
-      <section className="max-w-7xl mx-auto px-8 py-20">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-3">Intelligent Toolkit</h2>
-          <p className="text-on-surface-muted">Propel your career with enterprise-grade AI tools designed to analyze, prepare, and place.</p>
-        </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {tools.map(tool => (
-            <div key={tool.title} className={`card hover:border-primary/30 transition-all cursor-pointer ${tool.featured ? 'border-primary/40 glow-green' : ''}`}>
-              <span className="text-2xl mb-3 block">{tool.icon}</span>
-              <h3 className="font-semibold mb-2">{tool.title}</h3>
-              <p className="text-sm text-on-surface-muted">{tool.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="bg-surface-container border-y border-outline/20 py-14 px-8">
-        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map(s => (
-            <div key={s.label} className="text-center">
-              <p className="text-4xl font-extrabold text-primary">{s.value}</p>
-              <p className="text-sm text-on-surface-muted mt-1 uppercase tracking-wider">{s.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="max-w-7xl mx-auto px-8 py-20">
-        <h2 className="text-3xl font-bold text-center mb-10">Success Stories</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          {testimonials.map(t => (
-            <div key={t.name} className="card">
-              <div className="flex gap-1 mb-3">{[...Array(5)].map((_, i) => <Star key={i} size={14} className="fill-primary text-primary" />)}</div>
-              <p className="text-sm text-on-surface-muted italic mb-4">"{t.quote}"</p>
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-bold">
-                  {t.name[0]}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold">{t.name}</p>
-                  <p className="text-xs text-on-surface-muted">{t.role}</p>
+          
+          <div className="w-full lg:w-1/2 relative">
+            <div className="relative rounded-2xl border border-white/10 overflow-hidden shadow-2xl bg-card">
+              <div className="h-[400px] bg-gradient-to-br from-card to-background p-6">
+                {/* Simplified mockup representation */}
+                <div className="w-full h-full border border-white/5 rounded-xl flex items-center justify-center text-gray-500">
+                  Dashboard Interface Mockup
                 </div>
               </div>
             </div>
-          ))}
+            
+            <div className="absolute top-1/2 -left-12 transform -translate-y-1/2 bg-card border border-white/10 rounded-xl p-4 shadow-xl max-w-[250px]">
+              <div className="text-sm font-semibold text-white mb-1">AI Suggestion</div>
+              <div className="text-xs text-gray-400">Update Python skills to improve match rate by 24%</div>
+            </div>
+          </div>
         </div>
-      </section>
 
-      {/* CTA */}
-      <section className="bg-gradient-to-r from-primary/10 to-tertiary/10 border-y border-outline/20 py-16 text-center px-8">
-        <h2 className="text-3xl font-bold mb-4">Ready to Forge Your Career?</h2>
-        <p className="text-on-surface-muted mb-6">Join thousands of students and professionals who are using CareerForge AI to gain a competitive edge.</p>
-        <button onClick={() => navigate('/register')} className="btn-primary text-base px-8 py-3">
-          Get Started Now <ChevronRight size={16} />
-        </button>
-      </section>
+        {/* Trusted By */}
+        <div className="text-center mb-32">
+          <h3 className="text-xs uppercase tracking-[0.2em] font-semibold text-gray-500 mb-8">Trusted by leading institutions</h3>
+          <div className="flex flex-wrap justify-center items-center gap-12 opacity-50">
+            <span className="text-xl font-bold font-sans text-gray-400">UNIVERSITY_ALPHA</span>
+            <span className="text-xl font-bold font-sans text-gray-400">TECH_INSTITUTE</span>
+            <span className="text-xl font-bold font-sans text-gray-400">GLOBAL_ACADEMY</span>
+            <span className="text-xl font-bold font-sans text-gray-400">NEXUS_LEARNING</span>
+            <span className="text-xl font-bold font-sans text-gray-400">CORE_VARSITY</span>
+          </div>
+        </div>
 
+        {/* Intelligent Toolkit */}
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-bold text-white mb-4">Intelligent Toolkit</h2>
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            Propel your career with enterprise-grade AI tools designed to analyze, prepare, and place.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-32">
+          {/* Card 1 */}
+          <div className="bg-card border border-white/10 rounded-2xl p-8 hover:border-primary/50 transition-colors cursor-pointer group">
+            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-6 text-primary">
+              <FileText className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3">AI Resume Analyzer</h3>
+            <p className="text-sm text-gray-400 leading-relaxed mb-6">
+              Deep-scan your resume against top industry benchmarks and ATS algorithms to optimize every word.
+            </p>
+            <div className="h-24 bg-background rounded-lg border border-white/5 flex items-center justify-center text-xs text-gray-600">UI Preview</div>
+          </div>
+
+          {/* Card 2 */}
+          <div className="bg-card border border-white/10 rounded-2xl p-8 hover:border-primary/50 transition-colors cursor-pointer">
+            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-6 text-blue-400">
+              <Compass className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3">Skill Gap Analysis</h3>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              Instantly identify what skills are missing for your dream job and get a curated plan to bridge that gap.
+            </p>
+          </div>
+
+          {/* Card 3 */}
+          <div className="bg-card border border-white/10 rounded-2xl p-8 hover:border-primary/50 transition-colors cursor-pointer">
+            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-6 text-orange-400">
+              <Map className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3">Learning Roadmap</h3>
+            <p className="text-sm text-gray-400 leading-relaxed mb-6">
+              Personalized learning paths tailored to your pace and goals, integrating the best courses and projects.
+            </p>
+            <div className="w-full bg-background h-2 rounded-full mt-4">
+              <div className="bg-orange-400 h-2 rounded-full w-[66%]"></div>
+            </div>
+            <div className="flex justify-between mt-2 text-xs text-gray-500">
+              <span>Python Masterclass</span>
+              <span>66%</span>
+            </div>
+          </div>
+
+          {/* Card 4 */}
+          <div className="bg-card border border-white/10 rounded-2xl p-8 hover:border-primary/50 transition-colors cursor-pointer">
+            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-6 text-green-400">
+              <Target className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3">Career Recommendations</h3>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              Jobs matching your profile
+            </p>
+          </div>
+
+          {/* Card 5 (Featured) */}
+          <div className="bg-card border-2 border-blue-500/30 rounded-2xl p-8 shadow-[0_0_30px_rgba(59,130,246,0.1)] hover:border-blue-500/60 transition-colors cursor-pointer relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
+            <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-6 text-blue-400">
+              <BadgeCheck className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3">Placement Readiness</h3>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              Certification of interview mastery
+            </p>
+          </div>
+
+          {/* Card 6 */}
+          <div className="bg-card border border-white/10 rounded-2xl p-8 hover:border-primary/50 transition-colors cursor-pointer">
+            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-6 text-purple-400">
+              <MessageSquare className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3">AI Mock Interview</h3>
+            <p className="text-sm text-gray-400 leading-relaxed mb-6">
+              Simulate real-world interviews with an AI that provides real-time feedback on tone, clarity, and content.
+            </p>
+            <div className="bg-background rounded-lg border border-white/5 p-4">
+              <div className="text-xs text-primary italic mb-2">"How would you handle a conflict in a remote team?"</div>
+              <div className="text-xs text-gray-500">Wait... analyzing response...</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats Row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-32 border-y border-white/5 py-12">
+          <div className="text-center">
+            <div className="text-4xl md:text-5xl font-bold text-primary mb-2">50k+</div>
+            <div className="text-xs font-semibold uppercase tracking-wider text-gray-400">Students Helped</div>
+          </div>
+          <div className="text-center">
+            <div className="text-4xl md:text-5xl font-bold text-white mb-2">1.2M</div>
+            <div className="text-xs font-semibold uppercase tracking-wider text-gray-400">Resumes Analyzed</div>
+          </div>
+          <div className="text-center">
+            <div className="text-4xl md:text-5xl font-bold text-blue-400 mb-2">200k+</div>
+            <div className="text-xs font-semibold uppercase tracking-wider text-gray-400">Mock Interviews</div>
+          </div>
+          <div className="text-center">
+            <div className="text-4xl md:text-5xl font-bold text-white mb-2">94%</div>
+            <div className="text-xs font-semibold uppercase tracking-wider text-gray-400">Success Rate</div>
+          </div>
+        </div>
+
+        {/* Success Stories */}
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-bold text-white mb-4">Success Stories</h2>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
+          {/* Testimonial 1 */}
+          <div className="bg-card border border-white/10 rounded-2xl p-8 relative">
+            <div className="absolute top-6 right-8 text-6xl text-white/5 font-serif">"</div>
+            <p className="text-gray-300 italic mb-8 relative z-10 text-sm leading-relaxed">
+              "The AI Mock Interview tool was a game-changer. It spotted filler words I didn't even know I was using. Landed my role at a Fortune 500 company within 2 weeks!"
+            </p>
+            <div className="flex items-center space-x-4">
+              <div className="w-10 h-10 rounded-full bg-gray-700 flex-shrink-0"></div>
+              <div>
+                <div className="text-sm font-bold text-white">Sarah Jenkins</div>
+                <div className="text-xs text-gray-500">Software Engineer @ CloudScale</div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Testimonial 2 */}
+          <div className="bg-card border border-white/10 rounded-2xl p-8 relative">
+            <div className="absolute top-6 right-8 text-6xl text-white/5 font-serif">"</div>
+            <p className="text-gray-300 italic mb-8 relative z-10 text-sm leading-relaxed">
+              "I was struggling to switch careers into Data Science. The Skill Gap Analysis showed exactly what I needed to learn. The roadmap made it manageable."
+            </p>
+            <div className="flex items-center space-x-4">
+              <div className="w-10 h-10 rounded-full bg-gray-700 flex-shrink-0"></div>
+              <div>
+                <div className="text-sm font-bold text-white">Michael Chen</div>
+                <div className="text-xs text-gray-500">Data Analyst @ InnovateX</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Testimonial 3 */}
+          <div className="bg-card border border-white/10 rounded-2xl p-8 relative">
+            <div className="absolute top-6 right-8 text-6xl text-white/5 font-serif">"</div>
+            <p className="text-gray-300 italic mb-8 relative z-10 text-sm leading-relaxed">
+              "The resume analyzer helped me rewrite my experience in a way that actually caught the attention of recruiters. Highly recommend for any student."
+            </p>
+            <div className="flex items-center space-x-4">
+              <div className="w-10 h-10 rounded-full bg-gray-700 flex-shrink-0"></div>
+              <div>
+                <div className="text-sm font-bold text-white">Priya Sharma</div>
+                <div className="text-xs text-gray-500">Product Manager @ FinTechHub</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Final CTA */}
+        <div className="bg-card border border-white/10 rounded-3xl p-16 text-center max-w-4xl mx-auto mb-16 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent"></div>
+          <h2 className="text-4xl font-bold text-white mb-4 relative z-10">Ready to Forge Your Career?</h2>
+          <p className="text-gray-400 mb-8 max-w-lg mx-auto relative z-10">
+            Join thousands of students and professionals who are using CareerForge AI to gain a competitive edge.
+          </p>
+          <button className="bg-primary text-background px-8 py-4 rounded-xl font-semibold hover:bg-primary/90 transition-colors relative z-10">
+            Get Started Now
+          </button>
+        </div>
+
+      </main>
       <Footer />
     </div>
-  )
-}
+  );
+};
+
+export default Landing;

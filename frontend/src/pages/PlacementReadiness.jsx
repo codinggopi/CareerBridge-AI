@@ -1,217 +1,286 @@
-import React from 'react'
-import { TrendingUp, ArrowUp, Lock } from 'lucide-react'
-import Topbar from '../components/Topbar'
-import Footer from '../components/Footer'
-import AppShell from '../components/AppShell'
-import { heatmapData } from '../data/mockData'
+"use client";
+import React, { useEffect, useState } from 'react';
+import { 
+  Activity, FileText, Code, MessageSquare, TrendingUp, Zap, 
+  Brain, Shield, Sparkles 
+} from 'lucide-react';
+import Sidebar from '../components/Sidebar';
 
-const heatColor = v => {
-  if (v < 0.2) return 'bg-surface-high'
-  if (v < 0.4) return 'bg-primary/20'
-  if (v < 0.6) return 'bg-primary/40'
-  if (v < 0.8) return 'bg-primary/70'
-  return 'bg-primary'
-}
+const Icons = {
+  'file-text': FileText,
+  'code': Code,
+  'message-square': MessageSquare,
+  'trending-up': TrendingUp,
+  'zap': Zap,
+  'brain': Brain,
+  'shield': Shield
+};
 
-export default function PlacementReadiness() {
+// Generate fake heatmap data
+const generateHeatmap = () => {
+  const weeks = 12;
+  const days = 4; // Simplified to 4 rows
+  const matrix = [];
+  for (let i = 0; i < days; i++) {
+    const row = [];
+    for (let j = 0; j < weeks; j++) {
+      // 0: none, 1: low, 2: medium, 3: high
+      row.push(Math.floor(Math.random() * 4));
+    }
+    matrix.push(row);
+  }
+  return matrix;
+};
+
+const heatmapData = generateHeatmap();
+const heatColors = [
+  'bg-[#1A2234]', // none
+  'bg-[#1A3F33]', // low
+  'bg-[#2B7A52]', // medium
+  'bg-primary'    // high
+];
+
+const PlacementReadiness = () => {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    import('../data/mockReadiness.json').then(module => setData(module.default));
+  }, []);
+
+  if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;
+
   return (
-    <AppShell>
-      {/* Header */}
-      <div className="flex items-start justify-between mb-6 flex-wrap gap-4">
-        <div>
-          <h1 className="text-2xl font-bold mb-1">Placement Readiness</h1>
-          <p className="text-on-surface-muted text-sm">Your comprehensive intelligence report for the current hiring season.</p>
-        </div>
-        <div className="flex items-center gap-2 bg-surface-high rounded-xl px-3 py-2">
-          <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-          <span className="text-xs font-semibold text-primary">LIVE ANALYSIS ACTIVE</span>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#0B0F17] flex">
+      <Sidebar />
 
-      <div className="grid lg:grid-cols-2 gap-6 mb-6">
-        {/* Overall score ring */}
-        <div className="card flex items-center gap-8 flex-wrap">
+      <main className="flex-1 ml-64 p-8 overflow-y-auto custom-scrollbar">
+        
+        {/* Header */}
+        <div className="flex justify-between items-start mb-8">
           <div>
-            <p className="text-xs text-on-surface-muted uppercase tracking-widest mb-3">Overall Readiness Score</p>
-            <div className="relative w-36 h-36">
-              <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-                <circle cx="18" cy="18" r="15" fill="none" stroke="#3c4a42" strokeWidth="3" />
-                <circle cx="18" cy="18" r="15" fill="none" stroke="#76daa0" strokeWidth="3"
-                  strokeDasharray="77.28 22.72" strokeLinecap="round" />
+            <h1 className="text-3xl font-bold text-white mb-2 font-serif">Placement Readiness</h1>
+            <p className="text-gray-400">Your comprehensive intelligence report for the current hiring season.</p>
+          </div>
+          
+          <div className="flex items-center space-x-2 text-[10px] font-bold text-gray-400 border border-white/10 bg-white/5 px-3 py-1.5 rounded-full uppercase tracking-widest">
+            <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+            <span>LIVE ANALYSIS ACTIVE</span>
+          </div>
+        </div>
+
+        {/* Top Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          {/* Overall Score */}
+          <div className="bg-card border border-white/5 rounded-2xl p-6 flex flex-col items-center">
+            <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-6">OVERALL READINESS SCORE</div>
+            
+            <div className="relative w-48 h-48 flex items-center justify-center mb-8">
+              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                <path className="text-white/5" strokeWidth="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <path className="text-primary" strokeDasharray={`${data.score}, 100`} strokeWidth="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <path className="text-blue-400" strokeDasharray={`20, 100`} strokeDashoffset={`-${data.score}`} strokeWidth="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
               </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-3xl font-extrabold text-primary">82%</span>
-                <span className="text-xs text-primary font-semibold">+4% THIS WEEK</span>
+              <div className="absolute flex flex-col items-center">
+                <span className="text-5xl font-bold text-white mb-2">{data.score}%</span>
+                <span className="text-[10px] font-bold bg-[#11241C] text-primary px-2 py-0.5 rounded-full">{data.trend}</span>
               </div>
             </div>
-            <div className="flex gap-4 mt-4">
-              <div className="bg-surface-high rounded-xl px-4 py-2 text-center">
-                <p className="text-xs text-on-surface-muted">RANK</p>
-                <p className="font-bold text-sm">Top 12%</p>
+            
+            <div className="grid grid-cols-2 gap-4 w-full">
+              <div className="bg-[#111827] border border-white/5 rounded-xl p-4 text-center">
+                <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1">RANK</div>
+                <div className="text-lg font-bold text-white">{data.rank}</div>
               </div>
-              <div className="bg-surface-high rounded-xl px-4 py-2 text-center">
-                <p className="text-xs text-on-surface-muted">STATUS</p>
-                <p className="font-bold text-sm text-primary">High Fit</p>
+              <div className="bg-[#111827] border border-white/5 rounded-xl p-4 text-center">
+                <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1">STATUS</div>
+                <div className="text-lg font-bold text-blue-300">{data.status}</div>
               </div>
             </div>
           </div>
 
-          {/* Readiness breakdown */}
-          <div className="flex-1 min-w-48">
-            <h3 className="font-semibold mb-3">Readiness Breakdown</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { label: 'Resume Power', val: 92, note: 'Top-tier clarity and ATS optimization detected.' },
-                { label: 'Technical Proficiency', val: 78, note: 'Strong in React/Node, room for Cloud growth.' },
-                { label: 'Mock Performance', val: 85, note: 'Behavioral scores excellent; technical communication high.' },
-                { label: 'Learning Velocity', val: 84, note: 'Active consistency in course completion.' },
-              ].map(m => (
-                <div key={m.label} className="bg-surface-high rounded-xl p-3">
-                  <p className="text-xs text-on-surface-muted">{m.label}</p>
-                  <p className="text-lg font-bold text-primary">{m.val}<span className="text-xs text-on-surface-muted">/100</span></p>
-                  <div className="progress-bar-track my-1.5">
-                    <div className="progress-bar-fill" style={{ width: `${m.val}%` }} />
+          {/* Readiness Breakdown */}
+          <div className="lg:col-span-2 bg-card border border-white/5 rounded-2xl p-6 flex flex-col">
+            <h2 className="text-xl font-bold text-white mb-8">Readiness Breakdown</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 mb-8">
+              {data.breakdown.map((item, i) => {
+                const Icon = Icons[item.icon];
+                return (
+                  <div key={i}>
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center space-x-2 text-gray-300">
+                        <Icon className="w-4 h-4" />
+                        <span className="text-sm font-bold">{item.title}</span>
+                      </div>
+                      <div className="text-xs font-mono">
+                        <span className="text-primary font-bold">{item.score}</span>
+                        <span className="text-gray-500">/{item.max}</span>
+                      </div>
+                    </div>
+                    <div className="w-full bg-background h-1.5 rounded-full overflow-hidden mb-2">
+                      <div className={`h-full ${item.color}`} style={{ width: `${item.score}%` }}></div>
+                    </div>
+                    <div className="text-[10px] text-gray-400 leading-relaxed italic">{item.desc}</div>
                   </div>
-                  <p className="text-xs text-on-surface-muted italic">{m.note}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
-
-            {/* Placement probability */}
-            <div className="bg-primary/10 border border-primary/30 rounded-xl p-3 mt-3 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <TrendingUp size={16} className="text-primary" />
+            
+            <div className="mt-auto bg-gradient-to-r from-[#152336] to-[#0d1624] border border-blue-500/20 rounded-xl p-6 flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                  <TrendingUp className="w-5 h-5" />
+                </div>
                 <div>
-                  <p className="text-xs font-semibold">Placement Probability</p>
-                  <p className="text-xs text-on-surface-muted">Based on historical data for current profile fit.</p>
+                  <div className="text-sm font-bold text-white mb-1">Placement Probability</div>
+                  <div className="text-[11px] text-gray-400">Based on historical data for current profile fit.</div>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-extrabold text-primary">89.4%</p>
-                <p className="text-xs text-primary font-semibold">HIGH CERTAINTY</p>
+                <div className="text-3xl font-bold text-blue-400 leading-none mb-1">{data.probability}%</div>
+                <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">HIGH CERTAINTY</div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Performance Trends */}
-        <div className="card">
-          <h3 className="font-semibold mb-1">Performance Trends</h3>
-          <p className="text-xs text-on-surface-muted mb-4">Momentum check across metrics.</p>
-          <div className="space-y-4">
-            {[
-              { label: 'Agility', change: '+14%' },
-              { label: 'Cognitive', change: '+8%' },
-              { label: 'Behavioral', change: 'Stable' },
-            ].map(t => (
-              <div key={t.label} className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-surface-high flex items-center justify-center">
-                    <TrendingUp size={14} className="text-primary" />
+        {/* Middle Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          {/* Heatmap */}
+          <div className="lg:col-span-2 bg-card border border-white/5 rounded-2xl p-6">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-lg font-bold text-white">Skill Acquisition Heatmap</h2>
+              <div className="flex items-center space-x-2 text-[10px] text-gray-500 uppercase tracking-widest font-bold">
+                <span>LOW</span>
+                <div className="flex space-x-1">
+                  <div className="w-2.5 h-2.5 rounded-sm bg-[#1A3F33]"></div>
+                  <div className="w-2.5 h-2.5 rounded-sm bg-[#2B7A52]"></div>
+                  <div className="w-2.5 h-2.5 rounded-sm bg-primary"></div>
+                </div>
+                <span>HIGH</span>
+              </div>
+            </div>
+            
+            <div className="flex flex-col space-y-2 mb-4">
+              {heatmapData.map((row, i) => (
+                <div key={i} className="flex space-x-2">
+                  {row.map((val, j) => (
+                    <div key={j} className={`w-8 h-6 rounded-sm ${heatColors[val]} transition-colors hover:ring-1 hover:ring-white/50 cursor-pointer`}></div>
+                  ))}
+                </div>
+              ))}
+            </div>
+            
+            <div className="flex justify-between text-[9px] font-bold text-gray-500 uppercase tracking-widest">
+              <span>MONTH -6</span>
+              <span>CURRENT WEEK</span>
+            </div>
+          </div>
+
+          {/* Performance Trends */}
+          <div className="bg-card border border-white/5 rounded-2xl p-6 flex flex-col">
+            <h2 className="text-lg font-bold text-white mb-2">Performance Trends</h2>
+            <p className="text-xs text-gray-400 mb-6">Momentum check across metrics.</p>
+            
+            <div className="space-y-4 flex-1">
+              {data.trends.map((trend, i) => {
+                const Icon = Icons[trend.icon];
+                return (
+                  <div key={i} className="bg-background border border-white/5 rounded-xl p-4 flex items-center justify-between">
+                    <div className="flex items-center space-x-3 text-gray-300">
+                      <Icon className="w-4 h-4" />
+                      <span className="text-sm font-medium">{trend.name}</span>
+                    </div>
+                    <div className={`text-sm font-bold ${trend.changeColor}`}>
+                      {trend.change}
+                    </div>
                   </div>
-                  <span className="font-medium text-sm">{t.label}</span>
-                </div>
-                <div className="flex-1 mx-4 progress-bar-track">
-                  <div className="progress-bar-fill" style={{ width: t.label === 'Agility' ? '70%' : t.label === 'Cognitive' ? '55%' : '60%' }} />
-                </div>
-                <span className={`text-xs font-semibold flex items-center gap-1 ${t.change.startsWith('+') ? 'text-primary' : 'text-on-surface-muted'}`}>
-                  {t.change.startsWith('+') && <ArrowUp size={11} />}{t.change}
-                </span>
-              </div>
-            ))}
-          </div>
-          <button className="btn-ghost w-full justify-center text-xs mt-4">View Detailed Log</button>
-        </div>
-      </div>
-
-      {/* Heatmap */}
-      <div className="card mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold">Skill Acquisition Heatmap</h3>
-          <div className="flex items-center gap-2 text-xs text-on-surface-muted">
-            <span className="w-3 h-3 rounded-sm bg-surface-high inline-block" /> LOW
-            <span className="w-3 h-3 rounded-sm bg-primary inline-block ml-2" /> HIGH
-          </div>
-        </div>
-        <div className="overflow-x-auto">
-          <div className="flex flex-col gap-1 min-w-max">
-            {Array.from({ length: 5 }, (_, row) => (
-              <div key={row} className="flex gap-1">
-                {Array.from({ length: 14 }, (_, col) => {
-                  const cell = heatmapData.find(d => d.row === row && d.col === col)
-                  return (
-                    <div key={col} title={`${Math.round((cell?.value || 0) * 100)}%`}
-                      className={`w-6 h-6 rounded-sm ${heatColor(cell?.value || 0)} transition-all hover:opacity-80 cursor-pointer`} />
-                  )
-                })}
-              </div>
-            ))}
-          </div>
-          <div className="flex justify-between mt-2 text-xs text-on-surface-muted">
-            <span>MONTH: -8</span>
-            <span>CURRENT WEEK</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Milestone Timeline + AI Coach */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        <div className="card">
-          <h3 className="font-semibold mb-4">Milestone Timeline</h3>
-          <div className="space-y-4">
-            <div className="flex items-start gap-3">
-              <span className="w-2 h-2 rounded-full bg-primary mt-1.5 flex-shrink-0" />
-              <div className="flex-1">
-                <div className="flex justify-between">
-                  <p className="text-sm font-semibold">Resume AI Optimization</p>
-                  <span className="text-xs text-primary font-semibold">COMPLETED</span>
-                </div>
-                <p className="text-xs text-on-surface-muted">Completed with 92% match score for FAANG roles.</p>
-              </div>
+                );
+              })}
             </div>
-            <div className="flex items-start gap-3">
-              <span className="w-2 h-2 rounded-full bg-amber mt-1.5 flex-shrink-0" />
-              <div className="flex-1">
-                <div className="flex justify-between">
-                  <p className="text-sm font-semibold">Mock Interview Sprint</p>
-                  <span className="text-xs text-amber font-semibold">IN PROGRESS</span>
-                </div>
-                <p className="text-xs text-on-surface-muted">Focusing on system design and algorithmic complexity.</p>
-                <div className="progress-bar-track mt-1.5">
-                  <div className="h-full rounded-full bg-amber" style={{ width: '60%', height: '100%' }} />
-                </div>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 opacity-50">
-              <Lock size={14} className="mt-0.5 flex-shrink-0 text-on-surface-muted" />
-              <div>
-                <p className="text-sm font-semibold">Industry Referral Program</p>
-                <p className="text-xs text-on-surface-muted">Unlock after maintaining 65%+ readiness for 14 days.</p>
-              </div>
+            
+            <button className="w-full mt-4 py-3 border border-white/10 rounded-xl text-xs font-semibold text-gray-300 hover:bg-white/5 transition-colors">
+              View Detailed Log
+            </button>
+            
+            {/* Hovering Rocket Button (from screenshot) */}
+            <div className="absolute right-12 mt-32">
+              <button className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-[#0B0F17] shadow-[0_0_20px_rgba(95,227,160,0.3)] hover:scale-105 transition-transform">
+                <Zap className="w-5 h-5 fill-current" />
+              </button>
             </div>
           </div>
         </div>
 
-        {/* AI Coach Insights */}
-        <div className="card border-amber/40">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-primary text-sm">✨</span>
-            <h3 className="font-semibold">AI Coach Insights</h3>
+        {/* Bottom Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Milestone Timeline */}
+          <div className="lg:col-span-2 bg-card border border-white/5 rounded-2xl p-6">
+            <h2 className="text-lg font-bold text-white mb-8">Milestone Timeline</h2>
+            
+            <div className="space-y-8 relative before:absolute before:inset-0 before:ml-[11px] before:-translate-x-px before:h-full before:w-0.5 before:bg-white/10">
+              {data.milestones.map((ms, i) => (
+                <div key={i} className="relative flex items-start group">
+                  <div className={`w-6 h-6 rounded-full border-[3px] border-card flex items-center justify-center shrink-0 z-10 ${ms.dotColor}`}>
+                    <div className="w-2 h-2 rounded-full bg-card"></div>
+                  </div>
+                  
+                  <div className="ml-6 w-full">
+                    <div className="flex justify-between items-start mb-1">
+                      <div className="text-sm font-bold text-white">{ms.title}</div>
+                      <div className={`text-[9px] font-bold uppercase tracking-widest ${ms.statusColor}`}>{ms.status}</div>
+                    </div>
+                    <div className="text-xs text-gray-400 leading-relaxed mb-3">{ms.desc}</div>
+                    
+                    {ms.progress && (
+                      <div className="w-48 bg-background h-1.5 rounded-full overflow-hidden">
+                        <div className="bg-blue-400 h-full" style={{ width: `${ms.progress}%` }}></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <p className="text-sm text-on-surface-muted italic mb-4">
-            "Alex, your recent performance in System Design mocks has placed you in the{' '}
-            <span className="text-primary font-semibold">top 5% of all candidates</span> this month. Your consistency in
-            learning new cloud paradigms is exactly what Tier-1 tech firms are looking for right now."
-          </p>
-          <div className="bg-surface-high rounded-xl p-3 mb-4">
-            <p className="text-xs text-on-surface-muted uppercase tracking-wider mb-1">Recommended Action</p>
-            <p className="text-sm">Take the 'Advanced Kubernetes' assessment to boost Skill Gap score by +12 pts.</p>
+
+          {/* AI Coach Insights */}
+          <div className="bg-card border border-orange-500/30 rounded-2xl p-6 flex flex-col relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-orange-500/5 to-transparent pointer-events-none"></div>
+            <div className="flex items-center space-x-2 mb-6 relative z-10">
+              <Sparkles className="w-5 h-5 text-orange-300" />
+              <h2 className="text-lg font-bold text-white">AI Coach Insights</h2>
+            </div>
+            
+            <div className="text-sm text-gray-300 leading-loose mb-8 relative z-10" dangerouslySetInnerHTML={{__html: data.coach.insight}}></div>
+            
+            <div className="bg-[#111827] border border-white/10 rounded-xl p-4 mb-6 relative z-10">
+              <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Recommended Action</div>
+              <div className="text-xs text-gray-300 leading-relaxed">{data.coach.action}</div>
+            </div>
+            
+            <button className="w-full bg-[#E5C1A3] hover:bg-[#d4b092] text-[#0B0F17] py-3.5 rounded-xl text-sm font-bold transition-colors mt-auto relative z-10">
+              Execute Next Step
+            </button>
           </div>
-          <button className="w-full py-2.5 bg-amber/20 border border-amber/40 rounded-xl text-amber font-semibold text-sm hover:bg-amber/30 transition-colors">
-            Execute Next Step
-          </button>
         </div>
-      </div>
-    </AppShell>
-  )
-}
+        
+        <div className="border-t border-white/5 pt-8 mt-16 pb-4 flex justify-between items-center text-xs text-gray-500">
+          <div>
+            <span className="font-bold text-gray-300">CareerForge AI</span>
+            <br />
+            © 2024 CareerForge AI. Empowering the next generation of talent.
+          </div>
+          <div className="flex space-x-6">
+            <a href="#" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-gray-300 transition-colors">Terms of Service</a>
+            <a href="#" className="hover:text-gray-300 transition-colors">AI Ethics</a>
+            <a href="#" className="hover:text-gray-300 transition-colors">Contact Support</a>
+          </div>
+        </div>
+        
+      </main>
+    </div>
+  );
+};
+
+export default PlacementReadiness;

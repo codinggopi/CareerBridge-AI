@@ -1,0 +1,27 @@
+{
+  "score": 82,
+  "trend": "+4% THIS WEEK",
+  "rank": "Top 12%",
+  "status": "High Fit",
+  "breakdown": [
+    { "title": "Resume Power", "score": 92, "max": 100, "desc": "Top-tier clarity and ATS optimization detected.", "color": "bg-primary", "icon": "file-text" },
+    { "title": "Technical Proficiency", "score": 78, "max": 100, "desc": "Strong in React/Node; room for Cloud growth.", "color": "bg-blue-400", "icon": "code" },
+    { "title": "Mock Performance", "score": 85, "max": 100, "desc": "Behavioral scores excellent; technical communication high.", "color": "bg-orange-300", "icon": "message-square" },
+    { "title": "Learning Velocity", "score": 64, "max": 100, "desc": "Active consistency in course completion.", "color": "bg-gray-400", "icon": "trending-up" }
+  ],
+  "probability": 89.4,
+  "trends": [
+    { "name": "Agility", "change": "+ 14%", "changeColor": "text-primary", "icon": "zap" },
+    { "name": "Cognitive", "change": "+ 8%", "changeColor": "text-blue-400", "icon": "brain" },
+    { "name": "Behavioral", "change": "Stable", "changeColor": "text-gray-400", "icon": "shield" }
+  ],
+  "milestones": [
+    { "title": "Resume AI Optimization", "desc": "Completed with 92% match score for FAANG roles.", "status": "COMPLETED", "statusColor": "text-primary", "dotColor": "bg-primary" },
+    { "title": "Mock Interview Sprint", "desc": "Focusing on system design and algorithmic complexity.", "status": "IN PROGRESS", "statusColor": "text-blue-400", "dotColor": "bg-blue-400", "progress": 40 },
+    { "title": "Industry Referral Program", "desc": "Unlock after maintaining 85%+ readiness for 14 days.", "status": "LOCKED", "statusColor": "text-gray-600", "dotColor": "bg-gray-700" }
+  ],
+  "coach": {
+    "insight": "\"Alex, your recent performance in System Design mocks has placed you in the <span class='text-primary font-bold'>top 5% of all candidates</span> this month. Your consistency in learning new cloud paradigms is exactly what Tier-1 tech firms are looking for right now.\"",
+    "action": "Take the 'Advanced Kubernetes' assessment to boost Skill Gap score by +12 pts."
+  }
+}

@@ -1,172 +1,246 @@
-import React from 'react'
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { Search, Bell, MoreVertical, Users, Zap, FileText, Rocket } from 'lucide-react'
-import AppShell from '../components/AppShell'
-import { adminStudents, liveActivities, skillTrendsData } from '../data/mockData'
+"use client";
+import React, { useEffect, useState } from 'react';
+import {
+  BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, Cell
+} from 'recharts';
+import {
+  Users, Activity, FileText, Sparkles, Search, Bell,
+  MoreVertical, Filter, Download
+} from 'lucide-react';
+import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 
-const readinessColor = r => r === 'Highly Ready' ? 'text-primary' : 'text-amber'
+const Icons = {
+  'users': Users,
+  'activity': Activity,
+  'file-text': FileText,
+  'sparkles': Sparkles
+};
 
-export default function AdminDashboard() {
+const AdminDashboard = () => {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    import('../data/mockAdminDashboard.json').then(module => {
+      setData(module.default);
+    }).catch(err => console.error(err));
+  }, []);
+
+  if (!data) return <div className="min-h-screen bg-background flex items-center justify-center text-white">Loading...</div>;
+
   return (
-    <AppShell>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Intelligence Overview</h1>
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-muted" />
-            <input className="pl-9 pr-4 py-2 text-sm w-64 bg-surface-high" placeholder="Search talent, skills, or departments..." />
-          </div>
-          <button className="relative p-2 rounded-lg hover:bg-surface-high">
-            <Bell size={18} className="text-on-surface-muted" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full" />
-          </button>
-          <div className="w-9 h-9 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center text-primary text-xs font-bold">AD</div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#0B0F17] flex">
+      <Sidebar role="Premium Tier Admin" />
 
-      {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="card">
-          <div className="flex items-center gap-2 mb-1">
-            <Users size={16} className="text-on-surface-muted" />
-            <span className="text-xs text-primary font-semibold">+12%</span>
-          </div>
-          <p className="text-xs text-on-surface-muted uppercase tracking-wider">Total Students</p>
-          <p className="text-3xl font-bold mt-1">12,842</p>
-        </div>
-        <div className="card">
-          <div className="flex items-center gap-2 mb-1">
-            <Zap size={16} className="text-on-surface-muted" />
-            <span className="badge-green">Live</span>
-          </div>
-          <p className="text-xs text-on-surface-muted uppercase tracking-wider">Active Today</p>
-          <p className="text-3xl font-bold mt-1">2,410</p>
-        </div>
-        <div className="card">
-          <div className="flex items-center gap-2 mb-1">
-            <FileText size={16} className="text-on-surface-muted" />
-          </div>
-          <p className="text-xs text-on-surface-muted uppercase tracking-wider">Avg Resume Score</p>
-          <p className="text-3xl font-bold mt-1">78.4 <span className="text-base font-normal text-on-surface-muted">/100</span></p>
-        </div>
-        <div className="card border-primary/40 glow-green relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
-          <div className="relative">
-            <span className="badge-green mb-1 inline-block">AI Insights</span>
-            <p className="text-xs text-on-surface-muted uppercase tracking-wider">Placement Readiness</p>
-            <p className="text-3xl font-bold text-primary mt-1">92.1%</p>
-          </div>
-        </div>
-      </div>
+      <main className="flex-1 ml-64 p-8 overflow-y-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-2xl font-bold text-white">Intelligence Overview</h1>
 
-      <div className="grid lg:grid-cols-3 gap-6 mb-6">
-        {/* Skill Trends */}
-        <div className="card lg:col-span-2">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="font-semibold">Skill Trends Analysis</h3>
-              <p className="text-xs text-on-surface-muted">Evolution of student competencies across departments</p>
+          <div className="flex items-center space-x-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
+              <input
+                type="text"
+                placeholder="Search talent, skills, or departments"
+                className="bg-[#111827] border border-white/5 rounded-full py-2 pl-10 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 w-72 transition-colors"
+              />
             </div>
-            <select className="text-xs bg-surface-high border border-outline/40 rounded-md px-2 py-1 w-auto">
-              <option>Last 6 Months</option>
-            </select>
+            <button className="text-gray-400 hover:text-white transition-colors relative">
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full border border-background"></span>
+            </button>
+            <img src="https://i.pravatar.cc/150?u=admin" alt="Admin Profile" className="w-8 h-8 rounded-full bg-gray-600 border border-white/10" />
           </div>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={skillTrendsData}>
-              <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#bbcabf' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: '#bbcabf' }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={{ background: '#212a3b', border: '1px solid #3c4a42', borderRadius: 8, fontSize: 12 }} />
-              <Bar dataKey="value" fill="#172030" radius={[4, 4, 0, 0]}>
-                {skillTrendsData.map((_, i) => (
-                  <rect key={i} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
         </div>
 
-        {/* Live Activities */}
-        <div className="card">
-          <h3 className="font-semibold mb-4">Live Activities</h3>
-          <div className="space-y-4">
-            {liveActivities.map(a => (
-              <div key={a.id} className="flex items-start gap-3">
-                <span className="w-2 h-2 rounded-full bg-primary mt-1.5 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium">{a.title}</p>
-                  <p className="text-xs text-on-surface-muted">{a.sub}</p>
-                  <p className="text-xs text-on-surface-muted/60 mt-0.5">{a.time}</p>
+        {/* Stats Row */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          {data.stats.map((stat, i) => {
+            const Icon = Icons[stat.icon];
+            return (
+              <div key={i} className={`bg-card border border-white/5 rounded-2xl p-5 ${stat.isHighlighted ? 'bg-gradient-to-br from-[#111827] to-[#142A38] border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.1)]' : ''}`}>
+                <div className="flex justify-between items-start mb-4">
+                  <div className={`p-2 rounded-lg bg-white/5 ${stat.color}`}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  {stat.change && (
+                    <div className={`text-xs font-bold px-2 py-1 rounded bg-white/5 ${stat.change.includes('+') ? 'text-primary' : 'text-blue-400'}`}>
+                      {stat.change}
+                    </div>
+                  )}
+                  {stat.hasToggle && (
+                    <div className="w-8 h-4 bg-white/10 rounded-full relative">
+                      <div className="absolute top-0.5 right-0.5 w-3 h-3 bg-gray-400 rounded-full"></div>
+                    </div>
+                  )}
+                  {stat.label && (
+                    <div className="text-xs text-blue-400 font-mono tracking-widest">{stat.label}</div>
+                  )}
                 </div>
+                <div className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-1">{stat.title}</div>
+                <div className="text-3xl font-bold text-white flex items-end">
+                  {stat.value}
+                  {stat.suffix && <span className="text-sm text-gray-500 font-normal ml-1 mb-1">{stat.suffix}</span>}
+                </div>
+                {stat.hasProgress && (
+                  <div className="w-full bg-background h-1 rounded-full mt-3 overflow-hidden">
+                    <div className="bg-blue-400 h-full w-[40%]"></div>
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
-          <button className="btn-ghost w-full justify-center text-xs mt-4">View All Activities</button>
+            );
+          })}
         </div>
-      </div>
 
-      {/* Talent Pipeline Table */}
-      <div className="card">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h3 className="font-semibold">Talent Pipeline</h3>
-            <p className="text-xs text-on-surface-muted">Review student profiles and readiness scores</p>
+        {/* Middle Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          {/* Skill Trends Analysis */}
+          <div className="lg:col-span-2 bg-card border border-white/5 rounded-2xl p-6">
+            <div className="flex justify-between items-start mb-8">
+              <div>
+                <h2 className="text-lg font-bold text-white mb-1">Skill Trends Analysis</h2>
+                <p className="text-xs text-gray-400">Evolution of student competencies across departments</p>
+              </div>
+              <button className="text-xs bg-white/5 text-gray-300 px-4 py-2 rounded-full border border-white/5 hover:bg-white/10 transition-colors">
+                Last 6 Months
+              </button>
+            </div>
+
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={data.skillTrends} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                  <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#9CA3AF', fontSize: 10, fontWeight: 'bold' }} dy={10} />
+                  <Tooltip
+                    cursor={{ fill: 'rgba(255,255,255,0.02)' }}
+                    contentStyle={{ backgroundColor: '#111827', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px' }}
+                  />
+                  <Bar dataKey="value" radius={[4, 4, 0, 0]} barSize={24}>
+                    {data.skillTrends.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.value > 60 ? '#3B82F6' : '#2A3441'} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <button className="btn-ghost text-xs gap-1.5"><span>⚙</span> Filter</button>
-            <button className="btn-ghost text-xs gap-1.5"><span>↓</span> Export</button>
-          </div>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-outline/20">
-                {['Student Name', 'Department', 'Resume Score', 'Interview Avg', 'Readiness', 'Actions'].map(h => (
-                  <th key={h} className="text-left text-xs text-on-surface-muted uppercase tracking-wider pb-3 pr-4">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {adminStudents.map(s => (
-                <tr key={s.id} className="border-b border-outline/10 hover:bg-surface-high/50 transition-colors">
-                  <td className="py-3 pr-4">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-bold flex-shrink-0">{s.initials}</div>
-                      <div>
-                        <p className="font-medium text-sm">{s.name}</p>
-                        <p className="text-xs text-on-surface-muted">{s.email}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="py-3 pr-4 text-sm text-on-surface-muted">{s.dept}</td>
-                  <td className="py-3 pr-4">
-                    <span className="badge-green">{s.resumeScore}/100</span>
-                  </td>
-                  <td className="py-3 pr-4 text-sm">{s.interviewAvg}/10</td>
-                  <td className="py-3 pr-4">
-                    <div className="flex items-center gap-1.5">
-                      <span className={`w-2 h-2 rounded-full ${s.readiness === 'Highly Ready' ? 'bg-primary' : 'bg-amber'}`} />
-                      <span className={`text-xs font-medium ${readinessColor(s.readiness)}`}>{s.readiness}</span>
-                    </div>
-                  </td>
-                  <td className="py-3">
-                    <button className="p-1.5 hover:bg-surface-high rounded-md text-on-surface-muted">
-                      <MoreVertical size={16} />
-                    </button>
-                  </td>
-                </tr>
+
+          {/* Live Activities */}
+          <div className="bg-card border border-white/5 rounded-2xl p-6">
+            <h2 className="text-lg font-bold text-white mb-6">Live Activities</h2>
+            <div className="space-y-6 relative before:absolute before:inset-0 before:ml-[5px] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-white/5 before:to-transparent">
+              {data.liveActivities.map((activity, i) => (
+                <div key={i} className="relative flex items-start justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                  <div className={`flex items-center justify-center w-3 h-3 rounded-full border border-background shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 ${activity.dot}`}></div>
+                  <div className="w-[calc(100%-2rem)] md:w-[calc(50%-1.5rem)] ml-4 md:ml-0 md:group-odd:pr-8 md:group-even:pl-8 pb-2">
+                    <div className="text-sm font-bold text-white leading-tight mb-1">{activity.title}</div>
+                    <div className="text-xs text-gray-400 mb-1">{activity.desc}</div>
+                    <div className="text-[10px] font-mono text-gray-500">{activity.time}</div>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="flex items-center justify-between mt-4 pt-3 border-t border-outline/20">
-          <p className="text-xs text-on-surface-muted">Showing 3 of 12,842 students</p>
-          <div className="flex gap-1">
-            <button className="p-1.5 hover:bg-surface-high rounded text-on-surface-muted text-xs">‹</button>
-            <button className="p-1.5 hover:bg-surface-high rounded text-on-surface-muted text-xs">›</button>
+            </div>
+            <button className="w-full mt-6 py-2.5 border border-white/10 rounded-xl text-xs font-semibold text-gray-300 hover:bg-white/5 transition-colors">
+              View All Activities
+            </button>
           </div>
         </div>
-      </div>
-    </AppShell>
-  )
-}
+
+        {/* Talent Pipeline Table */}
+        <div className="bg-card border border-white/5 rounded-2xl p-6 overflow-hidden">
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h2 className="text-lg font-bold text-white mb-1">Talent Pipeline</h2>
+              <p className="text-xs text-gray-400">Review student profiles and readiness scores</p>
+            </div>
+            <div className="flex space-x-3">
+              <button className="flex items-center space-x-2 border border-white/10 rounded-lg px-4 py-2 text-xs font-semibold text-gray-300 hover:bg-white/5 transition-colors">
+                <Filter className="w-3.5 h-3.5" />
+                <span>Filter</span>
+              </button>
+              <button className="flex items-center space-x-2 border border-white/10 rounded-lg px-4 py-2 text-xs font-semibold text-gray-300 hover:bg-white/5 transition-colors">
+                <Download className="w-3.5 h-3.5" />
+                <span>Export</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-white/5">
+                  <th className="py-4 px-4 text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Student Name</th>
+                  <th className="py-4 px-4 text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Department</th>
+                  <th className="py-4 px-4 text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Resume Score</th>
+                  <th className="py-4 px-4 text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Interview Avg</th>
+                  <th className="py-4 px-4 text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Readiness</th>
+                  <th className="py-4 px-4 text-[10px] font-semibold text-gray-500 uppercase tracking-widest text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.talentPipeline.map((student, i) => (
+                  <tr key={i} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                    <td className="py-4 px-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 rounded bg-[#1A2234] flex items-center justify-center text-xs font-bold text-gray-300">
+                          {student.initials}
+                        </div>
+                        <div>
+                          <div className="text-sm font-bold text-white">{student.name}</div>
+                          <div className="text-[10px] text-gray-500">{student.email}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-xs text-gray-300">{student.department}</td>
+                    <td className="py-4 px-4">
+                      <div className="inline-flex bg-[#11241C] text-primary border border-primary/20 text-[10px] font-bold px-2 py-1 rounded">
+                        {student.resumeScore}/100
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-xs font-mono text-gray-300">{student.interviewAvg}/10.0</td>
+                    <td className="py-4 px-4">
+                      <div className="flex items-center space-x-2">
+                        <div className={`w-2 h-2 rounded-full ${student.readinessDot}`}></div>
+                        <span className="text-xs text-gray-300">{student.readiness}</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-right">
+                      <button className="text-gray-500 hover:text-white transition-colors">
+                        <MoreVertical className="w-4 h-4 inline-block" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="flex justify-between items-center mt-6 text-xs text-gray-500">
+            <div>Showing 3 of {data.stats[0].value} students</div>
+            <div className="flex space-x-2">
+              <button className="w-6 h-6 rounded flex items-center justify-center hover:bg-white/5 transition-colors">&lt;</button>
+              <button className="w-6 h-6 rounded flex items-center justify-center hover:bg-white/5 transition-colors">&gt;</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Simple Footer */}
+        <div className="border-t border-white/5 pt-8 mt-12 pb-4 flex justify-between items-center text-xs text-gray-500">
+          <div>
+            <span className="font-bold text-gray-300">CareerForge AI</span>
+            <br />
+            © 2024 CareerForge AI. Empowering the next generation of talent.
+          </div>
+          <div className="flex space-x-6">
+            <a href="#" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-gray-300 transition-colors">Terms of Service</a>
+            <a href="#" className="hover:text-gray-300 transition-colors">AI Ethics</a>
+            <a href="#" className="hover:text-gray-300 transition-colors">Contact Support</a>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default AdminDashboard;

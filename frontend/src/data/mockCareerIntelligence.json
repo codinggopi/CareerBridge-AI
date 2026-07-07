@@ -1,0 +1,44 @@
+{
+  "profile": {
+    "name": "Alex Rivera",
+    "role": "Mid-Level Software Engineer",
+    "avatar": "https://i.pravatar.cc/150?u=alex",
+    "skills": ["React.js", "Node.js", "AWS Lambda", "TypeScript", "+12 more"],
+    "projects": [
+      "Distributed Inventory Management System",
+      "Real-time Chat Engine with WebSockets"
+    ],
+    "score": 92,
+    "topRegion": "3%"
+  },
+  "insights": [
+    "\"Your React and Node.js expertise strongly align with Full Stack Developer roles at Series B+ startups.\"",
+    "\"We noticed a gap in Cloud Native Security. Closing this could increase your salary range by 15%.\"",
+    "\"Current market trend shows high demand for Next.js 14. You're 80% ready for these positions.\""
+  ],
+  "matches": [
+    { 
+      "title": "Full Stack Developer", "subtitle": "Enterprise & FinTech", 
+      "score": 96, "demand": "Critical", "demandColor": "text-primary", 
+      "salary": "$145k - $185k", "confidence": "9.8", "barColor": "bg-primary", "barWidth": "96%" 
+    },
+    { 
+      "title": "Frontend Engineer", "subtitle": "Product-Led Growth", 
+      "score": 89, "demand": "High", "demandColor": "text-blue-400", 
+      "salary": "$130k - $160k", "confidence": "9.2", "barColor": "bg-blue-400", "barWidth": "89%" 
+    },
+    { 
+      "title": "Backend Developer", "subtitle": "Infrastructure & Scale", 
+      "score": 84, "demand": "Moderate", "demandColor": "text-gray-400", 
+      "salary": "$125k - $155k", "confidence": "8.5", "barColor": "bg-gray-400", "barWidth": "84%" 
+    }
+  ],
+  "roadmap": {
+    "target": "Senior Staff Engineer",
+    "match": "99%",
+    "items": [
+      { "type": "Recommended", "title": "Kubernetes Advanced", "desc": "Closes infrastructure skill gap", "icon": "book" },
+      { "type": "Certification", "title": "AWS Solutions Architect", "desc": "Increases visibility by 4x", "icon": "award" }
+    ]
+  }
+}

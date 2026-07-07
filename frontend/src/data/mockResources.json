@@ -1,0 +1,30 @@
+{
+  "targetRole": "SENIOR FRONTEND ENGINEER",
+  "skillReadiness": 74,
+  "momentum": [
+    { "day": "Mon", "value": 40 },
+    { "day": "Tue", "value": 65 },
+    { "day": "Wed", "value": 30 },
+    { "day": "Thu", "value": 85 },
+    { "day": "Fri", "value": 45 },
+    { "day": "Sat", "value": 15 },
+    { "day": "Sun", "value": 10 }
+  ],
+  "saved": [
+    { "title": "Mastering Kubernetes", "meta": "12 Lessons • O'Reilly", "icon": "box" },
+    { "title": "System Design for...", "meta": "8 Modules • Udemy", "icon": "pen-tool" },
+    { "title": "PyTorch for AI Engi...", "meta": "24h content • Coursera", "icon": "cpu" }
+  ],
+  "recommendations": [
+    { "badge": "High Priority", "badgeColor": "text-primary bg-primary/10 border-primary/20", "title": "Microservices Architecture with Spring Boot", "desc": "Fills your identified gap in system modularization and high-scale backends.", "time": "24h 45m Course" },
+    { "badge": "Missing Skill", "badgeColor": "text-blue-400 bg-blue-400/10 border-blue-400/20", "title": "Advanced React & Performance Optimization", "desc": "Identified weakness in frontend profiling and memory leak detection.", "time": "18h 30m Course" },
+    { "badge": "Career Booster", "badgeColor": "text-purple-400 bg-purple-400/10 border-purple-400/20", "title": "Cloud Native Infrastructure (AWS/GCP)", "desc": "Accelerate your transition to Senior roles with strong cloud-native knowledge.", "time": "32h Total" },
+    { "badge": "Personalized", "badgeColor": "text-primary bg-primary/10 border-primary/20", "title": "LLM Integration for Full-Stack Apps", "desc": "Relevant to your current industry project focus in career-tech AI.", "time": "12h Workshop" }
+  ],
+  "courses": [
+    { "platform": "COURSERA", "title": "Mastering Next.js 14 and Server Components", "author": "by Vercel Learning Center", "progress": 68, "timeLeft": "15h Left", "status": "Continue" },
+    { "platform": "UDEMY", "title": "Deep Learning Foundations: From Zero to Hero", "author": "by Andrej Karpathy", "progress": 12, "timeLeft": "42h Left", "status": "Continue" },
+    { "platform": "PLURALSIGHT", "title": "Scalable Backend Systems: The Complete Guide", "author": "by Martin Kleppmann", "progress": 0, "timeLeft": "35h Content", "status": "Start Course" },
+    { "platform": "UDEMY", "title": "Flutter & Dart: Cross-Platform Mastery", "author": "by Google Dev Team", "progress": 94, "timeLeft": "2h Left", "status": "Finish Now" }
+  ]
+}

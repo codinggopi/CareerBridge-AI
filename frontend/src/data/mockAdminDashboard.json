@@ -1,0 +1,29 @@
+{
+  "stats": [
+    { "title": "Total Students", "value": "12,842", "change": "+12%", "icon": "users", "color": "text-primary" },
+    { "title": "Active Today", "value": "2,410", "change": "Live", "icon": "activity", "color": "text-blue-400", "hasProgress": true },
+    { "title": "Avg Resume Score", "value": "78.4", "suffix": "/100", "hasToggle": true, "icon": "file-text", "color": "text-gray-400" },
+    { "title": "Placement Readiness", "value": "92.1%", "label": "AI Insights", "icon": "sparkles", "color": "text-blue-500", "isHighlighted": true }
+  ],
+  "skillTrends": [
+    { "month": "JAN", "value": 35 },
+    { "month": "FEB", "value": 55 },
+    { "month": "MAR", "value": 75 },
+    { "month": "APR", "value": 45 },
+    { "month": "MAY", "value": 65 },
+    { "month": "JUN", "value": 85 },
+    { "month": "JUL", "value": 50 },
+    { "month": "AUG", "value": 40 }
+  ],
+  "liveActivities": [
+    { "title": "New Resume Analyzed", "desc": "Sarah Chen - CS Dept (Score: 84)", "time": "2 mins ago", "dot": "bg-primary" },
+    { "title": "Interview Completed", "desc": "David Miller - Mock AI Round", "time": "14 mins ago", "dot": "bg-blue-400" },
+    { "title": "Skill Gap Alert", "desc": "System identified low SQL proficiency", "time": "1 hour ago", "dot": "bg-orange-400" },
+    { "title": "Portfolio Verified", "desc": "James Wilson's GitHub connected", "time": "3 hours ago", "dot": "bg-primary" }
+  ],
+  "talentPipeline": [
+    { "initials": "EC", "name": "Ethan Carter", "email": "e.carter@careerforge.edu", "department": "Software Engineering", "resumeScore": 92, "interviewAvg": 8.4, "readiness": "Highly Ready", "readinessDot": "bg-primary" },
+    { "initials": "AL", "name": "Amara Lawson", "email": "a.lawson@careerforge.edu", "department": "Data Science", "resumeScore": 74, "interviewAvg": 7.1, "readiness": "In Progress", "readinessDot": "bg-orange-400" },
+    { "initials": "SK", "name": "Soren Kvist", "email": "soren.k@careerforge.edu", "department": "Business Analytics", "resumeScore": 88, "interviewAvg": 9.0, "readiness": "Highly Ready", "readinessDot": "bg-primary" }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "title": "Full Stack AI Engineer",
+  "desc": "Your personalized 6-week technical mastery plan. We've identified 4 critical skill gaps based on your target role at OpenAI.",
+  "progress": 34,
+  "weeks": [
+    {
+      "week": "WEEK 01",
+      "status": "DONE",
+      "title": "Advanced React Patterns",
+      "desc": "Mastering HOCs, Render Props, and the latest React 18 Concurrent features for scalable frontends.",
+      "meta": "12 Hours • 4 Lessons • Foundation Cert",
+      "progress": 100,
+      "state": "completed"
+    },
+    {
+      "week": "WEEK 02",
+      "status": "IN PROGRESS",
+      "title": "LLM Integration & Prompt Eng.",
+      "desc": "Learning LangChain, OpenAI API orchestration, and vector database management with Pinecone.",
+      "meta": "",
+      "progress": 45,
+      "state": "current",
+      "modules": [
+        { "name": "RAG Architecture 101", "icon": "layout" },
+        { "name": "Vector DB Setup", "icon": "code" }
+      ]
+    },
+    {
+      "week": "WEEK 03",
+      "status": "LOCKED",
+      "title": "Scalable Backend with Go",
+      "desc": "Building high-concurrency microservices and implementing gRPC communication protocols.",
+      "meta": "",
+      "progress": 0,
+      "state": "locked"
+    },
+    {
+      "week": "WEEK 04",
+      "status": "LOCKED",
+      "title": "Cloud Infrastructure (AWS)",
+      "desc": "Deploying AI models using AWS SageMaker and managing clusters with Kubernetes (EKS).",
+      "meta": "",
+      "progress": 0,
+      "state": "locked"
+    }
+  ],
+  "insights": {
+    "text": "Based on your progress in <span class='font-bold text-white'>Week 1</span>, we've updated your path. You skipped the \"Basic JS\" module—AI suggests adding a \"TypeScript Design Patterns\" deep-dive in Week 5 to compensate."
+  },
+  "resources": [
+    { "title": "LLM Orchestration", "meta": "YOUTUBE • 45 MIN", "icon": "youtube", "color": "text-red-500" },
+    { "title": "Deep Learning Specialization", "meta": "COURSERA • 4 WEEKS", "icon": "award", "color": "text-blue-500" },
+    { "title": "Go Microservices Mastery", "meta": "UDEMY • 24 HOURS", "icon": "briefcase", "color": "text-orange-500" },
+    { "title": "Data Structures & Algo", "meta": "NPTEL • 12 WEEKS", "icon": "check-circle", "color": "text-primary" }
+  ],
+  "milestones": [
+    { "title": "React Architecture Certificate", "status": "CLAIMED - JUN 12", "icon": "award", "color": "text-primary border-primary bg-primary/10" },
+    { "title": "AI Engineering Professional", "status": "UNLOCKED IN WEEK 3", "icon": "star", "color": "text-gray-500 border-gray-600 bg-gray-800" }
+  ]
+}
