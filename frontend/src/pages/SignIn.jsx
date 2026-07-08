@@ -1,11 +1,25 @@
 "use client";
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import Footer from '../components/Footer';
+import { loginStudent } from '../services/apiService';
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Try to use Next.js router, but fallback gracefully if not in Next environment (assuming React-Router)
+  let router;
+  try {
+      router = useRouter();
+  } catch(e) {
+      router = null;
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -49,13 +63,34 @@ const SignIn = () => {
               <div className="flex-1 border-t border-white/10"></div>
             </div>
 
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={async (e) => {
+              e.preventDefault();
+              setError('');
+              setIsLoading(true);
+              try {
+                const response = await loginStudent({ email, password });
+                if (response.access_token) {
+                  localStorage.setItem('careerbridge_token', response.access_token);
+                  window.location.href = "/dashboard";
+                } else {
+                  setError('Login failed, no token received.');
+                }
+              } catch (err) {
+                setError(err.message || 'Invalid email or password');
+              } finally {
+                setIsLoading(false);
+              }
+            }}>
+              {error && <div className="text-red-400 text-sm text-center bg-red-400/10 py-2 rounded-lg">{error}</div>}
               <div>
                 <label className="block text-xs font-medium text-gray-400 mb-2">Email Address</label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
                   <input
                     type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
                     placeholder="name@example.com"
                     className="w-full bg-background border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 transition-colors"
                   />
@@ -68,6 +103,9 @@ const SignIn = () => {
                   <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
                   <input
                     type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
                     placeholder="••••••••"
                     className="w-full bg-background border border-white/10 rounded-xl py-3 pl-11 pr-11 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 transition-colors"
                   />
@@ -84,21 +122,21 @@ const SignIn = () => {
               <div className="flex items-center justify-between pt-2">
                 <label className="flex items-center space-x-2 cursor-pointer group">
                   <div className="w-4 h-4 rounded border border-white/20 bg-background group-hover:border-primary/50 flex items-center justify-center transition-colors">
-                    {/* Checked state can be handled with state */}
                   </div>
                   <span className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">Remember Me</span>
                 </label>
                 <Link href="/forgot-password" className="text-sm text-primary hover:text-primary/80 transition-colors">Forgot Password?</Link>
               </div>
 
-              <Link href="/dashboard" className="block w-full">
+              <div className="block w-full">
                 <button
-                  type="button"
-                  className="w-full bg-primary text-background font-bold rounded-xl py-4 hover:bg-primary/90 transition-colors mt-6 shadow-[0_4px_14px_0_rgba(95,227,160,0.39)]"
+                  type="submit"
+                  disabled={isLoading}
+                  className={`w-full ${isLoading ? 'bg-primary/50 cursor-not-allowed' : 'bg-primary hover:bg-primary/90'} text-background font-bold rounded-xl py-4 transition-colors mt-6 shadow-[0_4px_14px_0_rgba(95,227,160,0.39)]`}
                 >
-                  Sign In
+                  {isLoading ? 'Signing In...' : 'Sign In'}
                 </button>
-              </Link>
+              </div>
             </form>
 
             <div className="mt-8 text-center text-sm text-gray-400">

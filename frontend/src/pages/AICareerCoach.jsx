@@ -11,18 +11,47 @@ import Footer from '../components/Footer';
 
 const AICareerCoach = () => {
   const [data, setData] = useState(null);
+  const [inputValue, setInputValue] = useState('');
+  const [isSending, setIsSending] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      const response = await getAICoach();
+      setData(response);
+    } catch (error) {
+      console.error('Failed to fetch getAICoach data:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getAICoach();
-        setData(response);
-      } catch (error) {
-        console.error('Failed to fetch getAICoach data:', error);
-      }
-    };
     fetchData();
   }, []);
+
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || isSending) return;
+    const msg = inputValue;
+    setInputValue('');
+    setIsSending(true);
+
+    // Optimistic update
+    const newChat = [...data.chat, { sender: 'user', text: msg, time: 'Now' }];
+    setData(prev => ({ ...prev, chat: newChat }));
+
+    try {
+      const { reply } = await import('../services/apiService').then(m => m.sendCoachMessage(msg));
+      setData(prev => ({ ...prev, chat: [...prev.chat, reply] }));
+    } catch (error) {
+      console.error('Failed to send message:', error);
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSendMessage();
+    }
+  };
 
   if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;
 
@@ -82,13 +111,21 @@ const AICareerCoach = () => {
                 </button>
                 <input
                   type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={handleKeyPress}
                   placeholder="Ask your career coach anything..."
                   className="flex-1 bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none py-3"
+                  disabled={isSending}
                 />
                 <button className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors shrink-0">
                   <Mic className="w-5 h-5" />
                 </button>
-                <button className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-[#0B0F17] hover:bg-primary/90 transition-colors shrink-0">
+                <button 
+                  onClick={handleSendMessage}
+                  disabled={isSending}
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center text-[#0B0F17] transition-colors shrink-0 ${isSending ? 'bg-primary/50 cursor-not-allowed' : 'bg-primary hover:bg-primary/90'}`}
+                >
                   <Send className="w-5 h-5 ml-1" />
                 </button>
               </div>

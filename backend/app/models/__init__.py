@@ -1,6 +1,7 @@
-from .student import Student
+from .student import Student, ActivityLog
 from .resume import Resume
 from .skills import Skill
-from .interview import Interview
-from .job import Job
+from .interview import InterviewSession
+from .job import JobRole, JobMatch
 from .notification import Notification
+from .coach import CoachMessage

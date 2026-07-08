@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { apiClient } from '../services/apiClient';
+import { apiClient } from '../services/apiService';
 
 export const useFetch = (endpoint, options = {}) => {
   const [data, setData] = useState(null);

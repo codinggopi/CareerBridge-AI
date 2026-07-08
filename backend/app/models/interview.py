@@ -1,20 +1,28 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, ForeignKey, JSON
+from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from ..database.base import Base
+from app.database.base import Base
 
-class Interview(Base):
-    __tablename__ = "interviews"
+class InterviewSession(Base):
+    __tablename__ = "interview_sessions"
+    
     id = Column(Integer, primary_key=True, index=True)
     student_id = Column(Integer, ForeignKey("students.id"), nullable=False)
-    interview_type = Column(String(50))
-    score = Column(Float, default=0.0)
-    communication_score = Column(Float, default=0.0)
-    confidence_score = Column(Float, default=0.0)
-    accuracy_score = Column(Float, default=0.0)
-    feedback = Column(Text)
-    messages = Column(JSON, default=list)
-    duration_seconds = Column(Integer, default=0)
-    completed = Column(Boolean, default=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    title = Column(String(255), nullable=False)
+    interviewer = Column(String(255), default="AI Interviewer")
+    scheduled_date = Column(DateTime(timezone=True))
+    is_completed = Column(Boolean, default=False)
+    score = Column(Float, nullable=True)
+    
     student = relationship("Student", back_populates="interviews")
+
+class InterviewMessage(Base):
+    __tablename__ = "interview_messages"
+
+    id = Column(Integer, primary_key=True, index=True)
+    student_id = Column(Integer, ForeignKey("students.id"), nullable=False)
+    sender = Column(String(50), nullable=False) # 'user' or 'ai'
+    text = Column(String(2000), nullable=False)
+    timestamp = Column(DateTime(timezone=True), server_default=func.now())
+
+    student_rel = relationship("Student", backref="interview_messages")

@@ -9,18 +9,47 @@ import Sidebar from '../components/Sidebar';
 
 const MockInterview = () => {
   const [data, setData] = useState(null);
+  const [inputValue, setInputValue] = useState('');
+  const [isSending, setIsSending] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      const response = await getMockInterview();
+      setData(response);
+    } catch (error) {
+      console.error('Failed to fetch getMockInterview data:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getMockInterview();
-        setData(response);
-      } catch (error) {
-        console.error('Failed to fetch getMockInterview data:', error);
-      }
-    };
     fetchData();
   }, []);
+
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || isSending) return;
+    const msg = inputValue;
+    setInputValue('');
+    setIsSending(true);
+
+    // Optimistic update
+    const newChat = [...data.chat, { sender: 'user', text: msg, time: 'Now' }];
+    setData(prev => ({ ...prev, chat: newChat }));
+
+    try {
+      const { reply } = await import('../services/apiService').then(m => m.sendInterviewMessage(msg));
+      setData(prev => ({ ...prev, chat: [...prev.chat, reply] }));
+    } catch (error) {
+      console.error('Failed to send message:', error);
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSendMessage();
+    }
+  };
 
   if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;
 
@@ -215,8 +244,12 @@ const MockInterview = () => {
               <div className="flex-1 relative">
                 <input 
                   type="text" 
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={handleKeyPress}
                   placeholder="Type your answer here..."
                   className="w-full bg-card border border-white/5 rounded-xl py-3.5 pl-4 pr-12 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/20 transition-colors"
+                  disabled={isSending}
                 />
               </div>
               
@@ -224,7 +257,11 @@ const MockInterview = () => {
                 <Mic className="w-5 h-5" />
               </button>
               
-              <button className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-[#0B0F17] hover:bg-primary/90 transition-colors shrink-0">
+              <button 
+                onClick={handleSendMessage}
+                disabled={isSending}
+                className={`w-12 h-12 rounded-xl flex items-center justify-center text-[#0B0F17] transition-colors shrink-0 ${isSending ? 'bg-primary/50 cursor-not-allowed' : 'bg-primary hover:bg-primary/90'}`}
+              >
                 <Send className="w-5 h-5 ml-1" />
               </button>
             </div>

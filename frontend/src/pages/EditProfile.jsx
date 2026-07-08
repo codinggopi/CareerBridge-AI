@@ -5,27 +5,60 @@ import Sidebar from '../components/Sidebar';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { getProfile, updateProfile } from '../services/apiService';
+
 const EditProfile = () => {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
-    fullName: "Alexander Forge",
-    email: "alexander.f@university.edu",
-    phone: "+1 (555) 0123-4567",
-    graduationYear: "2025",
-    major: "Computer Science",
-    bio: "Passionate about building scalable web applications and learning new technologies."
+    name: "",
+    email: "",
+    phone: "",
+    graduation_year: "",
+    branch: "",
+    bio: ""
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  React.useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await getProfile();
+        setFormData({
+          name: data.name || "",
+          email: data.email || "",
+          phone: data.phone || "",
+          graduation_year: data.graduation_year || "",
+          branch: data.branch || "",
+          bio: data.bio || "Update your bio."
+        });
+      } catch (err) {
+        console.error("Failed to fetch profile", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    // Here we would call an API to save the profile
-    alert("Profile saved successfully!");
-    router.push('/profile');
+    setIsSaving(true);
+    try {
+      await updateProfile(formData);
+      alert("Profile saved successfully!");
+      router.push('/profile');
+    } catch (err) {
+      console.error("Failed to save profile", err);
+      alert("Failed to save profile");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -59,24 +92,27 @@ const EditProfile = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-xs font-medium text-gray-400 mb-2">Full Name</label>
-              <input 
-                name="fullName" 
-                value={formData.fullName} 
-                onChange={handleChange} 
-                className="w-full bg-background border border-white/5 rounded-lg py-3 px-4 text-sm text-white focus:outline-none focus:border-white/20 transition-colors" 
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-400 mb-2">Email Address</label>
-              <input 
-                name="email" 
-                value={formData.email} 
-                onChange={handleChange} 
-                className="w-full bg-background border border-white/5 rounded-lg py-3 px-4 text-sm text-gray-300 focus:outline-none focus:border-white/20 transition-colors" 
-              />
-            </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Full Name</label>
+                <input 
+                  type="text" 
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full bg-background border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-primary/50 transition-colors"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Email Address</label>
+                <input 
+                  type="email" 
+                  name="email"
+                  value={formData.email}
+                  disabled
+                  className="w-full bg-background/50 border border-white/10 rounded-xl py-3 px-4 text-sm text-gray-400 cursor-not-allowed"
+                />
+              </div>
             <div>
               <label className="block text-xs font-medium text-gray-400 mb-2">Phone Number</label>
               <input 
@@ -86,24 +122,27 @@ const EditProfile = () => {
                 className="w-full bg-background border border-white/5 rounded-lg py-3 px-4 text-sm text-white focus:outline-none focus:border-white/20 transition-colors" 
               />
             </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-400 mb-2">Graduation Year</label>
-              <input 
-                name="graduationYear" 
-                value={formData.graduationYear} 
-                onChange={handleChange} 
-                className="w-full bg-background border border-white/5 rounded-lg py-3 px-4 text-sm text-white focus:outline-none focus:border-white/20 transition-colors" 
-              />
-            </div>
-            <div className="col-span-2">
-              <label className="block text-xs font-medium text-gray-400 mb-2">Major / Field of Study</label>
-              <input 
-                name="major" 
-                value={formData.major} 
-                onChange={handleChange} 
-                className="w-full bg-background border border-white/5 rounded-lg py-3 px-4 text-sm text-white focus:outline-none focus:border-white/20 transition-colors" 
-              />
-            </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Graduation Year</label>
+                <input 
+                  type="text" 
+                  name="graduation_year"
+                  value={formData.graduation_year}
+                  onChange={handleChange}
+                  className="w-full bg-background border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-primary/50 transition-colors"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Major / Department</label>
+                <input 
+                  type="text" 
+                  name="branch"
+                  value={formData.branch}
+                  onChange={handleChange}
+                  className="w-full bg-background border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-primary/50 transition-colors"
+                />
+              </div>
             <div className="col-span-2">
               <label className="block text-xs font-medium text-gray-400 mb-2">Bio / Summary</label>
               <textarea 
@@ -116,10 +155,14 @@ const EditProfile = () => {
             </div>
           </div>
 
-          <div className="flex justify-end pt-4 border-t border-white/5">
-            <button type="submit" className="bg-primary text-[#0B0F17] px-6 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors flex items-center space-x-2">
+          <div className="flex justify-end pt-4">
+            <button 
+              type="submit" 
+              disabled={isLoading || isSaving}
+              className="bg-primary hover:bg-primary/90 text-background font-bold px-8 py-3 rounded-xl flex items-center space-x-2 transition-colors shadow-[0_0_15px_rgba(95,227,160,0.3)]"
+            >
               <Save className="w-4 h-4" />
-              <span>Save Changes</span>
+              <span>{isSaving ? "Saving..." : "Save Changes"}</span>
             </button>
           </div>
         </form>

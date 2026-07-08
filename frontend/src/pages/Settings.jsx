@@ -5,8 +5,43 @@ import {
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 
+import { getSettings, saveSettings } from '../services/apiService';
+
 const Settings = () => {
   const [activeTab, setActiveTab] = useState('Account');
+  const [settings, setSettings] = useState({
+    twoFactor: true,
+    resumeVisibility: 'public',
+    preferredDomain: ['Software Engineering'],
+    matchThreshold: 85
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  React.useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const data = await getSettings();
+        if (Object.keys(data).length > 0) {
+          setSettings(data);
+        }
+      } catch (err) {
+        console.error("Failed to load settings:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  const updateSetting = async (key, value) => {
+    const newSettings = { ...settings, [key]: value };
+    setSettings(newSettings);
+    try {
+      await saveSettings(newSettings);
+    } catch (err) {
+      console.error("Failed to save settings:", err);
+    }
+  };
 
   const tabs = [
     { id: 'Account', icon: User },
@@ -87,8 +122,11 @@ const Settings = () => {
                     <div className="text-sm font-medium text-white">Two-Factor Authentication</div>
                     <div className="text-[10px] text-gray-500">Enhanced account security</div>
                   </div>
-                  <div className="w-10 h-5 bg-primary rounded-full relative cursor-pointer shadow-[0_0_10px_rgba(95,227,160,0.3)]">
-                    <div className="absolute right-1 top-1 w-3 h-3 bg-white rounded-full"></div>
+                  <div 
+                    onClick={() => updateSetting('twoFactor', !settings.twoFactor)}
+                    className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors shadow-[0_0_10px_rgba(95,227,160,0.3)] ${settings.twoFactor ? 'bg-primary' : 'bg-gray-600'}`}
+                  >
+                    <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${settings.twoFactor ? 'right-1' : 'left-1'}`}></div>
                   </div>
                 </div>
               </div>
@@ -101,9 +139,12 @@ const Settings = () => {
                 </div>
                 
                 <div className="space-y-3">
-                  <div className="flex items-start space-x-4 p-4 rounded-xl border border-primary/30 bg-[#152336] cursor-pointer">
-                    <div className="mt-1 w-4 h-4 rounded-full border-2 border-primary flex items-center justify-center shrink-0">
-                      <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <div 
+                    onClick={() => updateSetting('resumeVisibility', 'public')}
+                    className={`flex items-start space-x-4 p-4 rounded-xl border ${settings.resumeVisibility === 'public' ? 'border-primary/30 bg-[#152336]' : 'border-white/5 bg-background opacity-50'} cursor-pointer transition-colors`}
+                  >
+                    <div className={`mt-1 w-4 h-4 rounded-full border-2 ${settings.resumeVisibility === 'public' ? 'border-primary' : 'border-gray-600'} flex items-center justify-center shrink-0`}>
+                      {settings.resumeVisibility === 'public' && <div className="w-2 h-2 bg-primary rounded-full"></div>}
                     </div>
                     <div>
                       <div className="text-sm font-medium text-white mb-0.5">Public</div>
@@ -111,8 +152,13 @@ const Settings = () => {
                     </div>
                   </div>
                   
-                  <div className="flex items-start space-x-4 p-4 rounded-xl border border-white/5 hover:border-white/10 bg-background cursor-pointer transition-colors opacity-50">
-                    <div className="mt-1 w-4 h-4 rounded-full border-2 border-gray-600 shrink-0"></div>
+                  <div 
+                    onClick={() => updateSetting('resumeVisibility', 'private')}
+                    className={`flex items-start space-x-4 p-4 rounded-xl border ${settings.resumeVisibility === 'private' ? 'border-primary/30 bg-[#152336]' : 'border-white/5 bg-background opacity-50'} cursor-pointer transition-colors`}
+                  >
+                    <div className={`mt-1 w-4 h-4 rounded-full border-2 ${settings.resumeVisibility === 'private' ? 'border-primary' : 'border-gray-600'} flex items-center justify-center shrink-0`}>
+                      {settings.resumeVisibility === 'private' && <div className="w-2 h-2 bg-primary rounded-full"></div>}
+                    </div>
                     <div>
                       <div className="text-sm font-medium text-white mb-0.5">Private</div>
                       <div className="text-xs text-gray-400 leading-relaxed">Only visible to applied jobs</div>

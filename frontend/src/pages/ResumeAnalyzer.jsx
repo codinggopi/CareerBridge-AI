@@ -1,9 +1,34 @@
 "use client";
-import React from 'react';
-import { Upload, Download, Loader2 } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Upload, Download, Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
+import { analyzeResume } from '../services/apiService';
 
 const ResumeAnalyzer = () => {
+  const [file, setFile] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [result, setResult] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = async (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setIsAnalyzing(true);
+      
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      
+      try {
+        const response = await analyzeResume(formData);
+        setResult(response);
+      } catch (error) {
+        console.error("Failed to analyze resume", error);
+      } finally {
+        setIsAnalyzing(false);
+      }
+    }
+  };
   return (
     <div className="min-h-screen bg-[#0B0F17] flex">
       <Sidebar />
@@ -38,8 +63,18 @@ const ResumeAnalyzer = () => {
             </p>
 
             <div className="flex items-center space-x-4">
-              <button className="bg-primary text-[#0B0F17] px-8 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors shadow-[0_0_15px_rgba(95,227,160,0.2)]">
-                Select File
+              <input 
+                type="file" 
+                ref={fileInputRef}
+                className="hidden" 
+                accept=".pdf,.doc,.docx"
+                onChange={handleFileChange}
+              />
+              <button 
+                onClick={() => fileInputRef.current?.click()}
+                className="bg-primary text-[#0B0F17] px-8 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors shadow-[0_0_15px_rgba(95,227,160,0.2)]"
+              >
+                {file ? file.name : "Select File"}
               </button>
             </div>
 
@@ -48,10 +83,50 @@ const ResumeAnalyzer = () => {
           {/* Loading / Empty State Panel */}
           <div className="w-full lg:w-96 min-h-[300px] lg:min-h-0 bg-card border border-white/5 rounded-2xl flex items-center justify-center relative overflow-hidden shrink-0">
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/50"></div>
-            <div className="relative flex flex-col items-center justify-center text-gray-600">
-              <Loader2 className="w-16 h-16 animate-spin mb-4 opacity-20" />
-              <div className="text-sm font-semibold opacity-30">Awaiting Upload...</div>
-            </div>
+            {isAnalyzing ? (
+              <div className="relative flex flex-col items-center justify-center text-primary">
+                <Loader2 className="w-16 h-16 animate-spin mb-4" />
+                <div className="text-sm font-semibold">Analyzing Resume...</div>
+              </div>
+            ) : result ? (
+              <div className="relative flex flex-col items-start justify-start w-full h-full p-6 overflow-y-auto custom-scrollbar">
+                <h3 className="text-xl font-bold text-white mb-2">Analysis Complete</h3>
+                <div className="text-sm text-gray-400 mb-6">File: {result.filename}</div>
+                
+                <div className="w-full bg-[#111827] border border-white/5 rounded-xl p-4 mb-6 text-center">
+                  <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Score</div>
+                  <div className="text-3xl font-bold text-primary">{result.score}%</div>
+                </div>
+                
+                <h4 className="text-sm font-bold text-white mb-3">Feedback</h4>
+                <div className="space-y-3 w-full mb-6">
+                  {result.feedback.map((item, i) => (
+                    <div key={i} className="flex items-start space-x-2 bg-[#111827] p-3 rounded-xl border border-white/5">
+                      {item.type === 'strength' ? (
+                        <CheckCircle className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                      ) : (
+                        <AlertTriangle className="w-4 h-4 text-orange-400 shrink-0 mt-0.5" />
+                      )}
+                      <span className="text-xs text-gray-300">{item.msg}</span>
+                    </div>
+                  ))}
+                </div>
+                
+                <h4 className="text-sm font-bold text-white mb-3">Detected Keywords</h4>
+                <div className="flex flex-wrap gap-2">
+                  {result.keywords.map((kw, i) => (
+                    <span key={i} className="bg-white/5 border border-white/10 rounded px-2 py-1 text-xs text-gray-400">
+                      {kw}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="relative flex flex-col items-center justify-center text-gray-600">
+                <Loader2 className="w-16 h-16 animate-spin mb-4 opacity-20" />
+                <div className="text-sm font-semibold opacity-30">Awaiting Upload...</div>
+              </div>
+            )}
           </div>
         </div>
       </main>

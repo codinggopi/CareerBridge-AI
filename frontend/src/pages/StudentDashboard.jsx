@@ -188,21 +188,27 @@ const StudentDashboard = () => {
             {/* Upcoming Interviews */}
             <div className="bg-card border border-white/5 rounded-2xl p-6">
               <h2 className="text-lg font-bold text-white mb-6">Upcoming Interviews</h2>
-              <div className="bg-background border border-white/5 rounded-xl p-4 flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="bg-[#1A2E20] border border-primary/20 rounded-xl w-12 h-12 flex flex-col items-center justify-center text-primary">
-                    <span className="text-lg font-bold leading-none">{data.upcomingInterviews.date}</span>
-                    <span className="text-[9px] uppercase font-bold">{data.upcomingInterviews.month}</span>
+              {data.upcomingInterviews ? (
+                <div className="bg-background border border-white/5 rounded-xl p-4 flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-[#1A2E20] border border-primary/20 rounded-xl w-12 h-12 flex flex-col items-center justify-center text-primary">
+                      <span className="text-lg font-bold leading-none">{data.upcomingInterviews.date}</span>
+                      <span className="text-[9px] uppercase font-bold">{data.upcomingInterviews.month}</span>
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-white">{data.upcomingInterviews.title}</div>
+                      <div className="text-xs text-gray-400">{data.upcomingInterviews.interviewer}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-sm font-bold text-white">{data.upcomingInterviews.title}</div>
-                    <div className="text-xs text-gray-400">{data.upcomingInterviews.interviewer}</div>
-                  </div>
+                  <button className="bg-primary text-[#0B0F17] px-5 py-2 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors">
+                    Join
+                  </button>
                 </div>
-                <button className="bg-primary text-[#0B0F17] px-5 py-2 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors">
-                  Join
-                </button>
-              </div>
+              ) : (
+                <div className="text-center py-6 text-sm text-gray-400 border border-dashed border-white/10 rounded-xl">
+                  No upcoming interviews scheduled.
+                </div>
+              )}
             </div>
           </div>
 
@@ -239,23 +245,31 @@ const StudentDashboard = () => {
                 <Icons.sparkles className="w-4 h-4" />
                 <span className="text-xs font-bold uppercase tracking-widest">AI SMART PICK</span>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">{data.aiSmartPick.title}</h3>
-              <p className="text-xs text-gray-400 leading-relaxed mb-6">
-                {data.aiSmartPick.description}
-              </p>
-              <div className="flex items-center justify-between">
-                <div className="flex space-x-2">
-                  {data.aiSmartPick.tags.map((tag, i) => (
-                    <span key={i} className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[8px] text-gray-300 font-bold">
-                      {tag}
-                    </span>
-                  ))}
+              {data.aiSmartPick ? (
+                <>
+                  <h3 className="text-lg font-bold text-white mb-2">{data.aiSmartPick.title}</h3>
+                  <p className="text-xs text-gray-400 leading-relaxed mb-6">
+                    {data.aiSmartPick.description}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex space-x-2">
+                      {data.aiSmartPick.tags.map((tag, i) => (
+                        <span key={i} className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[8px] text-gray-300 font-bold">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <button className="flex items-center space-x-1 text-sm text-blue-400 hover:text-blue-300 font-bold transition-colors">
+                      <span>Start</span>
+                      <span className="text-lg leading-none">→</span>
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="text-center py-6 text-sm text-gray-400 border border-dashed border-white/10 rounded-xl">
+                  AI is analyzing your profile to formulate a Smart Pick. Check back later!
                 </div>
-                <button className="flex items-center space-x-1 text-sm text-blue-400 hover:text-blue-300 font-bold transition-colors">
-                  <span>Start</span>
-                  <span className="text-lg leading-none">→</span>
-                </button>
-              </div>
+              )}
             </div>
           </div>
         </div>

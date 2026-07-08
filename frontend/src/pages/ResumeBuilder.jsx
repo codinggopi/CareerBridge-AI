@@ -1,12 +1,63 @@
 "use client";
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Sparkles, Download, Share2, CheckCircle2, RotateCw, Plus, 
   Search, ZoomIn, ZoomOut, Maximize, X 
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
+import { getResume, saveResume } from '../services/apiService';
 
 const ResumeBuilder = () => {
+  const [resumeData, setResumeData] = useState({
+    fullName: '',
+    targetRole: '',
+    summary: '',
+    company: '',
+    duration: '',
+    accomplishment1: '',
+    accomplishment2: ''
+  });
+  const [loading, setLoading] = useState(true);
+
+  // Load existing resume from database
+  useEffect(() => {
+    const fetchResume = async () => {
+      try {
+        const response = await getResume();
+        if (response && response.content && Object.keys(response.content).length > 0) {
+          setResumeData(response.content);
+        }
+      } catch (error) {
+        console.error("Failed to load resume:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchResume();
+  }, []);
+
+  // Auto-save debounce effect
+  useEffect(() => {
+    if (loading) return; // Don't auto-save on initial load
+    
+    const timeoutId = setTimeout(async () => {
+      try {
+        await saveResume({ content: resumeData });
+        console.log("Resume auto-saved successfully");
+      } catch (error) {
+        console.error("Auto-save failed:", error);
+      }
+    }, 2000); // Save 2 seconds after user stops typing
+    
+    return () => clearTimeout(timeoutId);
+  }, [resumeData, loading]);
+
+  const handleChange = (field, value) => {
+    setResumeData(prev => ({ ...prev, [field]: value }));
+  };
+
+  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center text-white">Loading Resume...</div>;
+
   return (
     <div className="min-h-screen bg-[#0B0F17] flex">
       <Sidebar />
@@ -76,11 +127,11 @@ const ResumeBuilder = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Full Name</label>
-                  <input type="text" defaultValue="Alex Rivera" className="w-full bg-background border border-white/5 rounded-lg py-2.5 px-4 text-sm text-white focus:outline-none focus:border-primary/30 transition-colors" />
+                  <input type="text" value={resumeData.fullName} onChange={(e) => handleChange('fullName', e.target.value)} placeholder="Alex Rivera" className="w-full bg-background border border-white/5 rounded-lg py-2.5 px-4 text-sm text-white focus:outline-none focus:border-primary/30 transition-colors" />
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Target Role</label>
-                  <input type="text" defaultValue="Senior Product Designer" className="w-full bg-background border border-white/5 rounded-lg py-2.5 px-4 text-sm text-white focus:outline-none focus:border-primary/30 transition-colors" />
+                  <input type="text" value={resumeData.targetRole} onChange={(e) => handleChange('targetRole', e.target.value)} placeholder="Senior Product Designer" className="w-full bg-background border border-white/5 rounded-lg py-2.5 px-4 text-sm text-white focus:outline-none focus:border-primary/30 transition-colors" />
                 </div>
               </div>
               
@@ -88,7 +139,9 @@ const ResumeBuilder = () => {
                 <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Professional Summary</label>
                 <textarea 
                   rows="4" 
-                  defaultValue="Data-driven Product Designer with 6+ years of experience building scalable design systems and AI-integrated workflows. Passionate about human-centric interfaces..."
+                  value={resumeData.summary}
+                  onChange={(e) => handleChange('summary', e.target.value)}
+                  placeholder="Data-driven Product Designer with 6+ years of experience..."
                   className="w-full bg-background border border-white/5 rounded-lg py-3 px-4 text-sm text-gray-300 focus:outline-none focus:border-primary/30 transition-colors resize-none"
                 ></textarea>
                 <button className="absolute bottom-3 right-3 flex items-center space-x-1 bg-[#1A2E20] text-primary border border-primary/20 px-3 py-1.5 rounded-md text-[10px] font-bold hover:bg-[#1A2E20]/80 transition-colors">
@@ -114,11 +167,11 @@ const ResumeBuilder = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Company</label>
-                    <input type="text" defaultValue="InnovateTech Solutions" className="w-full bg-[#111827] border border-white/5 rounded-lg py-2.5 px-3 text-sm text-white focus:outline-none focus:border-white/10" />
+                    <input type="text" value={resumeData.company} onChange={(e) => handleChange('company', e.target.value)} placeholder="InnovateTech Solutions" className="w-full bg-[#111827] border border-white/5 rounded-lg py-2.5 px-3 text-sm text-white focus:outline-none focus:border-white/10" />
                   </div>
                   <div>
                     <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Duration</label>
-                    <input type="text" defaultValue="Jan 2021 - Present" className="w-full bg-[#111827] border border-white/5 rounded-lg py-2.5 px-3 text-sm text-white focus:outline-none focus:border-white/10" />
+                    <input type="text" value={resumeData.duration} onChange={(e) => handleChange('duration', e.target.value)} placeholder="Jan 2021 - Present" className="w-full bg-[#111827] border border-white/5 rounded-lg py-2.5 px-3 text-sm text-white focus:outline-none focus:border-white/10" />
                   </div>
                 </div>
 
@@ -126,13 +179,13 @@ const ResumeBuilder = () => {
                   <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Key Accomplishments</label>
                   <div className="space-y-2 mb-3">
                     <div className="flex items-center space-x-2">
-                      <input type="text" defaultValue="Led the redesign of the flagship mobile app, increasing user retention by 25%." className="flex-1 bg-[#111827] border border-white/5 rounded-lg py-2 px-3 text-xs text-gray-300 focus:outline-none focus:border-white/10" />
+                      <input type="text" value={resumeData.accomplishment1} onChange={(e) => handleChange('accomplishment1', e.target.value)} placeholder="Led the redesign of the flagship mobile app..." className="flex-1 bg-[#111827] border border-white/5 rounded-lg py-2 px-3 text-xs text-gray-300 focus:outline-none focus:border-white/10" />
                       <button className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
                         <RotateCw className="w-3.5 h-3.5" />
                       </button>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <input type="text" defaultValue="Optimized design-to-development handoff by implementing a new design system." className="flex-1 bg-[#111827] border border-white/5 rounded-lg py-2 px-3 text-xs text-gray-300 focus:outline-none focus:border-white/10" />
+                      <input type="text" value={resumeData.accomplishment2} onChange={(e) => handleChange('accomplishment2', e.target.value)} placeholder="Optimized design-to-development handoff..." className="flex-1 bg-[#111827] border border-white/5 rounded-lg py-2 px-3 text-xs text-gray-300 focus:outline-none focus:border-white/10" />
                       <button className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
                         <RotateCw className="w-3.5 h-3.5" />
                       </button>
@@ -248,8 +301,8 @@ const ResumeBuilder = () => {
                 {/* Real Resume Preview Content */}
                 <header className="mb-4 lg:mb-6 border-b border-gray-200 pb-4 lg:pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2">
                   <div>
-                    <h1 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 tracking-tight mb-1">ALEX RIVERA</h1>
-                    <div className="text-sm font-bold text-primary tracking-widest uppercase">SENIOR PRODUCT DESIGNER</div>
+                    <h1 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 tracking-tight mb-1">{resumeData.fullName || "YOUR NAME"}</h1>
+                    <div className="text-sm font-bold text-primary tracking-widest uppercase">{resumeData.targetRole || "TARGET ROLE"}</div>
                   </div>
                   <div className="text-left sm:text-right text-[10px] text-gray-500 leading-relaxed w-full sm:w-auto">
                     alex.rivera@example.com<br/>
@@ -261,8 +314,8 @@ const ResumeBuilder = () => {
 
                 <section className="mb-6">
                   <h2 className="text-[10px] font-bold text-primary uppercase tracking-widest mb-3">PROFESSIONAL SUMMARY</h2>
-                  <p className="text-[11px] leading-relaxed text-gray-700">
-                    Data-driven Product Designer with 6+ years of experience building scalable design systems and AI-integrated workflows. Passionate about human-centric interfaces that bridge the gap between complex data and intuitive user experiences. Proven track record of increasing user engagement by 25% through iterative design methodologies.
+                  <p className="text-[11px] leading-relaxed text-gray-700 whitespace-pre-wrap">
+                    {resumeData.summary || "Your professional summary will appear here."}
                   </p>
                 </section>
 
@@ -271,14 +324,13 @@ const ResumeBuilder = () => {
                   
                   <div className="mb-4">
                     <div className="flex justify-between items-baseline mb-0.5">
-                      <h3 className="text-[13px] font-bold text-gray-900">InnovateTech Solutions</h3>
-                      <span className="text-[10px] text-gray-500 italic">Jan 2021 - Present</span>
+                      <h3 className="text-[13px] font-bold text-gray-900">{resumeData.company || "Company Name"}</h3>
+                      <span className="text-[10px] text-gray-500 italic">{resumeData.duration || "Duration"}</span>
                     </div>
-                    <div className="text-[11px] font-bold text-gray-800 italic mb-2">Senior Product Designer</div>
+                    <div className="text-[11px] font-bold text-gray-800 italic mb-2">{resumeData.targetRole || "Role"}</div>
                     <ul className="list-disc list-outside ml-4 text-[11px] text-gray-700 space-y-1">
-                      <li>Led the redesign of the flagship mobile app, increasing user retention by 25% across a user base of 1M+.</li>
-                      <li>Optimized design-to-development handoff by implementing a new design system, reducing dev tickets by 15%.</li>
-                      <li>Mentored a team of 4 junior designers, establishing a culture of design excellence and high-fidelity prototyping.</li>
+                      <li>{resumeData.accomplishment1 || "Accomplishment 1"}</li>
+                      <li>{resumeData.accomplishment2 || "Accomplishment 2"}</li>
                     </ul>
                   </div>
 

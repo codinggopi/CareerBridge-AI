@@ -1,10 +1,28 @@
 "use client";
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { User, Mail, GraduationCap, Calendar, Lock } from 'lucide-react';
 import Footer from '../components/Footer';
+import { registerStudent } from '../services/apiService';
 
 const Register = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [branch, setBranch] = useState('');
+  const [year, setYear] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Try to use Next.js router, but fallback gracefully if not in Next environment
+  let router;
+  try {
+      router = useRouter();
+  } catch(e) {
+      router = null;
+  }
   return (
     <div className="min-h-screen bg-[#0B0F17] flex flex-col relative overflow-hidden">
       {/* Background glow effects */}
@@ -26,13 +44,37 @@ const Register = () => {
           <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white mb-3">Create an Account</h1>
           <p className="text-sm text-gray-400 mb-10">Unlock personalized career intelligence and AI-driven growth.</p>
 
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={async (e) => {
+            e.preventDefault();
+            setError('');
+            if (password !== confirmPassword) {
+              return setError("Passwords do not match");
+            }
+            setIsLoading(true);
+            try {
+              const response = await registerStudent({ name, email, password, branch, year });
+              if (response.access_token) {
+                localStorage.setItem('careerbridge_token', response.access_token);
+                window.location.href = "/dashboard";
+              } else {
+                setError('Registration failed, no token received.');
+              }
+            } catch (err) {
+              setError(err.message || 'Error creating account');
+            } finally {
+              setIsLoading(false);
+            }
+          }}>
+            {error && <div className="text-red-400 text-sm text-center bg-red-400/10 py-2 rounded-lg">{error}</div>}
             <div>
               <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Full Name</label>
               <div className="relative">
                 <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
                 <input
                   type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
                   placeholder="Alex Rivera"
                   className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 pl-12 pr-4 text-sm text-white placeholder-gray-300 focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all"
                 />
@@ -45,6 +87,9 @@ const Register = () => {
                 <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
                 <input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                   placeholder="alex.rivera@enggcollege.edu"
                   className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 pl-12 pr-4 text-sm text-white placeholder-gray-300 focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all"
                 />
@@ -56,16 +101,14 @@ const Register = () => {
                 <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Academic Branch</label>
                 <div className="relative">
                   <GraduationCap className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <select className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 pl-12 pr-4 text-sm text-gray-300 appearance-none focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all cursor-pointer">
+                  <select 
+                    value={branch}
+                    onChange={(e) => setBranch(e.target.value)}
+                    className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 pl-12 pr-4 text-sm text-gray-300 appearance-none focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all cursor-pointer"
+                  >
                     <option>Select Branch</option>
                     <option>Computer Science and Engineering</option>
                     <option>Information Technology</option>
-                    <option>Artificial Intelligence and Data Science</option>
-                    <option>Electronics and Communication Engineering</option>
-                    <option>Electrical and Electronics Engineering</option>
-                    <option>Computer Science and Business Systems</option>
-                    <option>Mechanical Engineering</option>
-                    <option>Civil Engineering</option>
                   </select>
                   <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -77,7 +120,11 @@ const Register = () => {
                 <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Current Year</label>
                 <div className="relative">
                   <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <select className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 pl-12 pr-4 text-sm text-gray-300 appearance-none focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all cursor-pointer">
+                  <select 
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                    className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 pl-12 pr-4 text-sm text-gray-300 appearance-none focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all cursor-pointer"
+                  >
                     <option>Select Year</option>
                     <option>First Year</option>
                     <option>Second Year</option>
@@ -98,6 +145,9 @@ const Register = () => {
                   <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
                   <input
                     type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
                     placeholder="••••••••"
                     className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 pl-12 pr-4 text-sm text-white placeholder-gray-300 focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all"
                   />
@@ -110,6 +160,9 @@ const Register = () => {
                   <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
                   <input
                     type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
                     placeholder="••••••••"
                     className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 pl-12 pr-4 text-sm text-white placeholder-gray-300 focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all"
                   />
@@ -119,22 +172,23 @@ const Register = () => {
 
             <div className="flex items-start pt-2 mb-8">
               <div className="flex items-center h-5 mt-0.5">
-                <input type="checkbox" className="w-4 h-4 bg-[#0B0F17] border-white/20 rounded text-primary focus:ring-0 cursor-pointer" />
+                <input type="checkbox" required className="w-4 h-4 bg-[#0B0F17] border-white/20 rounded text-primary focus:ring-0 cursor-pointer" />
               </div>
               <div className="ml-3 text-xs text-gray-400 leading-relaxed">
                 I agree to the <Link href="#" className="text-gray-300 hover:text-white transition-colors">Terms of Service</Link> and <Link href="#" className="text-gray-300 hover:text-white transition-colors">Privacy Policy</Link>, including AI processing of my professional data.
               </div>
             </div>
 
-            <Link href="/dashboard" className="block w-full">
+            <div className="block w-full">
               <button
-                type="button"
-                className="w-full bg-primary text-[#0B0F17] font-bold text-[15px] rounded-lg py-4 hover:bg-primary/90 transition-all shadow-[0_4px_20px_-5px_rgba(95,227,160,0.4)] hover:shadow-[0_4px_25px_-5px_rgba(95,227,160,0.5)] flex items-center justify-center space-x-2"
+                type="submit"
+                disabled={isLoading}
+                className={`w-full ${isLoading ? 'bg-primary/50 cursor-not-allowed' : 'bg-primary hover:bg-primary/90'} text-[#0B0F17] font-bold text-[15px] rounded-lg py-4 transition-all shadow-[0_4px_20px_-5px_rgba(95,227,160,0.4)] flex items-center justify-center space-x-2`}
               >
-                <span>Register Account</span>
-                <span className="text-xl leading-none">→</span>
+                <span>{isLoading ? 'Registering...' : 'Register Account'}</span>
+                {!isLoading && <span className="text-xl leading-none">→</span>}
               </button>
-            </Link>
+            </div>
 
             <div className="flex items-center mt-10 mb-6">
               <div className="flex-1 border-t border-white/5"></div>
