@@ -1,0 +1,1 @@
+export default function HeatmapComponent() { return null; }

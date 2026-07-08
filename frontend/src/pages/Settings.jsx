@@ -20,9 +20,9 @@ const Settings = () => {
     <div className="min-h-screen bg-[#0B0F17] flex">
       <Sidebar />
 
-      <main className="flex-1 ml-64 p-8 flex flex-col h-screen overflow-hidden">
+      <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 flex flex-col min-h-screen lg:h-screen lg:overflow-hidden overflow-x-hidden w-full max-w-[100vw]">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8 shrink-0">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 shrink-0 gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white mb-1">Settings</h1>
             <p className="text-sm text-gray-400">Manage your account preferences and AI career engine.</p>
@@ -39,9 +39,9 @@ const Settings = () => {
           </div>
         </div>
 
-        <div className="flex-1 flex gap-8 min-h-0">
+        <div className="flex-1 flex flex-col md:flex-row gap-8 min-h-0">
           {/* Left Menu */}
-          <div className="w-56 shrink-0 flex flex-col space-y-1">
+          <div className="w-full md:w-56 shrink-0 flex flex-row md:flex-col space-x-2 md:space-x-0 space-y-0 md:space-y-1 overflow-x-auto md:overflow-visible pb-2 md:pb-0 custom-scrollbar">
             {tabs.map(tab => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -65,34 +65,8 @@ const Settings = () => {
           {/* Right Content */}
           <div className="flex-1 overflow-y-auto custom-scrollbar pr-4 pb-8 space-y-6">
             
-            {/* Personal Information */}
-            <div className="bg-card border border-white/5 rounded-2xl p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg font-bold text-white">Personal Information</h2>
-                <Info className="w-4 h-4 text-gray-500" />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs font-medium text-gray-400 mb-2">Full Name</label>
-                  <input type="text" defaultValue="Alexander Forge" className="w-full bg-background border border-white/5 rounded-lg py-2.5 px-4 text-sm text-white focus:outline-none focus:border-white/20 transition-colors" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-400 mb-2">Email Address</label>
-                  <input type="email" defaultValue="alexander.f@university.edu" className="w-full bg-background border border-white/5 rounded-lg py-2.5 px-4 text-sm text-gray-300 focus:outline-none focus:border-white/20 transition-colors" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-400 mb-2">Phone Number</label>
-                  <input type="tel" defaultValue="+1 (555) 0123-4567" className="w-full bg-background border border-white/5 rounded-lg py-2.5 px-4 text-sm text-white focus:outline-none focus:border-white/20 transition-colors" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-400 mb-2">Graduation Year</label>
-                  <input type="text" defaultValue="2025" className="w-full bg-[#111827] border border-white/5 rounded-lg py-2.5 px-4 text-sm text-white focus:outline-none focus:border-white/20 transition-colors" />
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-6">
+            {/* Removed Personal Information per user request */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Security */}
               <div className="bg-card border border-white/5 rounded-2xl p-6">
                 <div className="flex items-center space-x-2 mb-6">
@@ -185,28 +159,35 @@ const Settings = () => {
                   <p className="text-[10px] text-gray-500 italic mt-2">The AI will prioritize scanning vacancies and networking opportunities at these specific firms.</p>
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-white/5">
-                  <div>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-4 border-t border-white/5 gap-4">
+                  <div className="flex-1 min-w-0">
                     <div className="text-sm font-bold text-primary mb-1">Adaptive Skill Analysis</div>
-                    <div className="text-[10px] text-gray-400">Allow CareerBridgeAI to suggest new certifications based on trending target company requirements.</div>
+                    <div className="text-[10px] text-gray-400 break-words">Allow CareerBridgeAI to suggest new certifications based on trending target company requirements.</div>
                   </div>
-                  <div className="w-10 h-5 bg-white rounded-full relative cursor-pointer">
+                  <div className="w-10 h-5 bg-white rounded-full relative cursor-pointer shrink-0">
                     <div className="absolute right-1 top-1 w-3 h-3 bg-primary rounded-full"></div>
                   </div>
                 </div>
               </div>
             </div>
 
+            {/* Target Companies Input */}
+            <div className="flex flex-col sm:flex-row gap-4 mt-6">
+              <input type="text" placeholder="Add specific companies..." className="flex-1 bg-background border border-white/5 rounded-lg py-2.5 px-4 text-sm text-white focus:outline-none focus:border-white/20 transition-colors w-full" />
+              <button className="bg-white/5 border border-white/10 text-white px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-white/10 transition-colors shrink-0">
+                Add Target
+              </button>
+            </div>
+
             {/* Bottom Actions */}
-            <div className="flex justify-between items-center pt-4">
-              <button className="text-xs font-bold text-gray-400 hover:text-white transition-colors">
+            <div className="pt-6 border-t border-white/5 flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4 shrink-0 mt-8">
+              <button className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-sm font-bold text-gray-400 hover:text-white transition-colors">
                 Discard Changes
               </button>
-              <button className="bg-primary text-[#0B0F17] px-8 py-3 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors">
+              <button className="w-full sm:w-auto bg-primary text-[#0B0F17] px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors shadow-[0_4px_14px_0_rgba(95,227,160,0.39)]">
                 Save Changes
               </button>
             </div>
-            
           </div>
         </div>
       </main>

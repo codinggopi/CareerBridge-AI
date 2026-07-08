@@ -18,10 +18,9 @@ const MockInterview = () => {
   return (
     <div className="min-h-screen bg-[#0B0F17] flex">
       <Sidebar />
-
-      <main className="flex-1 ml-64 p-8 flex flex-col h-screen overflow-hidden custom-scrollbar">
+      <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 flex flex-col min-h-screen lg:h-screen lg:overflow-hidden custom-scrollbar">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8 shrink-0">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 shrink-0 gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white mb-1">Mock Interview</h1>
             <p className="text-sm text-gray-400">Master your next career milestone with AI</p>
@@ -35,9 +34,9 @@ const MockInterview = () => {
           </div>
         </div>
 
-        <div className="flex-1 flex gap-6 min-h-0">
+        <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-0">
           {/* Left Panel: Controls & Insights */}
-          <div className="w-[320px] flex flex-col space-y-6 overflow-y-auto custom-scrollbar pr-2 pb-8">
+          <div className="w-full lg:w-[320px] flex flex-col space-y-6 overflow-y-auto custom-scrollbar lg:pr-2 pb-8 shrink-0">
             
             {/* Select Session */}
             <div className="bg-card border border-white/5 rounded-2xl p-6">
@@ -199,7 +198,7 @@ const MockInterview = () => {
             </div>
 
             {/* Chat Input */}
-            <div className="p-4 bg-background border-t border-white/5 shrink-0 flex items-center space-x-3">
+            <div className="sticky bottom-0 left-0 right-0 p-4 bg-background border-t border-white/5 shrink-0 flex items-center space-x-3 z-20">
               <button className="w-12 h-12 rounded-xl bg-card border border-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors shrink-0">
                 <Paperclip className="w-5 h-5" />
               </button>

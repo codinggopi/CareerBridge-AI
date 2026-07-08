@@ -2,8 +2,8 @@
 import React from 'react';
 import Topbar from '../components/Topbar';
 import Footer from '../components/Footer';
-import { 
-  Zap, Play, FileText, CheckCircle, Map, 
+import {
+  Zap, Play, FileText, CheckCircle, Map,
   MessageSquare, User, TrendingUp, Compass, Target, BadgeCheck
 } from 'lucide-react';
 import Link from 'next/link';
@@ -21,16 +21,16 @@ const Landing = () => {
               <Zap className="w-4 h-4 text-primary" />
               <span className="text-xs font-semibold uppercase tracking-wider text-gray-300">AI-Powered Career Intelligence</span>
             </div>
-            
+
             <h1 className="text-6xl md:text-7xl font-bold leading-tight">
-              <span className="text-white">Forge Your<br/>Future </span>
+              <span className="text-white">Forge Your<br />Future </span>
               <span className="italic text-primary">with AI</span>
             </h1>
-            
+
             <p className="text-lg text-gray-400 max-w-lg leading-relaxed">
               AI-powered placement preparation, resume intelligence, career guidance, mock interviews, and personalized learning paths.
             </p>
-            
+
             <div className="flex items-center space-x-4 pt-4">
               <Link href="/register" className="bg-primary text-background px-8 py-3.5 rounded-xl font-semibold hover:bg-primary/90 transition-colors">
                 Get Started
@@ -41,10 +41,9 @@ const Landing = () => {
               <button className="flex items-center justify-center w-12 h-12 rounded-full border border-white/10 text-white hover:bg-white/5 transition-colors">
                 <Play className="w-5 h-5 fill-current" />
               </button>
-              <span className="text-sm text-gray-400 font-medium">Watch Demo</span>
             </div>
           </div>
-          
+
           <div className="w-full lg:w-1/2 relative">
             <div className="relative rounded-2xl border border-white/10 overflow-hidden shadow-2xl bg-card">
               <div className="h-[400px] bg-gradient-to-br from-card to-background p-6">
@@ -54,7 +53,7 @@ const Landing = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="absolute top-1/2 -left-12 transform -translate-y-1/2 bg-card border border-white/10 rounded-xl p-4 shadow-xl max-w-[250px]">
               <div className="text-sm font-semibold text-white mb-1">AI Suggestion</div>
               <div className="text-xs text-gray-400">Update Python skills to improve match rate by 24%</div>
@@ -76,7 +75,7 @@ const Landing = () => {
 
         {/* Intelligent Toolkit */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-white mb-4">Intelligent Toolkit</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Intelligent Toolkit</h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
             Propel your career with enterprise-grade AI tools designed to analyze, prepare, and place.
           </p>
@@ -166,28 +165,28 @@ const Landing = () => {
         {/* Stats Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-32 border-y border-white/5 py-12">
           <div className="text-center">
-            <div className="text-4xl md:text-5xl font-bold text-primary mb-2">50k+</div>
+            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-2">50k+</div>
             <div className="text-xs font-semibold uppercase tracking-wider text-gray-400">Students Helped</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl md:text-5xl font-bold text-white mb-2">1.2M</div>
+            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">1.2M</div>
             <div className="text-xs font-semibold uppercase tracking-wider text-gray-400">Resumes Analyzed</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl md:text-5xl font-bold text-blue-400 mb-2">200k+</div>
+            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-400 mb-2">200k+</div>
             <div className="text-xs font-semibold uppercase tracking-wider text-gray-400">Mock Interviews</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl md:text-5xl font-bold text-white mb-2">94%</div>
+            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">94%</div>
             <div className="text-xs font-semibold uppercase tracking-wider text-gray-400">Success Rate</div>
           </div>
         </div>
 
         {/* Success Stories */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-white mb-4">Success Stories</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Success Stories</h2>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
           {/* Testimonial 1 */}
           <div className="bg-card border border-white/10 rounded-2xl p-8 relative">
@@ -203,7 +202,7 @@ const Landing = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Testimonial 2 */}
           <div className="bg-card border border-white/10 rounded-2xl p-8 relative">
             <div className="absolute top-6 right-8 text-6xl text-white/5 font-serif">"</div>
@@ -238,7 +237,7 @@ const Landing = () => {
         {/* Final CTA */}
         <div className="bg-card border border-white/10 rounded-3xl p-16 text-center max-w-4xl mx-auto mb-16 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent"></div>
-          <h2 className="text-4xl font-bold text-white mb-4 relative z-10">Ready to Forge Your Career?</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 relative z-10">Ready to Forge Your Career?</h2>
           <p className="text-gray-400 mb-8 max-w-lg mx-auto relative z-10">
             Join thousands of students and professionals who are using CareerForge AI to gain a competitive edge.
           </p>

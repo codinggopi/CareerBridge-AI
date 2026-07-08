@@ -1,14 +1,17 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import {
-  Search, Bell, Activity, Bookmark, Box, PenTool, Cpu, Play, CheckCircle, Plus
+  Search, Bell, Activity, Bookmark, Box, PenTool, Cpu, Play, CheckCircle, Plus, Bot, Code
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 
 const Icons = {
   'box': Box,
   'pen-tool': PenTool,
-  'cpu': Cpu
+  'cpu': Cpu,
+  'bot': Bot,
+  'code': Code
 };
 
 const LearningResources = () => {
@@ -24,10 +27,10 @@ const LearningResources = () => {
     <div className="min-h-screen bg-[#0B0F17] flex">
       <Sidebar />
 
-      <main className="flex-1 ml-64 flex flex-col h-screen overflow-hidden">
+      <main className="flex-1 md:ml-64 flex flex-col min-h-screen lg:h-screen lg:overflow-hidden overflow-x-hidden w-full max-w-[100vw]">
 
         {/* Top Search Header */}
-        <div className="flex justify-between items-center px-8 py-4 border-b border-white/5 bg-background shrink-0">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-4 sm:px-8 py-4 border-b border-white/5 bg-background shrink-0 gap-4">
           <div className="flex-1 max-w-2xl relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
             <input
@@ -53,11 +56,11 @@ const LearningResources = () => {
 
           {/* Main Title Area */}
           <div className="mb-10">
-            <h1 className="text-3xl font-bold text-primary mb-3">Learning Resources</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-primary mb-3">Learning Resources</h1>
             <p className="text-sm text-gray-300 max-w-2xl leading-relaxed mb-6">
               AI-curated resources personalized for your career goals. We've matched your Skill Gap Analysis with top industry materials.
             </p>
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-wrap items-center gap-4">
               <div className="flex items-center space-x-2 bg-card border border-white/10 rounded-full px-4 py-2">
                 <Activity className="w-3.5 h-3.5 text-gray-400" />
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">TARGET: {data.targetRole}</span>
@@ -84,11 +87,11 @@ const LearningResources = () => {
                 </button>
               </div>
 
-              <div className="flex-1 flex items-end justify-between px-2 pt-10 relative">
+              <div className="flex-1 flex items-end justify-between px-2 pt-10 relative overflow-x-auto min-h-[150px] gap-2 custom-scrollbar">
                 {/* Simplified bar chart representation */}
                 {data.momentum.map((m, i) => (
                   <div key={i} className="flex flex-col items-center space-y-3 w-full">
-                    <div className="w-12 bg-white/5 rounded-t-md hover:bg-white/10 transition-colors cursor-pointer relative group" style={{ height: `${m.value}%` }}>
+                    <div className="w-8 sm:w-12 bg-white/5 rounded-t-md hover:bg-white/10 transition-colors cursor-pointer relative group shrink-0" style={{ height: `${m.value}%` }}>
                       <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white text-gray-900 text-[10px] font-bold py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
                         {m.value}m
                       </div>
@@ -181,7 +184,7 @@ const LearningResources = () => {
           {/* Filters & Grid */}
           <div>
             <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
-              <div className="flex space-x-2">
+              <div className="flex flex-wrap gap-2">
                 <button className="bg-primary text-[#0B0F17] px-4 py-1.5 rounded-full text-xs font-bold">All Topics</button>
                 <button className="bg-card border border-white/5 text-gray-300 px-4 py-1.5 rounded-full text-xs font-medium hover:bg-white/5 transition-colors">Frontend</button>
                 <button className="bg-card border border-white/5 text-gray-300 px-4 py-1.5 rounded-full text-xs font-medium hover:bg-white/5 transition-colors">Backend</button>
@@ -250,11 +253,11 @@ const LearningResources = () => {
 
           <div className="border-t border-white/5 pt-8 mt-8 pb-4 flex justify-between items-center text-xs text-gray-500">
             <div>
-              <span className="font-bold text-gray-300">CareerForge AI</span>
+              <span className="font-bold text-gray-300">CareerBridge AI</span>
               <br />
-              © 2024 CareerForge AI. Empowering the next generation of talent.
+              © 2026 CareerBridge AI. Empowering the next generation of talent.
             </div>
-            <div className="flex space-x-6">
+            <div className="flex flex-col lg:flex-row lg:space-x-6 space-y-6 lg:space-y-0">
               <a href="#" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-gray-300 transition-colors">Terms of Service</a>
               <a href="#" className="hover:text-gray-300 transition-colors">AI Ethics</a>

@@ -11,9 +11,9 @@ const ResumeBuilder = () => {
     <div className="min-h-screen bg-[#0B0F17] flex">
       <Sidebar />
 
-      <main className="flex-1 ml-64 flex flex-col h-screen overflow-hidden">
+      <main className="flex-1 md:ml-64 flex flex-col h-auto lg:h-screen lg:overflow-hidden min-h-screen pt-16 md:pt-0">
         {/* Header */}
-        <div className="flex justify-between items-center p-6 border-b border-white/5 shrink-0 bg-background z-10">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center p-4 lg:p-6 gap-4 border-b border-white/5 shrink-0 bg-background z-10">
           <div>
             <h1 className="text-xl font-bold text-white mb-1">AI Resume Builder</h1>
             <div className="flex items-center space-x-2 text-[10px] font-mono text-gray-500 uppercase tracking-widest">
@@ -23,7 +23,7 @@ const ResumeBuilder = () => {
             </div>
           </div>
           
-          <div className="flex items-center space-x-6">
+          <div className="hidden lg:flex flex-wrap items-center gap-3 lg:gap-6 w-full lg:w-auto">
             <div className="flex items-center space-x-3 bg-card border border-white/10 rounded-full py-1.5 px-4">
               <div className="relative w-8 h-8 flex items-center justify-center">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
@@ -43,7 +43,7 @@ const ResumeBuilder = () => {
               <span>AI Optimizer</span>
             </button>
             
-            <div className="flex space-x-3">
+            <div className="flex flex-wrap gap-3">
               <button className="w-9 h-9 rounded-lg bg-card border border-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
                 <CheckCircle2 className="w-4 h-4" />
               </button>
@@ -58,10 +58,10 @@ const ResumeBuilder = () => {
           </div>
         </div>
 
-        <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 flex flex-col lg:flex-row overflow-y-visible lg:overflow-hidden">
           {/* Left Panel: Form */}
-          <div className="w-1/2 overflow-y-auto p-8 border-r border-white/5 custom-scrollbar">
-            <h2 className="text-xl font-bold text-primary mb-2">Craft your future</h2>
+          <div className="w-full lg:w-[60%] overflow-y-visible lg:overflow-y-auto p-4 sm:p-8 border-b lg:border-b-0 lg:border-r border-white/5 custom-scrollbar order-1 lg:order-none">
+            <h2 className="text-xl sm:text-2xl font-bold text-primary mb-2">Craft your future</h2>
             <p className="text-sm text-gray-400 mb-8">Craft a FAANG-ready resume with real-time AI intelligence.</p>
             
             {/* Personal Information Section */}
@@ -73,7 +73,7 @@ const ResumeBuilder = () => {
                 <h3 className="text-sm font-bold text-white">Personal Information</h3>
               </div>
               
-              <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Full Name</label>
                   <input type="text" defaultValue="Alex Rivera" className="w-full bg-background border border-white/5 rounded-lg py-2.5 px-4 text-sm text-white focus:outline-none focus:border-primary/30 transition-colors" />
@@ -111,7 +111,7 @@ const ResumeBuilder = () => {
               </div>
 
               <div className="border border-white/5 rounded-xl p-4 bg-background mb-4">
-                <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Company</label>
                     <input type="text" defaultValue="InnovateTech Solutions" className="w-full bg-[#111827] border border-white/5 rounded-lg py-2.5 px-3 text-sm text-white focus:outline-none focus:border-white/10" />
@@ -188,13 +188,49 @@ const ResumeBuilder = () => {
             </div>
           </div>
 
+
+          {/* Mobile Status Bar (Rendered between Form and Preview) */}
+          <div className="flex lg:hidden flex-wrap items-center justify-center gap-3 w-full p-4 border-b border-white/5 order-2 bg-background z-10 shrink-0">
+            <div className="flex items-center space-x-3 bg-card border border-white/10 rounded-full py-1.5 px-4">
+              <div className="relative w-8 h-8 flex items-center justify-center">
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                  <path className="text-gray-700" strokeWidth="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <path className="text-primary" strokeDasharray="85, 100" strokeWidth="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                </svg>
+                <span className="absolute text-[9px] font-bold text-white">85%</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[9px] text-gray-400 uppercase tracking-wider font-bold">Readiness</span>
+                <span className="text-[10px] text-white">ATS Compatible</span>
+              </div>
+            </div>
+            
+            <button className="flex items-center space-x-2 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-xs font-semibold text-gray-300 hover:bg-white/10 transition-colors">
+              <Sparkles className="w-3.5 h-3.5 text-primary" />
+              <span>AI Optimizer</span>
+            </button>
+            
+            <div className="flex flex-wrap gap-3">
+              <button className="w-9 h-9 rounded-lg bg-card border border-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+                <CheckCircle2 className="w-4 h-4" />
+              </button>
+              <button className="w-9 h-9 rounded-lg bg-card border border-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+                <Share2 className="w-4 h-4" />
+              </button>
+              <button className="flex items-center space-x-2 bg-primary text-[#0B0F17] rounded-lg px-4 py-2 text-xs font-bold hover:bg-primary/90 transition-colors">
+                <Download className="w-3.5 h-3.5" />
+                <span>PDF</span>
+              </button>
+            </div>
+          </div>
+
           {/* Right Panel: Live Preview */}
-          <div className="w-1/2 bg-[#1A1F2B] relative flex flex-col p-6">
+          <div className="w-full lg:w-[40%] bg-[#1A1F2B] relative flex flex-col p-4 sm:p-6 order-3 lg:order-none">
             
             {/* Top controls */}
-            <div className="flex justify-between items-center mb-6">
-              <div className="flex bg-card rounded-lg p-1 border border-white/5">
-                <button className="px-4 py-1.5 text-xs font-bold text-background bg-primary rounded-md">Modern</button>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+              <div className="flex overflow-x-auto bg-card rounded-lg p-1 border border-white/5 custom-scrollbar w-full sm:w-auto">
+                <button className="px-4 py-1.5 text-xs font-bold text-background bg-primary rounded-md whitespace-nowrap">Modern</button>
                 <button className="px-4 py-1.5 text-xs font-bold text-gray-400 hover:text-white transition-colors">Academic</button>
                 <button className="px-4 py-1.5 text-xs font-bold text-gray-400 hover:text-white transition-colors">Creative</button>
               </div>
@@ -207,15 +243,15 @@ const ResumeBuilder = () => {
             </div>
 
             {/* Resume Document Wrapper */}
-            <div className="flex-1 overflow-y-auto flex justify-center custom-scrollbar pb-24">
-              <div className="bg-white text-gray-900 w-[85%] max-w-[800px] shadow-2xl rounded-sm p-10 transform origin-top shrink-0">
+            <div className="flex-1 overflow-y-auto flex justify-center custom-scrollbar pb-8 lg:pb-24">
+              <div className="bg-white text-gray-900 w-full sm:w-[95%] lg:w-[85%] max-w-[800px] shadow-2xl rounded-sm p-4 sm:p-6 lg:p-10 transform origin-top shrink-0">
                 {/* Real Resume Preview Content */}
-                <header className="mb-6 border-b border-gray-200 pb-6 flex justify-between items-end">
+                <header className="mb-4 lg:mb-6 border-b border-gray-200 pb-4 lg:pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2">
                   <div>
-                    <h1 className="text-4xl font-serif font-bold text-gray-900 tracking-tight mb-1">ALEX RIVERA</h1>
+                    <h1 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 tracking-tight mb-1">ALEX RIVERA</h1>
                     <div className="text-sm font-bold text-primary tracking-widest uppercase">SENIOR PRODUCT DESIGNER</div>
                   </div>
-                  <div className="text-right text-[10px] text-gray-500 leading-relaxed">
+                  <div className="text-left sm:text-right text-[10px] text-gray-500 leading-relaxed w-full sm:w-auto">
                     alex.rivera@example.com<br/>
                     +1 (555) 0123 4567<br/>
                     San Francisco, CA<br/>
@@ -281,7 +317,7 @@ const ResumeBuilder = () => {
             </div>
 
             {/* Floating AI Recommendation tooltip */}
-            <div className="absolute bottom-8 right-8 bg-card border border-primary/30 rounded-xl p-4 shadow-2xl max-w-[280px] animate-pulse-slow">
+            <div className="relative lg:absolute mt-4 lg:mt-0 lg:bottom-8 lg:right-8 bg-card border border-primary/30 rounded-xl p-4 shadow-2xl w-full lg:w-auto lg:max-w-[280px] animate-pulse-slow">
               <div className="flex items-start space-x-3 mb-3">
                 <div className="w-6 h-6 rounded-md bg-primary/20 flex items-center justify-center shrink-0">
                   <Sparkles className="w-3.5 h-3.5 text-primary" />

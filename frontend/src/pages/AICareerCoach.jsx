@@ -1,10 +1,12 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { 
+import {
   Bot, Send, Mic, Paperclip, TrendingUp, Briefcase, Globe,
   Terminal, Shield, Database, Wrench, ArrowUpRight
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
+import ChatBubble from '../components/Chat/ChatBubble';
+import Footer from '../components/Footer';
 
 const AICareerCoach = () => {
   const [data, setData] = useState(null);
@@ -19,21 +21,21 @@ const AICareerCoach = () => {
     <div className="min-h-screen bg-[#0B0F17] flex">
       <Sidebar />
 
-      <main className="flex-1 ml-64 flex flex-col h-screen overflow-hidden">
-        {/* Top Navbar / Header area to match screenshot's top nav */}
-        <div className="flex justify-between items-center px-8 py-4 border-b border-white/5 bg-background shrink-0">
+      <main className="flex-1 md:ml-64 flex flex-col min-h-screen lg:h-screen lg:overflow-hidden">
+        {/* Top Navbar / Header area */}
+        <div className="flex flex-wrap lg:flex-nowrap justify-between items-center px-4 sm:px-8 py-4 border-b border-white/5 bg-background shrink-0 gap-4">
           <div className="text-xl font-bold font-serif tracking-wide text-primary">
-            CareerForge AI
+            CareerBridge AI
           </div>
-          
-          <div className="flex items-center space-x-6 text-sm font-semibold">
+
+          <div className="hidden lg:flex items-center space-x-6 text-sm font-semibold">
             <span className="text-gray-400 hover:text-white cursor-pointer transition-colors">Dashboard</span>
             <span className="text-gray-400 hover:text-white cursor-pointer transition-colors">Resume</span>
             <span className="text-gray-400 hover:text-white cursor-pointer transition-colors">Interviews</span>
             <span className="text-primary border-b-2 border-primary pb-4 -mb-4">AI Coach</span>
           </div>
-          
-          <div className="flex items-center space-x-4">
+
+          <div className="flex items-center space-x-4 ml-auto lg:ml-0">
             <button className="text-sm font-semibold text-gray-300 hover:text-white transition-colors">Sign In</button>
             <button className="bg-primary text-[#0B0F17] px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors">
               Get Started
@@ -41,67 +43,36 @@ const AICareerCoach = () => {
           </div>
         </div>
 
-        <div className="flex-1 flex overflow-hidden">
-          
+        <div className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
+
           {/* Main Chat Area */}
           <div className="flex-1 flex flex-col relative">
             <div className="px-8 py-6 border-b border-white/5 shrink-0">
-              <h1 className="text-3xl font-bold text-white mb-2">AI Career Coach</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">AI Career Coach</h1>
               <p className="text-gray-400">Your personal AI mentor for career guidance.</p>
             </div>
-            
+
             <div className="flex-1 overflow-y-auto p-8 custom-scrollbar space-y-8 pb-32">
               {data.chat.map((msg, i) => (
-                <div key={i} className={`flex w-full ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  {msg.sender === 'ai' && (
-                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary shrink-0 mr-4 mt-2 border border-primary/30">
-                      <Bot className="w-5 h-5" />
-                    </div>
-                  )}
-                  
-                  <div className={`max-w-[75%] ${msg.sender === 'user' ? 'bg-[#2A3F35] border border-primary/20 text-gray-200' : 'bg-[#111827] border border-white/5 text-gray-300'} rounded-2xl p-6 text-sm leading-relaxed shadow-lg`}>
-                    
-                    {/* Hacky bold replacement for demo */}
-                    <div dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>').replace(/\n/g, '<br/>') }} />
-
-                    {msg.options && (
-                      <div className="grid grid-cols-2 gap-4 mt-6">
-                        {msg.options.map((opt, j) => (
-                          <div key={j} className="bg-[#1A2234] border border-white/10 rounded-xl p-4 hover:border-primary/50 cursor-pointer transition-colors group">
-                            <div className="text-xs font-bold text-white mb-1 group-hover:text-primary transition-colors">{opt.title}</div>
-                            <div className="text-[10px] text-gray-500 italic">{opt.desc}</div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    
-                    {msg.actions && (
-                      <div className="flex space-x-3 mt-6">
-                        <button className="bg-[#11241C] border border-primary/30 text-primary px-4 py-2 rounded-full text-xs font-bold hover:bg-[#11241C]/80 transition-colors">
-                          {msg.actions[0]}
-                        </button>
-                        <button className="bg-white/5 border border-white/10 text-gray-300 px-4 py-2 rounded-full text-xs font-bold hover:bg-white/10 transition-colors">
-                          {msg.actions[1]}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {msg.sender === 'user' && (
-                    <img src="https://i.pravatar.cc/150?u=alex" alt="User" className="w-10 h-10 rounded-full border border-white/10 shrink-0 ml-4 mt-2" />
-                  )}
-                </div>
+                <ChatBubble 
+                  key={i}
+                  isUser={msg.sender === 'user'}
+                  message={msg.text}
+                  avatar={msg.sender === 'user' ? "https://i.pravatar.cc/150?u=alex" : <Bot className="w-5 h-5 text-primary" />}
+                  options={msg.options}
+                  actions={msg.actions?.map(action => ({ label: action, onClick: () => {} }))}
+                />
               ))}
             </div>
 
             {/* Input Area */}
-            <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-background via-background to-transparent pt-12">
-              <div className="bg-background border border-white/10 rounded-2xl p-2 flex items-center space-x-2 shadow-2xl focus-within:border-primary/50 transition-colors relative z-10">
+            <div className="sticky bottom-0 left-0 right-0 p-4 sm:p-8 bg-gradient-to-t from-background via-background to-transparent pt-8 sm:pt-12 z-20">
+              <div className="bg-background border border-white/10 rounded-2xl p-2 flex items-center space-x-2 shadow-[0_-10px_40px_rgba(11,15,23,0.8)] focus-within:border-primary/50 transition-colors relative z-10">
                 <button className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors shrink-0">
                   <Paperclip className="w-5 h-5" />
                 </button>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="Ask your career coach anything..."
                   className="flex-1 bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none py-3"
                 />
@@ -116,13 +87,13 @@ const AICareerCoach = () => {
           </div>
 
           {/* Right Panel: Career Intelligence */}
-          <div className="w-96 border-l border-white/5 bg-background/50 flex flex-col h-full shrink-0">
+          <div className="w-full lg:w-96 border-l border-white/5 bg-background/50 flex flex-col h-full shrink-0">
             <div className="p-6 border-b border-white/5 shrink-0">
               <h2 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">CAREER INTELLIGENCE</h2>
             </div>
-            
+
             <div className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
-              
+
               {/* Industry Insights */}
               <div className="bg-card border border-white/5 rounded-2xl p-5">
                 <div className="flex justify-between items-center mb-4">
@@ -146,11 +117,10 @@ const AICareerCoach = () => {
                 <h3 className="text-sm font-bold text-white mb-4">Trending Skills</h3>
                 <div className="flex flex-wrap gap-2">
                   {data.trendingSkills.map((skill, i) => (
-                    <span key={i} className={`border rounded-lg px-3 py-1.5 text-xs font-medium ${
-                      i === 0 ? 'bg-[#11241C] border-primary/30 text-primary' :
+                    <span key={i} className={`border rounded-lg px-3 py-1.5 text-xs font-medium ${i === 0 ? 'bg-[#11241C] border-primary/30 text-primary' :
                       i === 3 ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' :
-                      'bg-white/5 border-white/10 text-gray-300'
-                    }`}>
+                        'bg-white/5 border-white/10 text-gray-300'
+                      }`}>
                       {skill}
                     </span>
                   ))}
@@ -175,31 +145,25 @@ const AICareerCoach = () => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Market Readiness */}
               <div className="bg-card border border-white/5 rounded-2xl p-5">
                 <div className="text-xs font-bold text-gray-300 mb-2">Market Readiness</div>
                 <div className="flex items-baseline space-x-2 mb-3">
-                  <span className="text-3xl font-bold text-primary leading-none">{data.marketReadiness.score}%</span>
+                  <span className="text-2xl sm:text-3xl font-bold text-primary leading-none">{data.marketReadiness.score}%</span>
                   <span className="text-[10px] text-gray-500">{data.marketReadiness.trend}</span>
                 </div>
                 <div className="w-full bg-background h-1.5 rounded-full overflow-hidden">
                   <div className="bg-primary h-full" style={{ width: `${data.marketReadiness.score}%` }}></div>
                 </div>
               </div>
-            </div>
-            
-            {/* Minimal footer for right panel */}
-            <div className="p-4 border-t border-white/5 text-[9px] text-gray-600 font-mono uppercase tracking-widest flex justify-between">
-              <div>© 2024 CAREERFORGE AI. SYSTEM_STATUS: OPERATIONAL</div>
-              <div className="flex space-x-3">
-                <a href="#" className="hover:text-gray-400">AI ETHICS</a>
-                <a href="#" className="hover:text-gray-400">PRIVACY POLICY</a>
-                <a href="#" className="hover:text-gray-400">SUPPORT</a>
+              
+              <div className="mt-8 -mx-6 -mb-6">
+                <Footer />
               </div>
             </div>
           </div>
-          
+
         </div>
       </main>
     </div>

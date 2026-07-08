@@ -4,6 +4,7 @@ import {
   CheckCircle, FileText, Zap, ShieldCheck, TrendingUp, Globe, Edit3, Download, Award, Code, Briefcase
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
+import Link from 'next/link';
 
 const MyProfile = () => {
   const [data, setData] = useState(null);
@@ -18,16 +19,16 @@ const MyProfile = () => {
     <div className="min-h-screen bg-[#0B0F17] flex">
       <Sidebar />
 
-      <main className="flex-1 ml-64 p-8 overflow-y-auto custom-scrollbar h-screen">
+      <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 overflow-y-auto custom-scrollbar h-screen">
 
         {/* Header */}
         <div className="flex justify-between items-center mb-10">
-          <h1 className="text-3xl font-bold text-white font-serif">My Profile</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white font-serif">My Profile</h1>
           <div className="flex space-x-4">
-            <button className="bg-card border border-white/10 text-gray-300 px-4 py-2 rounded-xl text-sm font-bold hover:bg-white/5 transition-colors flex items-center space-x-2">
+            <Link href="/edit-profile" className="bg-card border border-white/10 text-gray-300 px-4 py-2 rounded-xl text-sm font-bold hover:bg-white/5 transition-colors flex items-center space-x-2">
               <Edit3 className="w-4 h-4" />
               <span>Edit Profile</span>
-            </button>
+            </Link>
             <button className="bg-primary text-[#0B0F17] px-4 py-2 rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors flex items-center space-x-2">
               <Download className="w-4 h-4" />
               <span>Download Resume</span>

@@ -8,7 +8,7 @@ const ResumeAnalyzer = () => {
     <div className="min-h-screen bg-[#0B0F17] flex">
       <Sidebar />
 
-      <main className="flex-1 ml-64 p-8 flex flex-col h-screen overflow-hidden">
+      <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 flex flex-col min-h-screen lg:h-screen lg:overflow-hidden">
         {/* Header */}
         <div className="flex justify-between items-center mb-8 shrink-0">
           <h1 className="text-2xl font-bold text-primary">Resume AI Analyzer</h1>
@@ -23,7 +23,7 @@ const ResumeAnalyzer = () => {
         </div>
 
         {/* Content area */}
-        <div className="flex-1 flex gap-8 min-h-0">
+        <div className="flex-1 flex flex-col lg:flex-row gap-8 min-h-0 overflow-y-auto lg:overflow-visible pb-16 lg:pb-0">
           {/* Dropzone Area */}
           <div className="flex-1 border-2 border-dashed border-white/10 rounded-2xl bg-card flex flex-col items-center justify-center relative hover:border-primary/30 transition-colors">
 
@@ -41,15 +41,12 @@ const ResumeAnalyzer = () => {
               <button className="bg-primary text-[#0B0F17] px-8 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors shadow-[0_0_15px_rgba(95,227,160,0.2)]">
                 Select File
               </button>
-              <button className="bg-white/5 border border-white/10 text-white px-8 py-3 rounded-xl text-sm font-bold hover:bg-white/10 transition-colors">
-                Scan URL
-              </button>
             </div>
 
           </div>
 
           {/* Loading / Empty State Panel */}
-          <div className="w-96 bg-card border border-white/5 rounded-2xl flex items-center justify-center relative overflow-hidden">
+          <div className="w-full lg:w-96 min-h-[300px] lg:min-h-0 bg-card border border-white/5 rounded-2xl flex items-center justify-center relative overflow-hidden shrink-0">
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/50"></div>
             <div className="relative flex flex-col items-center justify-center text-gray-600">
               <Loader2 className="w-16 h-16 animate-spin mb-4 opacity-20" />

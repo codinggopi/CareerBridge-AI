@@ -1,13 +1,14 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { 
-  BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, Cell 
+import {
+  BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, Cell
 } from 'recharts';
-import { 
+import {
   FileText, Code, Rocket, MessageSquare, TrendingUp,
   CheckSquare, Edit3, Sparkles
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
+import StatCard from '../components/StatCard';
 import Footer from '../components/Footer';
 
 // Icons mapping for dynamic rendering
@@ -38,17 +39,17 @@ const StudentDashboard = () => {
     <div className="min-h-screen bg-[#0B0F17] flex">
       <Sidebar />
 
-      <main className="flex-1 ml-64 p-8 overflow-y-auto">
+      <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 overflow-y-auto">
         {/* Header */}
-        <div className="flex justify-between items-start mb-8">
+        <div className="flex flex-col-reverse md:flex-row justify-between md:items-start gap-6 md:gap-0 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Good Morning, {data.user.name}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Good Morning, {data.user.name}</h1>
             <p className="text-gray-400">
               Your career readiness has increased by <span className="text-primary font-bold">12%</span> this week.
             </p>
           </div>
           <div className="flex items-center space-x-3 bg-card border border-white/5 rounded-full py-1.5 px-3">
-            <img src={data.user.avatar} alt="Profile" className="w-8 h-8 rounded-full bg-gray-600" />
+            <img src={data.user.avatar} alt="Profile" className="w-12 h-12 md:w-8 md:h-8 rounded-xl md:rounded-full bg-gray-600" />
             <div className="pr-2">
               <div className="text-sm font-bold text-white leading-tight">{data.user.fullName}</div>
               <div className="text-[10px] text-gray-400 uppercase tracking-wider">{data.user.role}</div>
@@ -57,27 +58,19 @@ const StudentDashboard = () => {
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-          {data.stats.map((stat, i) => {
-            const Icon = Icons[stat.icon];
-            return (
-              <div key={i} className={`bg-card border border-white/5 rounded-2xl p-5 ${stat.isHighlighted ? 'bg-gradient-to-br from-[#111827] to-[#1A2E20] border-primary/30' : ''}`}>
-                <div className="flex justify-between items-start mb-4">
-                  <div className={`p-2 rounded-lg bg-white/5 ${stat.color}`}>
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <div className={`text-xs font-bold ${stat.change.startsWith('+') ? 'text-primary' : stat.change === 'High' || stat.change === 'Fast' ? 'text-primary' : 'text-red-400'}`}>
-                    {stat.change}
-                  </div>
-                </div>
-                <div className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-1">{stat.title}</div>
-                <div className="text-3xl font-bold text-white">
-                  {stat.value}
-                  <span className="text-sm text-gray-500 font-normal">{stat.suffix}</span>
-                </div>
-              </div>
-            );
-          })}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
+          {data.stats.map((stat, i) => (
+            <StatCard 
+              key={i}
+              title={stat.title}
+              value={stat.value + (stat.suffix || '')}
+              icon={Icons[stat.icon]}
+              trend={stat.change.startsWith('+') || stat.change === 'High' || stat.change === 'Fast' ? 'up' : 'down'}
+              trendValue={stat.change}
+              className={stat.isHighlighted ? 'bg-gradient-to-br from-[#111827] to-[#1A2E20] border-primary/30' : ''}
+              iconColor={stat.color}
+            />
+          ))}
         </div>
 
         {/* Middle Section */}
@@ -88,21 +81,21 @@ const StudentDashboard = () => {
               <h2 className="text-lg font-bold text-white">Skill Distribution</h2>
               <span className="text-xs bg-white/5 text-gray-400 px-3 py-1 rounded-full border border-white/5">Last 30 Days</span>
             </div>
-            
+
             <div className="h-64 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data.skillDistribution} margin={{ top: 10, right: 0, left: -20, bottom: 0 }} barGap={0}>
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'transparent'}} height={10} />
-                  <Tooltip 
-                    cursor={{fill: 'rgba(255,255,255,0.02)'}}
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: 'transparent' }} height={10} />
+                  <Tooltip
+                    cursor={{ fill: 'rgba(255,255,255,0.02)' }}
                     contentStyle={{ backgroundColor: '#111827', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px' }}
                   />
-                  <Bar dataKey="core" radius={[4,4,0,0]}>
+                  <Bar dataKey="core" radius={[4, 4, 0, 0]}>
                     {data.skillDistribution.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.core > 0 && entry.core < 60 ? '#2A3441' : '#5FE3A0'} />
                     ))}
                   </Bar>
-                  <Bar dataKey="soft" radius={[4,4,0,0]}>
+                  <Bar dataKey="soft" radius={[4, 4, 0, 0]}>
                     {data.skillDistribution.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.soft > 0 && entry.soft < 50 ? '#2A3441' : '#60A5FA'} />
                     ))}
@@ -110,7 +103,7 @@ const StudentDashboard = () => {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            
+
             <div className="flex justify-between items-center mt-4">
               <div className="flex items-center space-x-2">
                 <div className="w-2.5 h-2.5 rounded-full bg-primary"></div>
@@ -129,7 +122,7 @@ const StudentDashboard = () => {
               <h2 className="text-lg font-bold text-white mb-1">Career Match</h2>
               <p className="text-xs text-gray-400">AI-Optimized roles for you</p>
             </div>
-            
+
             <div className="relative h-48 flex items-center justify-center">
               {/* Fake Radar/Concentric circles for match visualization */}
               <div className="w-32 h-32 rounded-full border border-primary/20 flex items-center justify-center">
@@ -139,7 +132,7 @@ const StudentDashboard = () => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Tags */}
               <div className="absolute top-2 bg-primary/20 text-primary text-[10px] font-bold px-2 py-1 rounded border border-primary/30">
                 98% FULL STACK
@@ -148,7 +141,7 @@ const StudentDashboard = () => {
                 74% DEVOPS
               </div>
             </div>
-            
+
             <button className="w-full py-3 bg-transparent border border-white/10 rounded-xl text-sm font-semibold text-gray-300 hover:bg-white/5 transition-colors">
               View Full Report
             </button>
@@ -184,7 +177,7 @@ const StudentDashboard = () => {
                 })}
               </div>
             </div>
-            
+
             {/* Upcoming Interviews */}
             <div className="bg-card border border-white/5 rounded-2xl p-6">
               <h2 className="text-lg font-bold text-white mb-6">Upcoming Interviews</h2>
@@ -232,7 +225,7 @@ const StudentDashboard = () => {
                 See Detailed Match Analysis
               </button>
             </div>
-            
+
             {/* AI Smart Pick */}
             <div className="bg-gradient-to-br from-card to-[#111A29] border border-blue-500/20 rounded-2xl p-6">
               <div className="flex items-center space-x-2 text-blue-400 mb-4">
@@ -259,21 +252,8 @@ const StudentDashboard = () => {
             </div>
           </div>
         </div>
-        
-        {/* Simple Footer inside main layout */}
-        <div className="border-t border-white/5 pt-8 mt-12 pb-4 flex justify-between items-center text-xs text-gray-500">
-          <div>
-            <span className="font-bold text-gray-300">CareerForge AI</span>
-            <br />
-            © 2024 CareerForge AI. Empowering the next generation of talent.
-          </div>
-          <div className="flex space-x-6">
-            <a href="#" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">AI Ethics</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">Contact Support</a>
-          </div>
-        </div>
+
+        <Footer />
       </main>
     </div>
   );

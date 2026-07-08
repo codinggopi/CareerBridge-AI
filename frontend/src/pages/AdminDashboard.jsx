@@ -32,7 +32,7 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-[#0B0F17] flex">
       <Sidebar role="Premium Tier Admin" />
 
-      <main className="flex-1 ml-64 p-8 overflow-y-auto">
+      <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 overflow-y-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-bold text-white">Intelligence Overview</h1>
@@ -43,7 +43,7 @@ const AdminDashboard = () => {
               <input
                 type="text"
                 placeholder="Search talent, skills, or departments"
-                className="bg-[#111827] border border-white/5 rounded-full py-2 pl-10 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 w-72 transition-colors"
+                className="bg-[#111827] border border-white/5 rounded-full py-2 pl-10 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 w-full sm:w-72 transition-colors"
               />
             </div>
             <button className="text-gray-400 hover:text-white transition-colors relative">
@@ -79,7 +79,7 @@ const AdminDashboard = () => {
                   )}
                 </div>
                 <div className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-1">{stat.title}</div>
-                <div className="text-3xl font-bold text-white flex items-end">
+                <div className="text-2xl sm:text-3xl font-bold text-white flex items-end">
                   {stat.value}
                   {stat.suffix && <span className="text-sm text-gray-500 font-normal ml-1 mb-1">{stat.suffix}</span>}
                 </div>
@@ -166,7 +166,7 @@ const AdminDashboard = () => {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <div className="overflow-x-auto"><table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-white/5">
                   <th className="py-4 px-4 text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Student Name</th>
@@ -212,7 +212,7 @@ const AdminDashboard = () => {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           </div>
 
           <div className="flex justify-between items-center mt-6 text-xs text-gray-500">
@@ -224,20 +224,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Simple Footer */}
-        <div className="border-t border-white/5 pt-8 mt-12 pb-4 flex justify-between items-center text-xs text-gray-500">
-          <div>
-            <span className="font-bold text-gray-300">CareerForge AI</span>
-            <br />
-            © 2024 CareerForge AI. Empowering the next generation of talent.
-          </div>
-          <div className="flex space-x-6">
-            <a href="#" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">AI Ethics</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">Contact Support</a>
-          </div>
-        </div>
+        <Footer />
       </main>
     </div>
   );

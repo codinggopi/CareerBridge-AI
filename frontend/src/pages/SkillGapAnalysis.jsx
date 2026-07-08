@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Sparkles, ChevronDown, Filter, Share2, AlertTriangle, Activity } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 
 const SkillGapAnalysis = () => {
   const [data, setData] = useState(null);
@@ -16,23 +17,23 @@ const SkillGapAnalysis = () => {
     <div className="min-h-screen bg-[#0B0F17] flex">
       <Sidebar />
 
-      <main className="flex-1 ml-64 p-8 overflow-y-auto custom-scrollbar">
+      <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 overflow-y-auto custom-scrollbar">
         {/* Header */}
         <div className="flex justify-between items-start mb-10">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2 font-serif">Skill Gap Analysis</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 font-serif">Skill Gap Analysis</h1>
             <p className="text-gray-400">Bridge the distance between your current profile and industry demands.</p>
           </div>
-          
+
           <div className="flex items-center space-x-4">
             <div className="relative">
               <label className="absolute -top-2 left-3 bg-[#0B0F17] px-1 text-[10px] text-gray-500 font-bold uppercase tracking-widest">Target Career Path</label>
-              <div className="flex items-center justify-between bg-card border border-white/10 rounded-lg px-4 py-2.5 w-64 cursor-pointer hover:border-white/20 transition-colors">
+              <div className="flex items-center justify-between bg-card border border-white/10 rounded-lg px-4 py-2.5 w-full sm:w-64 cursor-pointer hover:border-white/20 transition-colors">
                 <span className="text-sm text-gray-300">{data.targetRole}</span>
                 <ChevronDown className="w-4 h-4 text-gray-500" />
               </div>
             </div>
-            
+
             <button className="flex items-center space-x-2 bg-primary text-[#0B0F17] px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors">
               <Sparkles className="w-4 h-4" />
               <span>Run Analysis</span>
@@ -45,18 +46,18 @@ const SkillGapAnalysis = () => {
           {/* Skill Match */}
           <div className="bg-card border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center relative">
             <h2 className="text-lg font-bold text-white mb-8">Skill Match</h2>
-            
+
             <div className="relative w-40 h-40 flex items-center justify-center mb-6">
               <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                 <path className="text-white/5" strokeWidth="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                 <path className="text-primary" strokeDasharray={`${data.readiness}, 100`} strokeWidth="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
               </svg>
               <div className="absolute flex flex-col items-center">
-                <span className="text-4xl font-bold text-white">{data.readiness}%</span>
+                <span className="text-3xl sm:text-4xl font-bold text-white">{data.readiness}%</span>
                 <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mt-1">Readiness</span>
               </div>
             </div>
-            
+
             <p className="text-xs text-gray-400 text-center max-w-[200px]">
               You are highly competitive for <span className="text-primary">{data.targetRole}</span> roles. 3 key gaps identified.
             </p>
@@ -86,8 +87,8 @@ const SkillGapAnalysis = () => {
                     <span className="text-gray-400">{skill.value}%</span>
                   </div>
                   <div className="w-full h-1.5 bg-background rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full ${skill.status === 'Mastered' ? 'bg-primary' : 'bg-orange-400'}`} 
+                    <div
+                      className={`h-full ${skill.status === 'Mastered' ? 'bg-primary' : 'bg-orange-400'}`}
                       style={{ width: `${skill.value}%` }}
                     ></div>
                   </div>
@@ -106,7 +107,7 @@ const SkillGapAnalysis = () => {
               <AlertTriangle className="w-5 h-5 text-orange-400" />
               <h2 className="text-lg font-bold text-white">Critical Gaps</h2>
             </div>
-            
+
             <div className="space-y-4">
               {data.criticalGaps.map((gap, i) => (
                 <div key={i} className="bg-background border border-white/5 rounded-xl p-4">
@@ -120,13 +121,13 @@ const SkillGapAnalysis = () => {
 
           {/* Industry Benchmarks */}
           <div className="bg-card border border-blue-500/20 rounded-2xl p-6 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl"></div>
+            <div className="absolute top-0 right-0 w-full lg:w-32 h-32 bg-blue-500/5 rounded-full blur-3xl"></div>
             <div className="flex items-center space-x-2 mb-2 relative z-10">
               <Activity className="w-5 h-5 text-blue-400" />
               <h2 className="text-lg font-bold text-white">Industry Benchmarks</h2>
             </div>
             <p className="text-xs text-gray-400 mb-6 relative z-10">How you compare to the top 10% of applicants for this role in the Bay Area.</p>
-            
+
             <div className="space-y-4 relative z-10">
               {data.benchmarks.map((bench, i) => (
                 <div key={i} className="flex items-center justify-between py-3 border-b border-white/5 last:border-0 last:pb-0">
@@ -173,11 +174,11 @@ const SkillGapAnalysis = () => {
                   {/* Fake thumbnail content */}
                   <div className="w-full h-full opacity-30 bg-gradient-to-br from-blue-500/20 to-purple-500/20"></div>
                 </div>
-                
+
                 <div className="p-6 flex-1 flex flex-col">
                   <h3 className="text-sm font-bold text-white mb-2 group-hover:text-primary transition-colors">{item.title}</h3>
                   <p className="text-xs text-gray-400 leading-relaxed mb-6 flex-1">{item.desc}</p>
-                  
+
                   <div className="flex justify-between items-center text-xs">
                     <span className="text-gray-500">{item.meta}</span>
                     <button className="text-primary font-bold hover:text-primary/80 transition-colors">
@@ -189,21 +190,8 @@ const SkillGapAnalysis = () => {
             ))}
           </div>
         </div>
-        
-        {/* Simple Footer */}
-        <div className="border-t border-white/5 pt-8 mt-16 pb-4 flex justify-between items-center text-xs text-gray-500">
-          <div>
-            <span className="font-bold text-gray-300">CareerForge AI</span>
-            <br />
-            © 2024 CareerForge AI. Empowering the next generation of talent.
-          </div>
-          <div className="flex space-x-6">
-            <a href="#" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">AI Ethics</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">Contact Support</a>
-          </div>
-        </div>
+
+        <Footer />
       </main>
     </div>
   );

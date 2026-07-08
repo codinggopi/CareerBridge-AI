@@ -1,0 +1,1 @@
+export default function RadarChartComponent() { return null; }

@@ -1,10 +1,11 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { 
-  Activity, FileText, Code, MessageSquare, TrendingUp, Zap, 
-  Brain, Shield, Sparkles 
+import {
+  Activity, FileText, Code, MessageSquare, TrendingUp, Zap,
+  Brain, Shield, Sparkles
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 
 const Icons = {
   'file-text': FileText,
@@ -53,15 +54,15 @@ const PlacementReadiness = () => {
     <div className="min-h-screen bg-[#0B0F17] flex">
       <Sidebar />
 
-      <main className="flex-1 ml-64 p-8 overflow-y-auto custom-scrollbar">
-        
+      <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 overflow-y-auto custom-scrollbar">
+
         {/* Header */}
         <div className="flex justify-between items-start mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2 font-serif">Placement Readiness</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 font-serif">Placement Readiness</h1>
             <p className="text-gray-400">Your comprehensive intelligence report for the current hiring season.</p>
           </div>
-          
+
           <div className="flex items-center space-x-2 text-[10px] font-bold text-gray-400 border border-white/10 bg-white/5 px-3 py-1.5 rounded-full uppercase tracking-widest">
             <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
             <span>LIVE ANALYSIS ACTIVE</span>
@@ -73,7 +74,7 @@ const PlacementReadiness = () => {
           {/* Overall Score */}
           <div className="bg-card border border-white/5 rounded-2xl p-6 flex flex-col items-center">
             <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-6">OVERALL READINESS SCORE</div>
-            
+
             <div className="relative w-48 h-48 flex items-center justify-center mb-8">
               <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                 <path className="text-white/5" strokeWidth="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
@@ -85,7 +86,7 @@ const PlacementReadiness = () => {
                 <span className="text-[10px] font-bold bg-[#11241C] text-primary px-2 py-0.5 rounded-full">{data.trend}</span>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4 w-full">
               <div className="bg-[#111827] border border-white/5 rounded-xl p-4 text-center">
                 <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1">RANK</div>
@@ -101,7 +102,7 @@ const PlacementReadiness = () => {
           {/* Readiness Breakdown */}
           <div className="lg:col-span-2 bg-card border border-white/5 rounded-2xl p-6 flex flex-col">
             <h2 className="text-xl font-bold text-white mb-8">Readiness Breakdown</h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 mb-8">
               {data.breakdown.map((item, i) => {
                 const Icon = Icons[item.icon];
@@ -125,7 +126,7 @@ const PlacementReadiness = () => {
                 );
               })}
             </div>
-            
+
             <div className="mt-auto bg-gradient-to-r from-[#152336] to-[#0d1624] border border-blue-500/20 rounded-xl p-6 flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
@@ -137,7 +138,7 @@ const PlacementReadiness = () => {
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-3xl font-bold text-blue-400 leading-none mb-1">{data.probability}%</div>
+                <div className="text-2xl sm:text-3xl font-bold text-blue-400 leading-none mb-1">{data.probability}%</div>
                 <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">HIGH CERTAINTY</div>
               </div>
             </div>
@@ -160,7 +161,7 @@ const PlacementReadiness = () => {
                 <span>HIGH</span>
               </div>
             </div>
-            
+
             <div className="flex flex-col space-y-2 mb-4">
               {heatmapData.map((row, i) => (
                 <div key={i} className="flex space-x-2">
@@ -170,7 +171,7 @@ const PlacementReadiness = () => {
                 </div>
               ))}
             </div>
-            
+
             <div className="flex justify-between text-[9px] font-bold text-gray-500 uppercase tracking-widest">
               <span>MONTH -6</span>
               <span>CURRENT WEEK</span>
@@ -181,7 +182,7 @@ const PlacementReadiness = () => {
           <div className="bg-card border border-white/5 rounded-2xl p-6 flex flex-col">
             <h2 className="text-lg font-bold text-white mb-2">Performance Trends</h2>
             <p className="text-xs text-gray-400 mb-6">Momentum check across metrics.</p>
-            
+
             <div className="space-y-4 flex-1">
               {data.trends.map((trend, i) => {
                 const Icon = Icons[trend.icon];
@@ -198,11 +199,11 @@ const PlacementReadiness = () => {
                 );
               })}
             </div>
-            
+
             <button className="w-full mt-4 py-3 border border-white/10 rounded-xl text-xs font-semibold text-gray-300 hover:bg-white/5 transition-colors">
               View Detailed Log
             </button>
-            
+
             {/* Hovering Rocket Button (from screenshot) */}
             <div className="absolute right-12 mt-32">
               <button className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-[#0B0F17] shadow-[0_0_20px_rgba(95,227,160,0.3)] hover:scale-105 transition-transform">
@@ -217,21 +218,21 @@ const PlacementReadiness = () => {
           {/* Milestone Timeline */}
           <div className="lg:col-span-2 bg-card border border-white/5 rounded-2xl p-6">
             <h2 className="text-lg font-bold text-white mb-8">Milestone Timeline</h2>
-            
+
             <div className="space-y-8 relative before:absolute before:inset-0 before:ml-[11px] before:-translate-x-px before:h-full before:w-0.5 before:bg-white/10">
               {data.milestones.map((ms, i) => (
                 <div key={i} className="relative flex items-start group">
                   <div className={`w-6 h-6 rounded-full border-[3px] border-card flex items-center justify-center shrink-0 z-10 ${ms.dotColor}`}>
                     <div className="w-2 h-2 rounded-full bg-card"></div>
                   </div>
-                  
+
                   <div className="ml-6 w-full">
                     <div className="flex justify-between items-start mb-1">
                       <div className="text-sm font-bold text-white">{ms.title}</div>
                       <div className={`text-[9px] font-bold uppercase tracking-widest ${ms.statusColor}`}>{ms.status}</div>
                     </div>
                     <div className="text-xs text-gray-400 leading-relaxed mb-3">{ms.desc}</div>
-                    
+
                     {ms.progress && (
                       <div className="w-48 bg-background h-1.5 rounded-full overflow-hidden">
                         <div className="bg-blue-400 h-full" style={{ width: `${ms.progress}%` }}></div>
@@ -250,34 +251,34 @@ const PlacementReadiness = () => {
               <Sparkles className="w-5 h-5 text-orange-300" />
               <h2 className="text-lg font-bold text-white">AI Coach Insights</h2>
             </div>
-            
-            <div className="text-sm text-gray-300 leading-loose mb-8 relative z-10" dangerouslySetInnerHTML={{__html: data.coach.insight}}></div>
-            
+
+            <div className="text-sm text-gray-300 leading-loose mb-8 relative z-10" dangerouslySetInnerHTML={{ __html: data.coach.insight }}></div>
+
             <div className="bg-[#111827] border border-white/10 rounded-xl p-4 mb-6 relative z-10">
               <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Recommended Action</div>
               <div className="text-xs text-gray-300 leading-relaxed">{data.coach.action}</div>
             </div>
-            
+
             <button className="w-full bg-[#E5C1A3] hover:bg-[#d4b092] text-[#0B0F17] py-3.5 rounded-xl text-sm font-bold transition-colors mt-auto relative z-10">
               Execute Next Step
             </button>
           </div>
         </div>
-        
+
         <div className="border-t border-white/5 pt-8 mt-16 pb-4 flex justify-between items-center text-xs text-gray-500">
           <div>
-            <span className="font-bold text-gray-300">CareerForge AI</span>
+            <span className="font-bold text-gray-300">CareerBridge AI</span>
             <br />
-            © 2024 CareerForge AI. Empowering the next generation of talent.
+            © 2026 CareerBridge AI. Empowering the next generation of talent.
           </div>
-          <div className="flex space-x-6">
+          <div className="flex flex-col lg:flex-row lg:space-x-6 space-y-6 lg:space-y-0">
             <a href="#" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-gray-300 transition-colors">Terms of Service</a>
             <a href="#" className="hover:text-gray-300 transition-colors">AI Ethics</a>
             <a href="#" className="hover:text-gray-300 transition-colors">Contact Support</a>
           </div>
         </div>
-        
+
       </main>
     </div>
   );

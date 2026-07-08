@@ -1,0 +1,1 @@
+export default function RadialProgress() { return null; }

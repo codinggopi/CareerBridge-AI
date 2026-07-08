@@ -29,12 +29,12 @@ const LearningRoadmap = () => {
     <div className="min-h-screen bg-[#0B0F17] flex">
       <Sidebar />
 
-      <main className="flex-1 ml-64 p-8 flex flex-col overflow-y-auto custom-scrollbar h-screen">
+      <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 flex flex-col overflow-y-auto custom-scrollbar h-screen">
 
         {/* Header */}
         <div className="flex justify-between items-start mb-10">
           <div>
-            <h1 className="text-4xl font-bold text-white mb-3 font-serif tracking-tight">{data.title}</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3 font-serif tracking-tight">{data.title}</h1>
             <p className="text-sm text-gray-400 max-w-2xl leading-relaxed">{data.desc}</p>
           </div>
 
