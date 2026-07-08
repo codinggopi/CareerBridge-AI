@@ -1,71 +1,46 @@
 const fs = require('fs');
 const path = require('path');
 
-const walk = function(dir) {
-    let results = [];
-    const list = fs.readdirSync(dir);
-    list.forEach(function(file) {
-        file = path.join(dir, file);
-        const stat = fs.statSync(file);
-        if (stat && stat.isDirectory()) { 
-            results = results.concat(walk(file));
-        } else { 
-            results.push(file);
-        }
-    });
-    return results;
-};
-
-const processFile = (filePath) => {
-    if (!filePath.endsWith('.jsx')) return;
-    
-    let content = fs.readFileSync(filePath, 'utf8');
-    let changed = false;
-
-    // Add "use client";
-    if (!content.includes('"use client";') && !content.includes("'use client';")) {
-        content = '"use client";\n' + content;
-        changed = true;
-    }
-
-    // Replace react-router-dom imports
-    if (content.includes('react-router-dom')) {
-        let newImports = [];
-        
-        // Check what is being imported
-        const hasLink = content.includes('Link');
-        const hasUseLocation = content.includes('useLocation');
-        
-        if (hasLink) newImports.push("import Link from 'next/link';");
-        if (hasUseLocation) {
-            newImports.push("import { usePathname } from 'next/navigation';");
-        }
-        
-        // Remove the react-router-dom import line
-        content = content.replace(/import\s+{.*}\s+from\s+['"]react-router-dom['"];?/g, newImports.join('\n'));
-        
-        // Map useLocation to usePathname
-        if (hasUseLocation) {
-            // A simple hack to map useLocation to usePathname so we don't need to change `location.pathname` usage
-            const hookDef = `\nconst useLocation = () => ({ pathname: usePathname() });\n`;
-            // Insert after imports
-            const lastImportIndex = content.lastIndexOf('import ');
-            const insertPosition = content.indexOf('\n', lastImportIndex) + 1;
-            content = content.slice(0, insertPosition) + hookDef + content.slice(insertPosition);
-        }
-        
-        changed = true;
-    }
-
-    if (changed) {
-        fs.writeFileSync(filePath, content, 'utf8');
-        console.log(`Processed: ${filePath}`);
-    }
+const mappings = {
+  'AdminDashboard.jsx': 'getAdminDashboard',
+  'SkillGapAnalysis.jsx': 'getSkillGapAnalysis',
+  'PlacementReadiness.jsx': 'getPlacementReadiness',
+  'Notifications.jsx': 'getNotifications',
+  'MyProfile.jsx': 'getProfile',
+  'MockInterview.jsx': 'getMockInterview',
+  'LearningRoadmap.jsx': 'getLearningRoadmap',
+  'LearningResources.jsx': 'getLearningResources',
+  'CareerIntelligence.jsx': 'getCareerIntelligence',
+  'AICareerCoach.jsx': 'getAICoach'
 };
 
 const pagesDir = path.join(__dirname, 'src', 'pages');
-const compDir = path.join(__dirname, 'src', 'components');
 
-const files = [...walk(pagesDir), ...walk(compDir)];
-files.forEach(processFile);
-console.log('Migration complete!');
+for (const [file, apiFunc] of Object.entries(mappings)) {
+  const filePath = path.join(pagesDir, file);
+  let content = fs.readFileSync(filePath, 'utf8');
+
+  // Insert import
+  const importStatement = `import { ${apiFunc} } from '../services/apiService';\n`;
+  content = content.replace(/(import React.*?from 'react';\r?\n)/, `$1${importStatement}`);
+
+  // Replace useEffect
+  const regex = /useEffect\(\(\) => \{[\s\S]*?import\('\.\.\/data\/mock.*?'\)\.then\([\s\S]*?\}\, \[\]\);/m;
+  
+  const replacement = `useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await ${apiFunc}();
+        setData(response);
+      } catch (error) {
+        console.error('Failed to fetch ${apiFunc} data:', error);
+      }
+    };
+    fetchData();
+  }, []);`;
+
+  content = content.replace(regex, replacement);
+
+  fs.writeFileSync(filePath, content, 'utf8');
+  console.log('Updated ' + file);
+}

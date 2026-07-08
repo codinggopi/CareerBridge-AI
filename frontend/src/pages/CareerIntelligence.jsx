@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import { getCareerIntelligence } from '../services/apiService';
 import {
   Sparkles, CheckCircle2, Bot, TrendingUp, BarChart2, MessageSquare, BookOpen, Award
 } from 'lucide-react';
@@ -24,7 +25,15 @@ const CareerIntelligence = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    import('../data/mockCareerIntelligence.json').then(module => setData(module.default));
+    const fetchData = async () => {
+      try {
+        const response = await getCareerIntelligence();
+        setData(response);
+      } catch (error) {
+        console.error('Failed to fetch getCareerIntelligence data:', error);
+      }
+    };
+    fetchData();
   }, []);
 
   if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;

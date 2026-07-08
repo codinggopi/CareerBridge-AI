@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import { getAdminDashboard } from '../services/apiService';
 import {
   BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, Cell
 } from 'recharts';
@@ -21,9 +22,15 @@ const AdminDashboard = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    import('../data/mockAdminDashboard.json').then(module => {
-      setData(module.default);
-    }).catch(err => console.error(err));
+    const fetchData = async () => {
+      try {
+        const response = await getAdminDashboard();
+        setData(response);
+      } catch (error) {
+        console.error('Failed to fetch getAdminDashboard data:', error);
+      }
+    };
+    fetchData();
   }, []);
 
   if (!data) return <div className="min-h-screen bg-background flex items-center justify-center text-white">Loading...</div>;

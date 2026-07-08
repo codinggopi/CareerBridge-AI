@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import { getLearningRoadmap } from '../services/apiService';
 import {
   Check, Lock, Play, Layout, Code, Award, Briefcase,
   CheckCircle, Star, Settings, ChevronRight, Sparkles, Video
@@ -20,7 +21,15 @@ const LearningRoadmap = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    import('../data/mockRoadmap.json').then(module => setData(module.default));
+    const fetchData = async () => {
+      try {
+        const response = await getLearningRoadmap();
+        setData(response);
+      } catch (error) {
+        console.error('Failed to fetch getLearningRoadmap data:', error);
+      }
+    };
+    fetchData();
   }, []);
 
   if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;

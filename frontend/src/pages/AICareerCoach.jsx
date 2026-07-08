@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import { getAICoach } from '../services/apiService';
 import {
   Bot, Send, Mic, Paperclip, TrendingUp, Briefcase, Globe,
   Terminal, Shield, Database, Wrench, ArrowUpRight
@@ -12,7 +13,15 @@ const AICareerCoach = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    import('../data/mockCoach.json').then(module => setData(module.default));
+    const fetchData = async () => {
+      try {
+        const response = await getAICoach();
+        setData(response);
+      } catch (error) {
+        console.error('Failed to fetch getAICoach data:', error);
+      }
+    };
+    fetchData();
   }, []);
 
   if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;

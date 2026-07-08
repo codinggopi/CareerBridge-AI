@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import { getMockInterview } from '../services/apiService';
 import { 
   Code, Users, Target, PenTool, Play, Mic, Send, Paperclip, 
   User, Bot, Sparkles, Shield, CheckCircle
@@ -10,7 +11,15 @@ const MockInterview = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    import('../data/mockInterview.json').then(module => setData(module.default));
+    const fetchData = async () => {
+      try {
+        const response = await getMockInterview();
+        setData(response);
+      } catch (error) {
+        console.error('Failed to fetch getMockInterview data:', error);
+      }
+    };
+    fetchData();
   }, []);
 
   if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;

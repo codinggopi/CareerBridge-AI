@@ -23,14 +23,21 @@ const Icons = {
   'sparkles': Sparkles
 };
 
+import { getStudentDashboard } from '../services/apiService';
+
 const StudentDashboard = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    // In a real app, this would be an API call. We fetch from local mock data.
-    import('../data/mockDashboard.json').then(module => {
-      setData(module.default);
-    }).catch(err => console.error(err));
+    const fetchData = async () => {
+      try {
+        const response = await getStudentDashboard();
+        setData(response);
+      } catch (error) {
+        console.error("Failed to fetch dashboard data:", error);
+      }
+    };
+    fetchData();
   }, []);
 
   if (!data) return <div className="min-h-screen bg-background flex items-center justify-center text-white">Loading...</div>;

@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import { getSkillGapAnalysis } from '../services/apiService';
 import { Sparkles, ChevronDown, Filter, Share2, AlertTriangle, Activity } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
@@ -8,7 +9,15 @@ const SkillGapAnalysis = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    import('../data/mockSkillGap.json').then(module => setData(module.default));
+    const fetchData = async () => {
+      try {
+        const response = await getSkillGapAnalysis();
+        setData(response);
+      } catch (error) {
+        console.error('Failed to fetch getSkillGapAnalysis data:', error);
+      }
+    };
+    fetchData();
   }, []);
 
   if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;

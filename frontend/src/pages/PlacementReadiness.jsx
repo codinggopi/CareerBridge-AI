@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import { getPlacementReadiness } from '../services/apiService';
 import {
   Activity, FileText, Code, MessageSquare, TrendingUp, Zap,
   Brain, Shield, Sparkles
@@ -45,7 +46,15 @@ const PlacementReadiness = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    import('../data/mockReadiness.json').then(module => setData(module.default));
+    const fetchData = async () => {
+      try {
+        const response = await getPlacementReadiness();
+        setData(response);
+      } catch (error) {
+        console.error('Failed to fetch getPlacementReadiness data:', error);
+      }
+    };
+    fetchData();
   }, []);
 
   if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;

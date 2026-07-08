@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import { getLearningResources } from '../services/apiService';
 import {
   Search, Bell, Activity, Bookmark, Box, PenTool, Cpu, Play, CheckCircle, Plus, Bot, Code
 } from 'lucide-react';
@@ -18,7 +19,15 @@ const LearningResources = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    import('../data/mockResources.json').then(module => setData(module.default));
+    const fetchData = async () => {
+      try {
+        const response = await getLearningResources();
+        setData(response);
+      } catch (error) {
+        console.error('Failed to fetch getLearningResources data:', error);
+      }
+    };
+    fetchData();
   }, []);
 
   if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;

@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import { getNotifications } from '../services/apiService';
 import { 
   Bell, Search, Settings, FileText, MessageSquare, TrendingUp, Award
 } from 'lucide-react';
@@ -18,7 +19,15 @@ const Notifications = () => {
   const [activeFilter, setActiveFilter] = useState('All');
 
   useEffect(() => {
-    import('../data/mockNotifications.json').then(module => setData(module.default));
+    const fetchData = async () => {
+      try {
+        const response = await getNotifications();
+        setData(response);
+      } catch (error) {
+        console.error('Failed to fetch getNotifications data:', error);
+      }
+    };
+    fetchData();
   }, []);
 
   if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;
