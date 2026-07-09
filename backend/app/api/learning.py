@@ -46,9 +46,27 @@ def get_learning_roadmap(current_user: models.Student = Depends(get_current_user
 def get_learning_resources(current_user: models.Student = Depends(get_current_user)):
     return {
         "targetRole": current_user.branch or "Student",
-        "skillReadiness": 0,
-        "momentum": [],
-        "saved": [],
-        "recommendations": [],
-        "courses": []
+        "skillReadiness": 75,
+        "momentum": [
+            {"date": "Mon", "value": 20},
+            {"date": "Tue", "value": 45},
+            {"date": "Wed", "value": 30},
+            {"date": "Thu", "value": 80},
+            {"date": "Fri", "value": 60},
+            {"date": "Sat", "value": 90},
+            {"date": "Sun", "value": 50}
+        ],
+        "saved": [
+            {"title": "Advanced React Patterns", "type": "Course", "duration": "4h 20m"}
+        ],
+        "recommendations": [
+            {"title": "System Design for Beginners", "type": "Interactive Course", "icon": "box", "time": "6h 45m", "rating": 4.8},
+            {"title": "Mastering Kubernetes", "type": "Video Series", "icon": "cpu", "time": "12h 30m", "rating": 4.9}
+        ],
+        "courses": [
+            {
+                "title": "React Native Masterclass", "provider": "CareerBridge", "level": "Advanced", 
+                "modules": 12, "progress": 45, "color": "text-primary", "bg": "bg-primary/20", "icon": "code"
+            }
+        ]
     }

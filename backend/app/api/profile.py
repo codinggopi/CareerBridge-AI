@@ -15,13 +15,59 @@ def get_profile(
         "name": current_user.name,
         "email": current_user.email,
         "bio": current_user.bio or "Update your bio.",
-        "avatar": current_user.avatar or "https://i.pravatar.cc/150",
         "phone": current_user.phone or "",
         "branch": current_user.branch or "",
-        "year": current_user.year or "",
         "graduation_year": current_user.graduation_year or "",
-        "linkedin_link": current_user.linkedin_link or "",
-        "github_link": current_user.github_link or ""
+        "profile": {
+            "name": current_user.name,
+            "title": current_user.branch or "Student / Software Engineer",
+            "avatar": current_user.avatar or "https://i.pravatar.cc/150",
+            "placementScore": 88,
+            "placementRank": "TOP 12%"
+        },
+        "metrics": {
+            "resumeScore": current_user.resume_score if current_user.resume_score else 85,
+            "skillScore": 92,
+            "readiness": "HIGH"
+        },
+        "coreSkills": [
+            {"name": "Frontend Development", "score": 95},
+            {"name": "Backend Development", "score": 85},
+            {"name": "System Design", "score": 75}
+        ],
+        "technologies": ["React", "Node.js", "Python", "AWS", "Docker", "PostgreSQL"],
+        "projects": [
+            {
+                "title": "E-Commerce Platform",
+                "desc": "Built a scalable e-commerce backend using Node.js and microservices.",
+                "tags": ["Node.js", "Docker", "AWS"]
+            },
+            {
+                "title": "AI Resume Analyzer",
+                "desc": "Integrated OpenAI API to analyze resumes and give scoring.",
+                "tags": ["Python", "FastAPI", "React"]
+            }
+        ],
+        "achievements": [
+            {"title": "AWS Certified Developer", "desc": "Passed with 92% score."},
+            {"title": "Hackathon Winner 2025", "desc": "First place in university hackathon."}
+        ],
+        "journey": [
+            {
+                "date": "JUN 2026",
+                "title": "Resume Verified",
+                "desc": "Achieved a resume score of 85+. Ready for top-tier applications.",
+                "color": "bg-blue-500/20 text-blue-400",
+                "icon": "file-text"
+            },
+            {
+                "date": "MAR 2026",
+                "title": "System Design Module Completed",
+                "desc": "Finished the advanced system design module with flying colors.",
+                "color": "bg-primary/20 text-primary",
+                "icon": "git-merge"
+            }
+        ]
     }
 
 @router.put("/profile")

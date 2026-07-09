@@ -15,10 +15,10 @@ const ResumeAnalyzer = () => {
     if (selectedFile) {
       setFile(selectedFile);
       setIsAnalyzing(true);
-      
+
       const formData = new FormData();
       formData.append('file', selectedFile);
-      
+
       try {
         const response = await analyzeResume(formData);
         setResult(response);
@@ -51,7 +51,7 @@ const ResumeAnalyzer = () => {
         <div className="flex-1 flex flex-col lg:flex-row gap-8 min-h-0 overflow-y-auto lg:overflow-visible pb-16 lg:pb-0">
           {/* Dropzone Area */}
           <div className="flex-1 border-2 border-dashed border-white/10 rounded-2xl bg-card flex flex-col items-center justify-center relative hover:border-primary/30 transition-colors">
-
+            <br></br>
             <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 text-primary shadow-[0_0_30px_rgba(95,227,160,0.15)]">
               <Upload className="w-8 h-8" />
             </div>
@@ -61,22 +61,22 @@ const ResumeAnalyzer = () => {
             <p className="text-sm text-gray-400 text-center max-w-sm mb-10 leading-relaxed">
               Support for PDF, DOCX formats. AI will automatically scan and provide insights in seconds.
             </p>
-
+            <br></br>
             <div className="flex items-center space-x-4">
-              <input 
-                type="file" 
+              <input
+                type="file"
                 ref={fileInputRef}
-                className="hidden" 
+                className="hidden"
                 accept=".pdf,.doc,.docx"
                 onChange={handleFileChange}
               />
-              <button 
+              <button
                 onClick={() => fileInputRef.current?.click()}
                 className="bg-primary text-[#0B0F17] px-8 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors shadow-[0_0_15px_rgba(95,227,160,0.2)]"
               >
                 {file ? file.name : "Select File"}
               </button>
-            </div>
+            </div><br></br>
 
           </div>
 
@@ -92,12 +92,12 @@ const ResumeAnalyzer = () => {
               <div className="relative flex flex-col items-start justify-start w-full h-full p-6 overflow-y-auto custom-scrollbar">
                 <h3 className="text-xl font-bold text-white mb-2">Analysis Complete</h3>
                 <div className="text-sm text-gray-400 mb-6">File: {result.filename}</div>
-                
+
                 <div className="w-full bg-[#111827] border border-white/5 rounded-xl p-4 mb-6 text-center">
                   <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Score</div>
                   <div className="text-3xl font-bold text-primary">{result.score}%</div>
                 </div>
-                
+
                 <h4 className="text-sm font-bold text-white mb-3">Feedback</h4>
                 <div className="space-y-3 w-full mb-6">
                   {result.feedback.map((item, i) => (
@@ -111,7 +111,7 @@ const ResumeAnalyzer = () => {
                     </div>
                   ))}
                 </div>
-                
+
                 <h4 className="text-sm font-bold text-white mb-3">Detected Keywords</h4>
                 <div className="flex flex-wrap gap-2">
                   {result.keywords.map((kw, i) => (

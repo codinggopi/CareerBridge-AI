@@ -213,12 +213,6 @@ const PlacementReadiness = () => {
               View Detailed Log
             </button>
 
-            {/* Hovering Rocket Button (from screenshot) */}
-            <div className="absolute right-12 mt-32">
-              <button className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-[#0B0F17] shadow-[0_0_20px_rgba(95,227,160,0.3)] hover:scale-105 transition-transform">
-                <Zap className="w-5 h-5 fill-current" />
-              </button>
-            </div>
           </div>
         </div>
 
