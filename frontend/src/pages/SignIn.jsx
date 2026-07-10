@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import Footer from '../components/Footer';
 import { loginStudent } from '../services/apiService';
+import logo from '../assets/images/CareerBridge-AI.png';
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
@@ -34,8 +36,11 @@ const SignIn = () => {
             </div>
           </div>
 
-          <div className="text-center z-10">
-            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-6">CareerBridge AI</h1>
+          <div className="text-center z-10 flex flex-col items-center">
+            <div className="flex items-center space-x-3 mb-6">
+              <img src={logo.src} alt="CareerBridge AI Logo" className="h-12 w-auto object-contain" />
+              <h1 className="text-3xl sm:text-4xl font-bold text-white">CareerBridge AI</h1>
+            </div>
             <p className="text-gray-400 text-lg max-w-md mx-auto leading-relaxed">
               Precision engineering for your professional journey. Elevate your potential with data-driven career intelligence.
             </p>
@@ -70,8 +75,27 @@ const SignIn = () => {
               try {
                 const response = await loginStudent({ email, password });
                 if (response.access_token) {
-                  localStorage.setItem('careerbridge_token', response.access_token);
-                  window.location.href = "/dashboard";
+                  if (rememberMe) {
+                    localStorage.setItem('careerbridge_token', response.access_token);
+                    if (response.user) localStorage.setItem('careerbridge_user', JSON.stringify(response.user));
+                  } else {
+                    sessionStorage.setItem('careerbridge_token', response.access_token);
+                    if (response.user) sessionStorage.setItem('careerbridge_user', JSON.stringify(response.user));
+                  }
+                  
+                  // Handle dynamic redirect back to originally requested page
+                  let redirectPath = "/dashboard"; // Default
+                  try {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const requestedRedirect = urlParams.get('redirect');
+                    if (requestedRedirect && requestedRedirect.startsWith('/')) {
+                      redirectPath = requestedRedirect;
+                    }
+                  } catch (e) {
+                    // Ignore parsing errors and fallback to dashboard
+                  }
+                  
+                  window.location.href = redirectPath;
                 } else {
                   setError('Login failed, no token received.');
                 }
@@ -120,8 +144,13 @@ const SignIn = () => {
               </div>
 
               <div className="flex items-center justify-between pt-2">
-                <label className="flex items-center space-x-2 cursor-pointer group">
-                  <div className="w-4 h-4 rounded border border-white/20 bg-background group-hover:border-primary/50 flex items-center justify-center transition-colors">
+                <label className="flex items-center space-x-2 cursor-pointer group" onClick={() => setRememberMe(!rememberMe)}>
+                  <div className={`w-4 h-4 rounded border ${rememberMe ? 'border-primary bg-primary' : 'border-white/20 bg-background'} group-hover:border-primary/50 flex items-center justify-center transition-colors`}>
+                    {rememberMe && (
+                      <svg className="w-3 h-3 text-background" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
                   </div>
                   <span className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">Remember Me</span>
                 </label>

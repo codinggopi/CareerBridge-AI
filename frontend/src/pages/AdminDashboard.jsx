@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
+import { withAuth } from '../components/withAuth';
 
 const Icons = {
   'users': Users,
@@ -237,4 +238,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default withAuth(AdminDashboard, ['admin']);

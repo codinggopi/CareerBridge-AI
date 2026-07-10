@@ -7,6 +7,9 @@ import {
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 
+import SkeletonDashboard from '../components/SkeletonDashboard';
+import { withAuth } from '../components/withAuth';
+
 const Icons = {
   'layout': Layout,
   'code': Code,
@@ -24,15 +27,43 @@ const LearningRoadmap = () => {
     const fetchData = async () => {
       try {
         const response = await getLearningRoadmap();
+        if (!response || !response.weeks) throw new Error("Invalid API Data");
         setData(response);
       } catch (error) {
         console.error('Failed to fetch getLearningRoadmap data:', error);
+        // Fallback mock data
+        setData({
+          title: "Full Stack Engineer Path",
+          progress: 25,
+          desc: "Start your journey by exploring modules based on your skill gaps.",
+          weeks: [
+            {
+                "week": "Week 1", "state": "completed", "title": "Foundation Concepts",
+                "desc": "Reviewed basic algorithms and core programming concepts.",
+                "progress": 100, "meta": "Completed • 4 hours spent"
+            },
+            {
+                "week": "Week 2", "state": "current", "title": "System Design & Architecture",
+                "desc": "Focusing on your critical gap: designing scalable distributed systems.",
+                "progress": 25, 
+                "modules": [
+                    {"name": "Load Balancing", "icon": "layout"},
+                    {"name": "Database Sharding", "icon": "code"}
+                ]
+            },
+            {
+                "week": "Week 3", "state": "locked", "title": "Cloud Deployment",
+                "desc": "Introduction to AWS and automated CI/CD pipelines.",
+                "progress": 0, "meta": "Prerequisite: System Design"
+            }
+          ]
+        });
       }
     };
     fetchData();
   }, []);
 
-  if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;
+  if (!data) return <SkeletonDashboard />;
 
   return (
     <div className="min-h-screen bg-[#0B0F17] flex">
@@ -206,4 +237,4 @@ const LearningRoadmap = () => {
   );
 };
 
-export default LearningRoadmap;
+export default withAuth(LearningRoadmap);

@@ -6,6 +6,7 @@ import {
   LayoutDashboard, FileText, Compass, MessageSquare,
   Target, Settings, HelpCircle, LogOut, Menu, X
 } from 'lucide-react';
+import logo from '../../assets/images/CareerBridge-AI.png';
 const useLocation = () => ({ pathname: usePathname() });
 
 const Sidebar = ({ role = 'Premium Tier' }) => {
@@ -31,8 +32,9 @@ const Sidebar = ({ role = 'Premium Tier' }) => {
     <>
       {/* Mobile Header */}
       <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-background border-b border-white/5 flex items-center justify-between px-4 z-40">
-        <Link href="/" className="text-xl font-bold font-serif tracking-wide text-primary">
-          CareerBridge AI
+        <Link href="/" className="flex items-center space-x-2">
+          <img src={logo.src} alt="CareerBridge AI" className="h-8 w-auto object-contain" />
+          <div className="text-xl font-bold font-serif tracking-wide text-primary">CareerBridge AI</div>
         </Link>
         <button onClick={() => setIsOpen(!isOpen)} className="text-gray-300 p-2 rounded-lg hover:bg-white/5 transition-colors">
           {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -50,16 +52,22 @@ const Sidebar = ({ role = 'Premium Tier' }) => {
       {/* Sidebar Content */}
       <div className={`w-64 bg-background border-r border-white/5 flex flex-col h-screen fixed left-0 top-0 overflow-y-auto z-50 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
         <div className="p-6 hidden md:block">
-          <Link href="/" className="text-xl font-bold font-serif tracking-wide text-primary block">
-            CareerBridge AI
+          <Link href="/" className="block">
+            <div className="flex items-center space-x-2">
+              <img src={logo.src} alt="CareerBridge AI" className="h-8 w-auto object-contain" />
+              <div className="text-xl font-bold font-serif tracking-wide text-primary">CareerBridge AI</div>
+            </div>
           </Link>
-          <div className="text-xs text-gray-500 mt-1">{role}</div>
+          <div className="text-xs text-gray-500 mt-2">{role}</div>
         </div>
 
         <div className="p-6 md:hidden flex justify-between items-center border-b border-white/5">
           <div>
-            <div className="text-sm font-bold font-serif tracking-wide text-primary">CareerBridge AI</div>
-            <div className="text-xs text-gray-500 mt-1">{role}</div>
+            <div className="flex items-center space-x-2 mb-1">
+              <img src={logo.src} alt="CareerBridge AI" className="h-8 w-auto object-contain" />
+              <div className="text-sm font-bold font-serif tracking-wide text-primary">CareerBridge AI</div>
+            </div>
+            <div className="text-xs text-gray-500">{role}</div>
           </div>
           <button onClick={() => setIsOpen(false)} className="text-gray-400 p-2 hover:bg-white/5 rounded-lg">
             <X className="w-5 h-5" />

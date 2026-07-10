@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { memo } from 'react';
 
-const StatCard = ({ title, value, icon: Icon, trend, trendValue, iconColor = 'text-primary', className = '' }) => {
+const StatCard = memo(({ title, value, icon: Icon, trend, trendValue, iconColor = 'text-primary', className = '' }) => {
   return (
     <div className={`bg-card border border-white/5 rounded-2xl p-6 ${className}`}>
       <div className="flex justify-between items-start mb-4">
@@ -23,6 +23,6 @@ const StatCard = ({ title, value, icon: Icon, trend, trendValue, iconColor = 'te
       </div>
     </div>
   );
-};
+});
 
 export default StatCard;

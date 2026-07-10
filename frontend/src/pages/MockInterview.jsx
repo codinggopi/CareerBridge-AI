@@ -6,6 +6,8 @@ import {
   User, Bot, Sparkles, Shield, CheckCircle
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
+import SkeletonDashboard from '../components/SkeletonDashboard';
+import { withAuth } from '../components/withAuth';
 
 const MockInterview = () => {
   const [data, setData] = useState(null);
@@ -15,9 +17,26 @@ const MockInterview = () => {
   const fetchData = async () => {
     try {
       const response = await getMockInterview();
+      if (!response || !response.chat) throw new Error("Invalid API Data");
       setData(response);
     } catch (error) {
       console.error('Failed to fetch getMockInterview data:', error);
+      // Fallback data
+      setData({
+        metrics: {
+          communication: 85,
+          confidence: 78,
+          accuracy: 92
+        },
+        insights: {
+          strength: { title: "Strengths", desc: "Good technical accuracy." },
+          improvement: { title: "Improvements", desc: "Can improve communication clarity." }
+        },
+        chat: [
+          { sender: "ai", text: "Welcome to your Mock Interview for the Full Stack Developer role. Let's start with a basic question: Can you explain the difference between client-side and server-side rendering in Next.js?", time: "10:00 AM" },
+          { sender: "user", text: "Sure. Client-side rendering happens in the browser, while server-side rendering means the HTML is generated on the server before being sent to the client.", time: "10:01 AM" }
+        ]
+      });
     }
   };
 
@@ -51,7 +70,7 @@ const MockInterview = () => {
     }
   };
 
-  if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;
+  if (!data) return <SkeletonDashboard />;
 
   return (
     <div className="min-h-screen bg-[#0B0F17] flex">
@@ -273,4 +292,4 @@ const MockInterview = () => {
   );
 };
 
-export default MockInterview;
+export default withAuth(MockInterview);

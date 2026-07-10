@@ -8,6 +8,8 @@ import {
 import Sidebar from '../components/Sidebar';
 import ChatBubble from '../components/Chat/ChatBubble';
 import Footer from '../components/Footer';
+import { withAuth } from '../components/withAuth';
+import logo from '../assets/images/CareerBridge-AI.png';
 
 const AICareerCoach = () => {
   const [data, setData] = useState(null);
@@ -62,8 +64,9 @@ const AICareerCoach = () => {
       <main className="flex-1 md:ml-64 flex flex-col min-h-screen lg:h-screen lg:overflow-hidden">
         {/* Top Navbar / Header area */}
         <div className="flex flex-wrap lg:flex-nowrap justify-between items-center px-4 sm:px-8 py-4 border-b border-white/5 bg-background shrink-0 gap-4">
-          <div className="text-xl font-bold font-serif tracking-wide text-primary">
-            CareerBridge AI
+          <div className="flex items-center space-x-2">
+            <img src={logo.src} alt="CareerBridge AI Logo" className="h-8 w-auto object-contain" />
+            <div className="text-xl font-bold font-serif tracking-wide text-primary">CareerBridge AI</div>
           </div>
 
           <div className="hidden lg:flex items-center space-x-6 text-sm font-semibold">
@@ -216,4 +219,4 @@ const AICareerCoach = () => {
   );
 };
 
-export default AICareerCoach;
+export default withAuth(AICareerCoach);

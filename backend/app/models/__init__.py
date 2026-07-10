@@ -5,3 +5,4 @@ from .interview import InterviewSession, InterviewMessage
 from .job import JobRole, JobMatch
 from .notification import Notification
 from .coach import CoachMessage
+from .audit import AuditLog

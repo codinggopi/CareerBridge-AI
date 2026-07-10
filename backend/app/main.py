@@ -1,6 +1,8 @@
 from fastapi import FastAPI, Request, APIRouter
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import time
+import os
 from app.database.connection import engine
 from app.database.base import Base
 from app.core.config import settings
@@ -11,13 +13,12 @@ from app import models
 # Create database tables (graceful fallback if DB is not ready)
 try:
     Base.metadata.create_all(bind=engine)
-    print("Successfully connected to MySQL and created tables.")
 except Exception as e:
-    print(f"Warning: Could not connect to MySQL Database. Ensure it is running and credentials are correct. Error: {e}")
+    print("Error creating tables:", e)
+app = FastAPI(title="CareerBridge AI", version="2.0.0")
 
-app = FastAPI(title="CareerBridge AI API", version="2.0.0")
+from fastapi.responses import JSONResponse
 
-# Setup CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
@@ -25,6 +26,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    # Log the exception here if you have a logger configured
+    print(f"Unhandled Exception: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content={"message": "An unexpected error occurred. Please try again later.", "details": str(exc)},
+    )
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
@@ -40,7 +50,7 @@ async def log_requests(request: Request, call_next):
 # Import and include all modular routes
 from app.api import auth, analytics, admin, notifications, learning, interviews, coach, resume, skills, profile
 
-api_router = APIRouter(prefix="/api/v1")
+api_router = APIRouter(prefix="/api")
 api_router.include_router(auth.router)
 api_router.include_router(analytics.router)
 api_router.include_router(admin.router)
@@ -54,6 +64,11 @@ api_router.include_router(profile.router)
 
 app.include_router(api_router)
 
+# Serve uploaded files (avatars, etc.) as static assets
+uploads_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "uploads")
+os.makedirs(os.path.join(uploads_dir, "avatars"), exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
+
 @app.get("/")
 def read_root():
-    return {"status": "ok", "message": "CareerBridge AI API is running on MySQL"}
+    return {"status": "ok", "message": "CareerBridge AI API is running successfully"}

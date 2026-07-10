@@ -23,7 +23,7 @@ def get_student_dashboard(
             name=student.name,
             fullName=f"{student.name}",
             role="Student",
-            avatar="https://i.pravatar.cc/150"
+            avatar=student.avatar or "https://i.pravatar.cc/150"
         ),
         stats=[
             schemas.StatOut(title="Resume Score", value=str(student.resume_score), suffix="/100", change="", icon="file-text", color="text-primary"),
@@ -84,41 +84,8 @@ def get_skill_gap(
     current_user: models.Student = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    skills = db.query(models.Skill).filter(models.Skill.student_id == current_user.id).all()
-    
-    skill_distribution = []
-    for s in skills:
-        skill_distribution.append({
-            "name": s.name,
-            "value": s.proficiency,
-            "status": "Mastered" if s.proficiency >= 80 else "In Progress"
-        })
-        
-    if not skill_distribution:
-        skill_distribution = [
-            {"name": "No Skills Added", "value": 0, "status": "In Progress"}
-        ]
-        
-    return {
-        "targetRole": current_user.branch or "General Student",
-        "readiness": int(current_user.placement_readiness_score) if current_user.placement_readiness_score else 0,
-        "skillDistribution": skill_distribution,
-        "criticalGaps": [
-            {"impact": "High Impact", "title": "System Design", "desc": "Crucial for senior roles in tech. Missing core concepts."},
-            {"impact": "Medium Impact", "title": "Cloud Deployment", "desc": "Good to have for full stack development. Lacking practical exposure."}
-        ],
-        "benchmarks": [
-            {"metric": "Problem Solving", "you": "75%", "avg": "85%"},
-            {"metric": "System Design", "you": "40%", "avg": "70%"}
-        ],
-        "learningPath": [
-            {
-                "type": "Course", "typeColor": "text-blue-400", "title": "System Design Basics", 
-                "desc": "Learn the core concepts of designing scalable distributed systems.", 
-                "meta": "4 Weeks", "action": "Start Module"
-            }
-        ]
-    }
+    from app.services import skill_gap_service
+    return skill_gap_service.get_skill_gap_analysis(db, current_user)
 
 @router.get("/analysis/placement-readiness")
 def get_placement_readiness(current_user: models.Student = Depends(get_current_user)):

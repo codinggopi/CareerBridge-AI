@@ -1,312 +1,538 @@
-CareerBridgeAI
+<div align="center">
+  <img src="frontend/src/assets/images/CareerBridge-AI.png" alt="CareerBridge AI Logo" width="120" height="auto" />
+  <h1>CareerBridge AI</h1>
+  <p><strong>AI-Powered Career Intelligence & Placement Preparation Platform</strong></p>
+  <p>An intelligent, full-stack ecosystem designed to empower students and professionals to navigate their career journey, optimize resumes, bridge skill gaps, and excel in interviews.</p>
 
-🎯 PROJECT BRIEF
-Build a full-stack web application called CareerForge AI — an AI-powered placement preparation and career intelligence platform for students. I am attaching:
-A PDF product specification document (features, modules, tech stack, database schema).
-17 reference UI screenshots of the exact pages I want built.
-Your job: Recreate every screenshot pixel-faithfully as a real, working page (same layout, spacing, colors, typography, card structure, icons, and copy), wired into one cohesive React application with shared navigation, shared design tokens, and functional interactivity where indicated. Use the PDF only for feature/data-model context — the screenshots are the visual ground truth, don't deviate from their layout or design language.
+  <!-- Badges -->
+  <p>
+    <img src="https://img.shields.io/badge/Next.js-15.1.4-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+    <img src="https://img.shields.io/badge/React-19.0.0-blue?style=for-the-badge&logo=react" alt="React" />
+    <img src="https://img.shields.io/badge/FastAPI-0.110.0-009688?style=for-the-badge&logo=fastapi" alt="FastAPI" />
+    <img src="https://img.shields.io/badge/Python-3.x-3776AB?style=for-the-badge&logo=python" alt="Python" />
+    <img src="https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase" alt="Supabase" />
+    <img src="https://img.shields.io/badge/PostgreSQL-15.x-4169E1?style=for-the-badge&logo=postgresql" alt="PostgreSQL" />
+  </p>
+  <p>
+    <img src="https://img.shields.io/badge/Tailwind_CSS-3.4.1-38B2AC?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS" />
+    <img src="https://img.shields.io/badge/Framer_Motion-12.42.2-0055FF?style=for-the-badge&logo=framer" alt="Framer Motion" />
+    <img src="https://img.shields.io/badge/JWT-Auth-black?style=for-the-badge&logo=json-web-tokens" alt="JWT" />
+    <img src="https://img.shields.io/badge/REST-API-005571?style=for-the-badge&logo=postman" alt="REST API" />
+    <img src="https://img.shields.io/badge/AI-Powered-FF9900?style=for-the-badge&logo=openai" alt="AI Powered" />
+    <img src="https://img.shields.io/badge/Responsive-Design-brightgreen?style=for-the-badge" alt="Responsive Design" />
+    <img src="https://img.shields.io/badge/Vercel-Deployment-000000?style=for-the-badge&logo=vercel" alt="Vercel" />
+    <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT License" />
+  </p>
+</div>
+
 ---
-🎨 GLOBAL DESIGN SYSTEM (extract this from the screenshots and apply everywhere)
-Theme: Dark mode only. Background: near-black navy (`#0B0F17` / `#0D1117`-ish), card surfaces one shade lighter (`#111827`-ish) with subtle 1px borders (`rgba(255,255,255,0.08)`).
-Accent color: Mint/emerald green (`#5FE3A0`-ish) for primary buttons, active nav states, progress bars, positive metrics, and the "CareerForge AI" logo text.
-Secondary accents: Soft blue for informational badges/links, amber/orange for "in progress" or warning states, red/coral sparingly for alerts.
-Typography: Clean sans-serif (Inter or similar). Large bold headings (28–36px), muted gray subtext under every page title, small uppercase tracked labels (e.g. "TOTAL STUDENTS", "RESUME SCORE") in low-opacity gray.
-Layout shell: Persistent left sidebar (fixed, ~260px) with logo top, nav items with icons, "Analyze Resume" CTA button pinned near bottom, then Help Center / Logout links. Main content area scrolls independently. Some pages also have a top navbar variant (landing, login-adjacent public pages) — replicate per screenshot.
-Cards: Rounded corners (~12–16px), subtle border, soft inner padding (~24px), sometimes a soft glow/border highlight color for "featured" or "AI insight" cards (green/blue/orange border accents as shown).
-Charts: Bar charts, radial/circular progress rings, radar/capability matrix, heatmaps — all in flat, minimal, dark-mode style matching the screenshots' color palette.
-Buttons: Solid mint-green primary buttons with dark text; secondary buttons are outlined/ghost with muted border.
-Icons: Line-style icon set (lucide-react equivalent) consistent across sidebar and cards.
-Footer: Repeated across all authenticated + public pages: "CareerForge AI © 2024 CareerForge AI. Empowering the next generation of talent." + links (Privacy Policy, Terms of Service, AI Ethics, Contact Support).
-Build this as a shared design token / Tailwind config first (colors, spacing, radius, font sizes) so every page below reuses it consistently — don't restyle per page.
+
+## 📋 Table of Contents
+
+- [Project Overview](#project-overview)
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [System Architecture](#system-architecture)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Modules](#modules)
+- [Database Structure](#database-structure)
+- [API Documentation](#api-documentation)
+- [Installation & Local Development](#installation--local-development)
+- [Environment Variables](#environment-variables)
+- [Deployment Configuration](#deployment-configuration)
+- [Security](#security)
+- [AI Features](#ai-features)
+- [Responsive Design & Performance](#responsive-design--performance)
+- [Future Enhancements](#future-enhancements)
+- [Contributing](#contributing)
+- [License](#license)
+- [Developer](#developer)
+
 ---
-🗺️ SITEMAP & PAGE-BY-PAGE SPEC
-Build these as separate routed pages/components. Reference the screenshot filename in each.
-PUBLIC / UNAUTHENTICATED PAGES
-1. Landing Page (`landing_page_careerforge_ai.png`)
-Top navbar: logo, Dashboard/Resume/Interviews/Resources links, Sign In, Get Started button.
-Hero: "Forge Your Future with AI" headline (green gradient on "with AI"), subtext, Get Started / Upload Resume / Watch Demo buttons, hero product mockup image with a floating "AI Suggestion" tooltip card.
-"Trusted by" logo strip (muted institution names).
-"Intelligent Toolkit" section: 6-card grid — AI Resume Analyzer, Skill Gap Analysis, Learning Roadmap, AI Mock Interview, Career Recommendations, Placement Readiness (this last one highlighted/outlined as featured).
-Stats row: 50k+ Students Helped, 1.2M Resumes Analyzed, 200k+ Mock Interviews, 94% Success Rate.
-Success Stories: 3 testimonial cards with avatar, quote, name, role/company.
-Final CTA band: "Ready to Forge Your Career?" + Get Started Now button.
-Footer as described above.
-2. Sign In (`sign_in_careerforge_ai.png`)
-Split screen: left side has a decorative futuristic humanoid/AI illustration + "CareerForge AI" tagline copy; right side is the auth card: "Welcome Back" heading, "Sign In with Google" button, divider "OR EMAIL", Email field, Password field (with show/hide eye icon), Remember Me checkbox, Forgot Password link, big green Sign In button, "Don't have an account? Get Started" link.
-3. Register / Create Account (`register_careerforge_ai.png`)
-Centered card on dark background: "Create Account" heading + subtext.
-Fields: Full Name, University Email, Academic Branch (dropdown), Current Year (dropdown), Password, Confirm Password.
-Checkbox: "I agree to the Terms of Service and Privacy Policy, including AI processing of my professional data."
-Green "Register Account →" button.
-Divider "OR JOIN WITH" → Google / LinkedIn buttons.
-Small footer trust line about encryption.
-AUTHENTICATED STUDENT PAGES (all share the left sidebar shell: Dashboard, Resume AI, Skill Gap, Mock Interview, Readiness, Settings — plus My Profile / Notifications where shown)
-4. Student Dashboard (`dashboard_careerforge_ai.png`)
-Greeting: "Good Morning, [Name]" + "Your career readiness has increased by 12% this week." + user avatar/name/role badge top right.
-5 stat cards in a row: Resume Score, Skill Score, Placement Readiness (highlighted gradient card), Interview Score, Learning Progress — each with a small % change indicator.
-"Skill Distribution" bar chart (Core Tech vs Soft Skills legend) + "Career Match" side panel with circular badge and % match tags (e.g. 98% Full Stack, 74% DevOps) + "View Full Report" button.
-"Recent Activities" list (icon, title, subtext, timestamp) with "See All" link.
-"Upcoming Interviews" card with date badge, title, "Join" button.
-"Recommended Roles" list with match % and progress bars per role.
-"AI Smart Pick" callout card at bottom with a specific action + "Start →" link.
-5. Admin Dashboard (`admin_dashboard_careerforge_ai.png`)
-Sidebar labeled "Premium Tier Admin" with Dashboard/Resume AI/Skill Gap/Mock Interview/Readiness/Settings.
-Header: "Intelligence Overview" + search bar + notification bell + avatar.
-4 stat cards: Total Students, Active Today (Live badge), Avg Resume Score (with toggle), Placement Readiness (highlighted, AI Insights label).
-"Skill Trends Analysis" bar chart (Jan–Aug) with "Last 6 Months" filter.
-"Live Activities" feed (colored dot + title + subtext + time ago).
-"Talent Pipeline" data table: Student Name (avatar+email), Department, Resume Score, Interview Avg, Readiness (colored status dot: Highly Ready / In Progress), row actions (⋮), Filter/Export buttons, pagination footer.
-6. AI Resume Analyzer — Upload (`ai_resume_analyzer_careerforge_ai.png`)
-Page header "Resume AI Analyzer" + Download Report button + avatar.
-Large dashed-border drop zone: upload icon, "Drop your resume here", supported formats text, "Select File" (primary) and "Scan URL" (secondary) buttons.
-Empty state panel on the right (loading circle placeholder) for when analysis is running.
-7. AI Resume Builder (`ai_resume_builder_careerforge_ai.png`)
-Header: "AI Resume Builder" + status ("DRAFTING • FAANG MODERN TEMPLATE") + circular Readiness % + "AI Optimizer" button + share/download icons + green PDF export button.
-Left: form panel — "Craft your future" heading, Personal Information (Full Name, Target Role, Professional Summary textarea with "AI Enhance" button), Experience section (Company, Duration, Key Accomplishments list with regenerate icons, "Auto-generate Bullet Points" button, "Add Experience"), Skills & Expertise chips with "AI Scan Job Desc" button.
-Right: live resume preview (template switcher tabs: Modern/Academic/Creative, zoom controls) rendering the actual resume as a formatted document (name, title, contact info, summary, work experience, competencies, education).
-Floating "AI Recommendation" tooltip card with a suggestion + "Apply Fixes" button.
-8. Skill Gap Analysis (`skill_gap_analysis_careerforge_ai.png`)
-Header: "Skill Gap Analysis" + subtext + Target Career Path dropdown + green "Run Analysis" button.
-"Skill Match" circular readiness ring (%) + short summary text below it.
-"Skill Distribution" list of skills with progress bars (Mastered/In Progress legend dots).
-"Critical Gaps" card (orange border): High Impact / Medium Impact gap entries with description.
-"Industry Benchmarks" card (blue border): You vs Avg comparisons (Publication Count, Years of Experience, Open Source Contribution).
-"AI-Curated Learning Path" section: 3 resource cards (YouTube/Coursera/Interactive Lab thumbnails) with duration, level, and CTA links.
-9. Career Intelligence (`career_intelligence_careerforge_ai.png`)
-Header: "Career Intelligence" + "Intelligence Engine Active" badge + subtext.
-"Profile Summary" card: avatar, name, title, Verified badge, extracted skill chips, key projects list with checkmarks, Resume Score with percentile.
-"Capability Matrix" radar chart (Frontend/Backend/DevOps/Systems axes) + Primary Archetype + Growth Potential stat boxes.
-"AI Career Insights" side panel: 3 short insight quote-cards + "Request Full Analysis" button.
-"Career Match Analysis" section: 3 role-match cards (Full Stack Developer 96%, Frontend Engineer 89%, Backend Developer 84%) each with Market Demand tag, Est. Salary range, confidence score progress bar.
-"Skill Acceleration Roadmap" banner card with recommended cert/skill chips + "Generate Personalized Roadmap" button.
-Floating chat bubble icon bottom-right.
-10. AI Career Coach (`ai_career_coach_careerforge_ai.png`)
-Left sidebar with user card (name + Premium Tier), nav.
-Center: chat interface — "AI Career Coach" heading, initial AI greeting message with 2 quick-reply suggestion cards ("Career Path", "Interview Prep"), user message bubble (right-aligned, green), AI response bubble (left-aligned, numbered actionable list with bold keywords), inline action buttons ("Deep Dive: Python", "Find Courses"), bottom input bar with attach/mic/send icons.
-Right panel: "Career Intelligence" — Industry Insights cards, Trending Skills tag cloud, "Recommended for You" cert card with image, "Market Readiness" % with progress bar.
-11. AI Mock Interview (`ai_mock_interview_careerforge_ai.png`)
-Header: "Mock Interview" + subtext + user status badge ("IN-SESSION READY") + avatar.
-Left panel: "Select Session" — 4 selectable type cards (Technical, HR/Culture, Behavioral, Aptitude) with icons, green "Start Interview Session" button, then live metric bars (Communication, Confidence, Accuracy with %) and an "AI Insights" card with Strength Detected / Improvement Area callouts.
-Right/main panel: session status bar (SESSION ACTIVE, timer, step dots 1–4, "Question X of 10"), chat-style Q&A thread (AI question bubble left, user answer bubble right, timestamps), typing indicator (•••), bottom text input with attach/mic/send.
-12. Learning Resources (`learning_resources_careerforge_ai.png`)
-Top search bar + notification bell + avatar.
-"Learning Resources" header with Target role badge + Skill Readiness % badge.
-"Learning Momentum" bar chart (Mon–Sun) + "Saved for Later" bookmark list (thumbnail, title, meta, delete icon, "View All Bookmarks" link).
-"AI Recommendations" — 4 highlighted cards (tags: High Priority / Missing Skill / Career Booster / Personalized) each with title, description, duration, bookmark icon, "Start Learning" button.
-Filter chips row (All Topics/Frontend/Backend/AI-ML/System Design) + Difficulty/Platform dropdowns.
-Course grid: 4 cards with thumbnail image, platform badge, title, instructor, progress bar %, time left, Continue/Start/Finish button.
-"Load More Resources" button.
-13. Learning Roadmap / Readiness Plan (`learning_roadmap_careerforge_ai.png`)
-Header: "Full Stack AI Engineer" title + subtext (6-week plan, gaps identified) + Overall Progress % circular badge.
-Vertical timeline: Week cards — completed (checkmark, 100% Done), in-progress (highlighted border, % completion, embedded resource pill buttons), locked (greyed, lock icon) — each with title, description, meta (hours/lessons/cert).
-Right panel: "AI Career Insights" callout with "Adjust My Roadmap" button, "Selected Resources" list (icon, title, platform/duration, chevron), floating chat icon, "Milestones" list (claimed cert vs locked-in-future cert).
-14. My Profile (`my_profile_careerforge_ai.png`)
-Header: "My Profile" + Edit Profile / Download Resume buttons.
-Left card: avatar (verified badge), name, degree/branch, social icons (GitHub/LinkedIn/portfolio), Placement Score with Top % label and progress bar, then 3 stacked stat cards (Resume Score, Skill Score, Readiness status).
-Right: "Core Skills" card (skill bars + AI Verified badge + skill chips), "Top Projects" card (project name, description, tech tags), "Achievements" card (icon + title + subtext, timeline style), "Progress Journey" card — vertical timeline of dated milestones (Resume Uploaded, Roadmap Generated, Mock Interview Completed) each with description.
-Floating chat icon bottom-right.
-15. Notifications (`notifications_careerforge_ai.png`)
-Top navbar (Dashboard/Resume/Interviews/Resources) + search + avatar.
-"Notifications" header + "Mark all as read" link.
-Filter pill tabs: All / Resume / Learning / Interviews / Achievements.
-Grouped sections by date (Today / This Week / Earlier), each notification card has icon, bold title, description, timestamp, unread dot, and contextual action links (View Report, Dismiss, Review Feedback).
-16. Placement Readiness (`placement_readiness_careerforge_ai.png`)
-Top navbar variant + "Placement Readiness" header + "Live Analysis Active" badge.
-"Overall Readiness Score" circular ring (82%) + Rank + Status stat boxes.
-"Readiness Breakdown" 2x2 grid: Resume Power, Technical Proficiency, Mock Performance, Learning Velocity — each with progress bar + short italic note.
-"Placement Probability" banner strip with % and certainty label.
-"Skill Acquisition Heatmap" grid (color intensity = skill strength) with Low/High legend and month range labels.
-"Performance Trends" card: Agility/Cognitive/Behavioral trend rows with up-arrow %.
-"Milestone Timeline" (Completed / In Progress with bar / Locked entries).
-"AI Coach Insights" card (orange border): quote-style feedback + "Recommended Action" sub-box + "Execute Next Step" button.
-17. Settings (`settings_careerforge_ai.png`)
-Header: "Settings" + language selector + dark mode toggle icon.
-Left settings sub-nav: Account (active), Security, Notifications, Privacy, AI Preferences.
-"Personal Information" card: Full Name, Email, Phone Number, Graduation Year fields.
-"Security" card: Change Password row, Two-Factor Auth toggle.
-"Resume Visibility" card: radio options — Public, Recruiters Only, Private (each with description).
-"AI Intelligence Preferences" card: Preferred Career Domain tag input (removable chips + Add Domain), Target Companies text input with helper text, "Adaptive Skill Analysis" toggle with description.
-Bottom action bar: "Discard Changes" text link + green "Save Changes" button.
+
+## 🌟 Project Overview
+
+### What is CareerBridge AI?
+CareerBridge AI is a state-of-the-art, AI-powered career intelligence and placement preparation web application. Built with a scalable micro-architecture consisting of a Next.js frontend and a FastAPI backend connected to a Supabase PostgreSQL database, the platform operates as a personalized career mentor.
+
+### Why was it developed?
+The modern job market is fiercely competitive. Students and early-career professionals often lack targeted guidance on resume building, skill gap analysis, and interview preparation. Generic advice fails to meet the specific requirements of highly specialized technical and business roles.
+
+### Problem Statement
+Candidates struggle to translate their educational background into industry-ready profiles. They face challenges getting their resumes past Applicant Tracking Systems (ATS), identifying what skills they need to learn for their target roles, and preparing for the nuanced questions asked in real technical interviews.
+
+### Solution
+CareerBridge AI bridges the gap between academic learning and industry expectations by providing data-driven resume analysis, real-time mock interviews, personalized learning roadmaps, and actionable career intelligence generated by advanced AI services.
+
+### Objectives
+- Maximize the placement success rate of students and professionals.
+- Provide real-time, constructive feedback on resumes and interviews.
+- Deliver personalized, actionable intelligence for career planning.
+
+### Target Users
+- **University Students** preparing for their first placements.
+- **Early-Career Professionals** seeking lateral movement or promotions.
+- **Career Changers** needing targeted skill gap analysis.
+
+### Benefits
+- **Higher ATS Pass Rates:** Automated resume scoring against industry keywords.
+- **Enhanced Confidence:** Real-time AI mock interviews simulate real-world pressure.
+- **Targeted Upskilling:** AI pinpoints exactly what skills are missing for a target job.
+
 ---
-⚙️ FUNCTIONAL / TECHNICAL REQUIREMENTS
-Frontend: React + React Router + Tailwind CSS. Componentize the shared Sidebar, Topbar, Footer, StatCard, ProgressBar, Badge, Chart wrappers so all 17 pages reuse them instead of duplicating markup.
-Charts: Use Recharts (or similar) for bar charts, radial progress, and radar chart. Build a custom heatmap grid component for the Skill Acquisition Heatmap.
-State/Data: Use mock/sample JSON data matching exactly what's shown in each screenshot (same names, numbers, percentages) so the demo looks identical to the reference images. Structure this mock data so it's easy to later swap for real API calls.
-Routing map:
-`/` → Landing
-`/sign-in`, `/register`
-`/dashboard` (student), `/admin` (admin)
-`/resume/analyze`, `/resume/build`
-`/skill-gap`, `/career-intelligence`
-`/coach`
-`/interview`
-`/learning/resources`, `/learning/roadmap`
-`/readiness`
-`/profile`
-`/notifications`
-`/settings`
-Backend (if requested): FastAPI, matching the PDF's schema — Students, Resumes, Skills, Interviews, Jobs tables; JWT auth; endpoints for resume upload/parsing, skill-gap comparison, mock-interview session, notifications. AI calls (resume scoring, chat coach, gap analysis) go through a single `ai/` service layer so the model provider (Gemini/OpenAI) can be swapped.
-Responsiveness: Sidebar collapses to icons or a hamburger drawer on mobile; stat card rows wrap to 2-column/1-column; charts stay legible on small screens.
-Interactivity to actually implement (not just visual):
-File upload on Resume Analyzer (accepts PDF/DOCX, shows loading state, then a result panel).
-Live-editable form + preview sync on Resume Builder.
-Working chat UI (send message → append bubble → simulated AI typing → response) on AI Career Coach and Mock Interview.
-Filter/tab switching on Notifications, Learning Resources, Skill Gap resource tags.
-Toggle switches and radio groups persist local state on Settings.
-Sidebar active-route highlighting.
+
+## ✨ Features
+
+### Authentication & Authorization
+- **Register:** Secure student account creation with strict password policies.
+- **Login:** JWT-based stateless authentication with `HTTPBearer`.
+- **Remember Me:** Secure token persistence via Local Storage and Session Storage.
+- **Forgot Password / Reset Password:** Secure workflows to reclaim account access.
+- **Role-Based Authentication (RBAC):** Strict segregation between `Student` and `Admin` roles.
+- **Protected Routes:** Frontend Higher-Order Components (HOC) and Backend Dependency Injection (`get_current_user`) block unauthenticated access.
+
+### Dashboard & Analytics
+- **Dashboard:** Unified command center displaying Placement Readiness Score, Total Interviews, and Skill Mastery.
+- **Admin Dashboard:** Centralized metrics for institutional overview and user management.
+
+### Resume Intelligence
+- **Resume Analyzer:** Deep ATS compatibility checks, keyword analysis, and actionable feedback.
+- **Resume Builder:** Dynamic, auto-saving component to craft professional resumes.
+- **Resume Validation:** Strict backend rules enforcing resume quality.
+- **Resume Templates:** (Planned) Multiple industry-standard export templates.
+- **PDF Export:** (Planned) Single-click resume downloads.
+- **Resume Sharing:** (Planned) Public URLs for recruiter visibility.
+
+### Career & Skill Intelligence
+- **Skill Gap Analysis:** AI-driven comparison between current skills and target role requirements.
+- **Career Intelligence:** Industry insights, remote work trends, and emerging technology analytics.
+- **AI Career Coach:** A specialized, conversational AI assistant providing hyper-personalized career advice.
+- **Career Target:** Granular settings to define target roles, industries, and expected salaries.
+
+### Placement & Interview Preparation
+- **Mock Interview:** AI-generated behavioral and technical questions based on the user's resume and target role.
+- **Placement Readiness:** Aggregated algorithmic scoring defining the probability of landing a role.
+- **Learning Resources:** Curated articles, courses, and documentation links.
+- **Learning Roadmap:** Chronological, step-by-step upskilling timeline.
+
+### User Management
+- **Profile:** Manage personal information, academic details, and external links (GitHub/LinkedIn).
+- **Settings:** Advanced configuration for career targets, email preferences, and password security.
+- **Notifications:** In-app alert system for upcoming interviews, resume milestones, and system updates.
+
+### System-Wide Features
+- **Responsive Design:** Flawless rendering across Desktop, Tablet, and Mobile devices.
+- **Dark Mode:** Deep, premium dark aesthetics built with Tailwind CSS.
+- **AI Integration:** Real-time generative endpoints powering all analytical features.
+
 ---
-📁 EXACT PROJECT FOLDER STRUCTURE (use this exact layout — no vite/venv config files)
-Generate the project with this precise file/folder structure. Do not invent a different structure, do not add extra top-level folders, and do not skip any file — create every file listed even if it starts empty, then fill it with the corresponding page/component/route code from the specs above.
-CareerBridgeAI/
-├── backend/
-│   ├── app/
-│   │   ├── agents/
-│   │   │   ├── ResumeAgent/agent.py
-│   │   │   ├── SkillAgent/agent.py
-│   │   │   ├── LearningAgent/agent.py
-│   │   │   ├── InterviewAgent/agent.py
-│   │   │   ├── CoachAgent/agent.py
-│   │   │   └── JobAgent/agent.py
-│   │   ├── ai/
-│   │   │   ├── gemini_client.py
-│   │   │   ├── embeddings.py
-│   │   │   ├── rag.py
-│   │   │   └── prompt_templates.py
-│   │   ├── api/
-│   │   │   ├── auth.py
-│   │   │   ├── resume.py
-│   │   │   ├── skills.py
-│   │   │   ├── interviews.py
-│   │   │   ├── coach.py
-│   │   │   ├── learning.py
-│   │   │   ├── notifications.py
-│   │   │   ├── analytics.py
-│   │   │   └── admin.py
-│   │   ├── core/
-│   │   │   ├── config.py
-│   │   │   └── security.py
-│   │   ├── database/
-│   │   │   ├── connection.py
-│   │   │   └── base.py
-│   │   ├── models/
-│   │   │   ├── student.py
-│   │   │   ├── resume.py
-│   │   │   ├── skills.py
-│   │   │   ├── interview.py
-│   │   │   ├── job.py
-│   │   │   └── notification.py
-│   │   ├── schemas/
-│   │   │   ├── student_schema.py
-│   │   │   ├── resume_schema.py
-│   │   │   ├── interview_schema.py
-│   │   │   └── job_schema.py
-│   │   ├── services/
-│   │   │   ├── auth_service.py
-│   │   │   ├── resume_service.py
-│   │   │   ├── skill_gap_service.py
-│   │   │   ├── interview_service.py
-│   │   │   └── notification_service.py
-│   │   ├── utils/
-│   │   │   ├── file_utils.py
-│   │   │   └── pdf_parser.py
-│   │   └── main.py
-│   └── requirements.txt
-├── database/
-│   ├── migrations/
-│   ├── seed/seed_data.sql
-│   └── schema.sql
-├── docs/
-│   ├── SRS/SRS.pdf
-│   ├── Architecture/Architecture.pdf
-│   ├── PPT/
-│   └── Report/
-├── frontend/
+
+## 📸 Screenshots
+
+<div align="center">
+  <h3>Desktop Screens</h3>
+  <img src="https://via.placeholder.com/600x350/111827/5FE3A0?text=Dashboard" alt="Dashboard Screenshot" width="400" />
+  <img src="https://via.placeholder.com/600x350/111827/5FE3A0?text=Resume+Builder" alt="Resume Builder Screenshot" width="400" />
+  <img src="https://via.placeholder.com/600x350/111827/5FE3A0?text=Mock+Interview" alt="Mock Interview Screenshot" width="400" />
+  <img src="https://via.placeholder.com/600x350/111827/5FE3A0?text=Skill+Gap" alt="Skill Gap Screenshot" width="400" />
+  
+  <h3>Mobile Screens</h3>
+  <img src="https://via.placeholder.com/300x600/111827/5FE3A0?text=Mobile+Dashboard" alt="Mobile Dashboard Screenshot" width="200" />
+  <img src="https://via.placeholder.com/300x600/111827/5FE3A0?text=Mobile+Profile" alt="Mobile Profile Screenshot" width="200" />
+</div>
+
+> *Note: Replace placeholders with actual application screenshots.*
+
+---
+
+## 🏗️ System Architecture
+
+```mermaid
+graph TD
+    subgraph Frontend [Next.js Client]
+        UI[React Components]
+        State[React Hooks & Context]
+        AuthHOC[withAuth Route Protection]
+    end
+
+    subgraph Backend [FastAPI Server]
+        Router[API Routers]
+        Deps[Dependency Injection / Auth]
+        Services[Business Logic & AI Services]
+        Validators[Pydantic V2 Schemas]
+    end
+
+    subgraph Database [Supabase]
+        PgSQL[(PostgreSQL Database)]
+        RLS[Row Level Security]
+    end
+
+    subgraph External [External Services]
+        Gemini[Google Gemini API]
+    end
+
+    UI -->|REST / JSON| Router
+    AuthHOC -->|Bearer JWT| Router
+    Router --> Deps
+    Deps --> Services
+    Services --> Validators
+    Services -->|SQLAlchemy ORM| PgSQL
+    Services -->|Prompts| Gemini
+```
+
+---
+
+## 💻 Tech Stack
+
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend** | Next.js 15, React 19, Tailwind CSS 3.4, Framer Motion, Lucide React, Recharts |
+| **Backend** | FastAPI 0.110, Uvicorn, Python 3.x, Pydantic V2, python-multipart |
+| **Database** | Supabase (PostgreSQL 15), SQLAlchemy 2.0, Psycopg2-binary |
+| **Authentication**| JWT (python-jose), Passlib (bcrypt), React Context API |
+| **AI** | Google Gemini API (Simulated/Integrated) |
+| **Cloud Storage** | (Planned) Cloudinary / Supabase Storage for Resumes |
+| **Deployment** | Vercel (Frontend), Render/Railway/AWS (Backend) |
+| **Dev Tools** | Postman, Git, NPM/Pip |
+
+---
+
+## 📂 Project Structure
+
+```text
+CareerBridge-AI/
+├── frontend/                     # Next.js Application
 │   ├── src/
-│   │   ├── assets/
-│   │   │   ├── images/
-│   │   │   ├── logos/
-│   │   │   └── icons/
-│   │   ├── components/
-│   │   │   ├── Sidebar/index.jsx
-│   │   │   ├── Topbar/index.jsx
-│   │   │   ├── Footer/index.jsx
-│   │   │   ├── StatCard/index.jsx
-│   │   │   ├── ProgressBar/index.jsx
-│   │   │   ├── Badge/index.jsx
-│   │   │   ├── Buttons/index.jsx
-│   │   │   ├── Forms/index.jsx
-│   │   │   ├── Charts/BarChart.jsx
-│   │   │   ├── Charts/RadialProgress.jsx
-│   │   │   ├── Charts/RadarChart.jsx
-│   │   │   ├── Charts/Heatmap.jsx
-│   │   │   ├── Chat/ChatWindow.jsx
-│   │   │   └── Chat/ChatBubble.jsx
-│   │   ├── pages/
-│   │   │   ├── Landing/index.jsx            → Page 1
-│   │   │   ├── SignIn/index.jsx             → Page 2
-│   │   │   ├── Register/index.jsx           → Page 3
-│   │   │   ├── Dashboard/index.jsx          → Page 4 (student)
-│   │   │   ├── AdminDashboard/index.jsx     → Page 5
-│   │   │   ├── ResumeAnalyzer/index.jsx     → Page 6
-│   │   │   ├── ResumeBuilder/index.jsx      → Page 7
-│   │   │   ├── SkillGap/index.jsx           → Page 8
-│   │   │   ├── CareerIntelligence/index.jsx → Page 9
-│   │   │   ├── AICoach/index.jsx            → Page 10
-│   │   │   ├── MockInterview/index.jsx      → Page 11
-│   │   │   ├── LearningResources/index.jsx  → Page 12
-│   │   │   ├── LearningRoadmap/index.jsx    → Page 13
-│   │   │   ├── Readiness/index.jsx          → Page 16 (Placement Readiness)
-│   │   │   ├── Profile/index.jsx            → Page 14
-│   │   │   ├── Notifications/index.jsx      → Page 15
-│   │   │   └── Settings/index.jsx           → Page 17
-│   │   ├── routes/
-│   │   │   ├── AppRoutes.jsx     → wires the Routing map below to every page above
-│   │   │   └── ProtectedRoute.jsx
-│   │   ├── context/
-│   │   │   ├── AuthContext.jsx
-│   │   │   └── UserContext.jsx
-│   │   ├── hooks/
-│   │   │   ├── useAuth.js
-│   │   │   └── useFetch.js
-│   │   ├── services/
-│   │   │   ├── apiClient.js
-│   │   │   ├── authService.js
-│   │   │   ├── resumeService.js
-│   │   │   ├── skillGapService.js
-│   │   │   ├── interviewService.js
-│   │   │   ├── coachService.js
-│   │   │   ├── learningService.js
-│   │   │   └── notificationService.js
-│   │   ├── utils/
-│   │   │   ├── formatters.js
-│   │   │   └── constants.js
-│   │   ├── data/
-│   │   │   ├── mockDashboard.json
-│   │   │   ├── mockSkillGap.json
-│   │   │   ├── mockInterview.json
-│   │   │   └── mockNotifications.json
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   ├── index.html
-│   ├── package.json
-│   └── tailwind.config.js
-├── tests/
-│   ├── frontend/
-│   └── backend/
-├── uploads/
-│   ├── resumes/
-│   └── profile_pictures/
-├── .env
-├── .gitignore
-└── README.md
-Placement rules for the AI builder
-Every page in SITEMAP & PAGE-BY-PAGE SPEC maps 1:1 to a folder under `frontend/src/pages/` exactly as named above — do not rename, merge, or split these page folders.
-Every reusable UI element described in the GLOBAL DESIGN SYSTEM (sidebar, topbar, footer, stat cards, progress bars, badges, charts, chat bubbles) must live in `frontend/src/components/` and be imported into pages — never re-implemented inline per page.
-All chart types (bar chart, radial progress ring, radar/capability matrix, heatmap) go in `frontend/src/components/Charts/` as separate reusable files, imported wherever a screenshot shows that chart type.
-Mock data used to replicate exact screenshot numbers (scores, percentages, names, activity feeds) goes in `frontend/src/data/*.json` — pages import from there, not hardcoded inline, so it's swap-ready for real API calls later.
-`frontend/src/routes/AppRoutes.jsx` must implement the exact Routing map listed above, one `<Route>` per page.
-Every backend feature (resume parsing, skill-gap comparison, mock interview sessions, AI coach chat, notifications, admin analytics) maps 1:1 to a file under `backend/app/api/` + a matching file in `backend/app/services/` + (where relevant) an agent under `backend/app/agents/` — keep this three-layer separation (route → service → agent) for every feature, don't collapse logic directly into the route file.
-Do not generate `vite.config.js`, `venv/`, `node_modules/`, `.venv`, or any bundler/environment setup files — only the source files listed in the tree above. Environment variables go only in the single root `.env` file.
+│   │   ├── assets/               # Images and static assets
+│   │   ├── components/           # Reusable UI components (Sidebar, Topbar, PasswordSecurity)
+│   │   ├── context/              # React Context (AuthContext)
+│   │   ├── pages/                # Next.js Page Routes (Dashboard, Resume, Coach)
+│   │   ├── services/             # Axios API Client configurations
+│   │   ├── styles/               # Global CSS and Tailwind definitions
+│   │   └── utils/                # Helper functions (Password Validation)
+│   ├── package.json              # NPM Dependencies
+│   └── tailwind.config.js        # Tailwind Design System tokens
+│
+└── backend/                      # FastAPI Application
+    ├── app/
+    │   ├── api/                  # API Endpoint Routers (auth.py, resume.py, etc.)
+    │   ├── core/                 # Configs, Security, Validators (validators.py)
+    │   ├── models/               # SQLAlchemy Database Models (student.py, resume.py)
+    │   ├── schemas/              # Pydantic V2 Schemas for I/O validation
+    │   ├── services/             # Business Logic (auth_service.py, resume_service.py)
+    │   └── main.py               # FastAPI App Initialization and CORS setup
+    ├── .env                      # Database and Secret Configuration
+    └── requirements.txt          # Python Dependencies
+```
+
+### Folder Purposes
+- **`frontend/src/pages`**: Contains all routed components. Follows strict aesthetic rules defined by global design tokens.
+- **`frontend/src/components`**: Houses modular UI elements (e.g., `PasswordSecurity` for unified password strength testing).
+- **`backend/app/api`**: Separates route definitions into logical domain files (`interviews.py`, `learning.py`).
+- **`backend/app/schemas`**: Provides robust, type-safe request/response validation utilizing `@model_validator`.
+- **`backend/app/models`**: Maps Python classes directly to Supabase PostgreSQL relational tables.
+
 ---
-✅ DELIVERABLE
-A single cohesive multi-page web app where every page listed above exists, visually matches its screenshot as closely as possible, shares one consistent design system, and is wired together with real navigation (sidebar links actually route to the corresponding pages). Use the attached PDF only to fill in labels/data/logic that aren't visible in the screenshots (e.g., exact DB fields, feature descriptions). When something in the PDF and a screenshot conflict, the screenshot wins.
+
+## 🧩 Modules
+
+### Authentication Module
+Handles the entire user lifecycle. From registration with strict, dynamic password validation, to JWT issuance and validation. Includes endpoints for secure password resets.
+
+### Dashboard Module
+Aggregates data from multiple services to present a high-level overview. Calculates the "Placement Readiness Score" dynamically based on resume strength and interview performance.
+
+### Resume Module
+A bifurcated system offering both an interactive `ResumeBuilder` for creating ATS-friendly resumes and a `ResumeAnalyzer` for scoring existing profiles against targeted industry standards.
+
+### Skill Gap Module
+Compares the user's currently documented skills against the standard requirements of their "Target Role", outputting actionable missing skills and proficiency suggestions.
+
+### Career Coach Module
+A conversational interface (`AICareerCoach`) that provides contextual guidance. It retains session context to offer highly relevant industry insights and remote work trends.
+
+### Mock Interview Module
+Generates dynamic interview questions based on the user's resume. Records user responses (text-based) and provides real-time AI feedback on tone, technical accuracy, and completeness.
+
+### Learning Module
+Supplies the `LearningResources` and `LearningRoadmap`. Recommends specific courses, documentation, and sequential milestones tailored to close identified skill gaps.
+
+### Placement Module
+Predictive analytics determining the user's likelihood of securing their target role, generating a detailed "Recommended Action" matrix.
+
+### Notification Module
+A background service delivering important system alerts (e.g., "Complete your profile", "Interview scheduled").
+
+### Settings Module
+Allows users to alter system preferences, update password credentials, and define their ultimate career target metrics (Role, Salary, Location).
+
+### Admin Module
+Protected domain strictly for institutional oversight, tracking total active students and overall system engagement metrics.
+
+---
+
+## 🗄️ Database Structure
+
+CareerBridge AI utilizes a robust **PostgreSQL** database hosted on **Supabase**.
+
+### Core Tables
+
+1. **`students`**
+   - **Primary Key:** `id` (UUID)
+   - **Fields:** `full_name`, `email`, `hashed_password`, `role`, `created_at`
+   - **Purpose:** Stores core user authentication and authorization data.
+
+2. **`resumes`**
+   - **Primary Key:** `id` (UUID)
+   - **Foreign Key:** `student_id` (References `students.id`)
+   - **Fields:** `content_json`, `ats_score`, `last_analyzed`
+   - **Purpose:** Persists structured resume data for builder auto-saving and analysis tracking.
+
+3. **`skills`**
+   - **Primary Key:** `id` (UUID)
+   - **Foreign Key:** `student_id` (References `students.id`)
+   - **Fields:** `skill_name`, `proficiency`, `is_verified`
+   - **Purpose:** Tracks individual user competencies for gap analysis.
+
+4. **`jobs` (Target Roles)**
+   - **Primary Key:** `id` (UUID)
+   - **Foreign Key:** `student_id` (References `students.id`)
+   - **Fields:** `title`, `industry`, `expected_salary`
+   - **Purpose:** Stores the user's ultimate career goals to tailor AI outputs.
+
+5. **`interviews` (Mock Sessions)**
+   - **Primary Key:** `id` (UUID)
+   - **Foreign Key:** `student_id` (References `students.id`)
+   - **Fields:** `score`, `feedback_json`, `date_conducted`
+   - **Purpose:** Records historical performance in simulated technical interviews.
+
+6. **`audit_logs`**
+   - **Primary Key:** `id` (UUID)
+   - **Fields:** `user_id`, `action`, `status`, `ip_address`
+   - **Purpose:** Security tracing for critical actions (e.g., password changes, login attempts).
+
+---
+
+## 🔌 API Documentation
+
+All endpoints are prefixed with `/api`. Authenticated endpoints require a `Bearer <JWT_TOKEN>` in the Authorization header.
+
+### Authentication (`/auth`)
+| Method | Route | Purpose | Auth Required |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/auth/register` | Create a new student account | No |
+| `POST` | `/auth/login` | Authenticate and retrieve JWT | No |
+| `POST` | `/auth/reset-password` | Reset user password | No |
+| `POST` | `/auth/change-password` | Update password from settings | Yes |
+
+### Profile & Settings (`/profile`, `/settings`)
+| Method | Route | Purpose | Auth Required |
+| :--- | :--- | :--- | :--- |
+| `GET`  | `/profile` | Fetch user profile data | Yes |
+| `PUT`  | `/profile` | Update profile information | Yes |
+| `GET`  | `/settings` | Fetch career targets & preferences | Yes |
+| `PUT`  | `/settings` | Update career targets | Yes |
+
+### Analytics & Dashboard (`/analytics`)
+| Method | Route | Purpose | Auth Required |
+| :--- | :--- | :--- | :--- |
+| `GET`  | `/dashboard/student` | Fetch student dashboard metrics | Yes |
+| `GET`  | `/dashboard/admin` | Fetch admin overview metrics | Yes (Admin) |
+| `GET`  | `/analysis/skill-gap` | Execute AI skill gap assessment | Yes |
+| `GET`  | `/analysis/placement-readiness` | Generate readiness score | Yes |
+| `GET`  | `/career/intelligence` | Fetch industry trends | Yes |
+
+### Resume Operations (`/resume`)
+| Method | Route | Purpose | Auth Required |
+| :--- | :--- | :--- | :--- |
+| `GET`  | `/resume` | Fetch the current saved resume | Yes |
+| `POST` | `/resume` | Auto-save resume builder content | Yes |
+| `POST` | `/resume/analyze` | Run ATS checks on resume content | Yes |
+
+### Interviews & Learning (`/interviews`, `/learning`)
+| Method | Route | Purpose | Auth Required |
+| :--- | :--- | :--- | :--- |
+| `GET`  | `/interviews/mock` | Generate new mock questions | Yes |
+| `POST` | `/interviews/mock/message` | Submit answer for AI feedback | Yes |
+| `GET`  | `/learning/roadmap` | Fetch structured learning path | Yes |
+| `GET`  | `/learning/resources` | Fetch curated external resources | Yes |
+
+### Coach & Notifications (`/coach`, `/notifications`)
+| Method | Route | Purpose | Auth Required |
+| :--- | :--- | :--- | :--- |
+| `GET`  | `/coach/session` | Initialize AI coach session | Yes |
+| `POST` | `/coach/message` | Send prompt to AI coach | Yes |
+| `GET`  | `/notifications` | Fetch unread system alerts | Yes |
+
+---
+
+## 🛠️ Installation & Local Development
+
+### Prerequisites
+- Node.js (v18+)
+- Python (v3.10+)
+- PostgreSQL (or Supabase account)
+- Git
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-username/CareerBridge-AI.git
+cd CareerBridge-AI
+```
+
+### 2. Database Setup (Supabase)
+1. Create a new project on [Supabase](https://supabase.com/).
+2. Retrieve your `Database Password` and `Connection String (URI)`.
+3. (Optional) Run any pending Alembic migrations or manually map models.
+
+### 3. Backend Setup (FastAPI)
+```bash
+cd backend
+# Create Virtual Environment
+python -m venv venv
+
+# Activate Environment
+# Windows:
+venv\Scripts\activate
+# Mac/Linux:
+source venv/bin/activate
+
+# Install Dependencies
+pip install -r requirements.txt
+
+# Run the Development Server
+uvicorn app.main:app --reload --port 8000
+```
+*The backend will be available at `http://localhost:8000`. Swagger UI at `http://localhost:8000/docs`.*
+
+### 4. Frontend Setup (Next.js)
+```bash
+cd frontend
+# Install Dependencies
+npm install
+
+# Run the Development Server
+npm run dev
+```
+*The frontend will be available at `http://localhost:3000`.*
+
+---
+
+## 🔐 Environment Variables
+
+Ensure these files are kept out of version control (`.gitignore`).
+
+### Backend (`backend/.env`)
+| Variable | Description | Example |
+| :--- | :--- | :--- |
+| `DATABASE_URL` | Supabase PostgreSQL Connection String | `postgresql+psycopg2://...` |
+| `SECRET_KEY` | Key for signing JWTs | `your-secure-random-string` |
+| `ALGORITHM` | JWT Encoding Algorithm | `HS256` |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | JWT Lifespan | `1440` |
+| `GEMINI_API_KEY` | Optional: External AI Service Key | `AIzaSyB...` |
+
+### Frontend (`frontend/.env.local`)
+| Variable | Description | Example |
+| :--- | :--- | :--- |
+| `NEXT_PUBLIC_API_URL` | Point to FastAPI Backend | `http://localhost:8000/api` |
+
+---
+
+## 🚀 Deployment Configuration
+
+### Frontend (Vercel)
+The Next.js frontend is fully optimized for Vercel deployment.
+1. Push your code to GitHub.
+2. Import the project into Vercel.
+3. Set the Root Directory to `frontend`.
+4. Configure the Environment Variable `NEXT_PUBLIC_API_URL` to point to your live backend.
+5. Deploy.
+
+### Backend (Render / AWS / Railway)
+The FastAPI application can be deployed using Docker or native Python environments.
+1. Ensure the `uvicorn` web server is bound to the dynamic `$PORT`.
+2. Supply the `DATABASE_URL` pointing to your production Supabase pool.
+3. Configure CORS in `main.py` to accept requests strictly from your Vercel URL.
+
+### Database (Supabase)
+Ensure that your connection string utilizes Supabase's IPv4 connection pooler (port 6543) if deploying to environments without IPv6 support.
+
+---
+
+## 🛡️ Security
+
+CareerBridge AI implements enterprise-grade security protocols:
+- **Stateless Authentication:** JSON Web Tokens (JWT) eliminate session highjacking vectors. Tokens are verified via the `get_current_user` dependency before any data is served.
+- **Password Cryptography:** `passlib` utilizing `bcrypt` algorithms ensures plain-text passwords never touch the database.
+- **Strict Validation Pipelines:** Custom `validate_strong_password` schemas enforce length, casing, symbols, and restrict usage of personal identifiers inside passwords.
+- **CORS Protection:** Cross-Origin Resource Sharing is strictly limited to whitelisted frontend domains.
+- **Audit Logging:** Password changes, resets, and critical failures are logged with timestamps and originating IP addresses for intrusion detection.
+
+---
+
+## 🧠 AI Features
+
+The platform's core value proposition is driven by Artificial Intelligence:
+- **Resume Scoring Engine:** Parsed JSON resume data is evaluated against keyword matrices to calculate an ATS compatibility score.
+- **Skill Gap Detection:** NLP algorithms assess the delta between a user's `skills` table and the standardized requirements of their `target_role`.
+- **Mock Interview Generation:** Dynamic question generation preventing repetitive scenarios, tailored to the specific seniority level indicated in the user's profile.
+- **Placement Prediction:** A weighted algorithm combining Resume Score, Interview Score, and Profile Completeness to generate a realistic Placement Readiness percentage.
+
+---
+
+## 📱 Responsive Design & Performance
+
+- **Fluid Layouts:** Constructed using Tailwind CSS utility classes (`md:`, `lg:`), ensuring the application adapts gracefully from 4K desktop monitors down to 320px mobile screens.
+- **Component Reusability:** The UI architecture relies heavily on DRY principles, isolating complex logic into generic components (`Sidebar`, `PasswordSecurity`).
+- **Performance Optimizations:** 
+  - Code Splitting via Next.js.
+  - Client-side routing eliminating full page reloads.
+  - Efficient database indexing on `student_id` foreign keys ensuring low-latency analytics fetching.
+
+---
+
+## 🔮 Future Enhancements
+
+The CareerBridge AI roadmap includes the following planned features:
+- [ ] **Firebase Push Notifications:** Real-time mobile alerts for interview schedules.
+- [ ] **Recruiter Portal:** A dedicated frontend interface for companies to source top-scoring candidates.
+- [ ] **Video Mock Interviews:** WebRTC integration with facial expression analysis.
+- [ ] **Voice AI:** Speech-to-text integration for conversational interview simulations.
+- [ ] **Resume Version History:** Time-travel capabilities to restore previous resume iterations.
+- [ ] **Mobile App:** A native React Native or Flutter application.
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions from the open-source community!
+
+1. Fork the Project.
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the Branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
+
+Please ensure your code adheres to the existing styling configurations and passes all Pydantic validations.
+
+---
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+## 👨‍💻 Developer
+
+**Gopinath G**
+- Senior Full Stack Engineer & Database Architect
+- Project: CareerBridge AI
+- Portfolio/GitHub: [Gopinath's Profile](https://github.com/your-username)
+
+---
+
+<div align="center">
+  <p>Built with ❤️ for the next generation of talent.</p>
+</div>

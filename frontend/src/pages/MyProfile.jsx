@@ -1,11 +1,14 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { getProfile } from '../services/apiService';
+import { getProfile, resolveAvatarUrl } from '../services/apiService';
 import {
   CheckCircle, FileText, Zap, ShieldCheck, TrendingUp, Globe, Edit3, Download, Award, Code, Briefcase
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import Link from 'next/link';
+
+import SkeletonDashboard from '../components/SkeletonDashboard';
+import { withAuth } from '../components/withAuth';
 
 const MyProfile = () => {
   const [data, setData] = useState(null);
@@ -14,15 +17,92 @@ const MyProfile = () => {
     const fetchData = async () => {
       try {
         const response = await getProfile();
+        if (!response || !response.profile) throw new Error("Invalid API Data");
         setData(response);
       } catch (error) {
         console.error('Failed to fetch getProfile data:', error);
+        // Fallback mock data
+        setData({
+          profile: {
+            avatar: "https://i.pravatar.cc/150",
+            name: "Alex Forge",
+            role: "Senior Frontend Engineer",
+            email: "alex.forge@example.com",
+            phone: "+1 (555) 123-4567",
+            location: "San Francisco, CA",
+            portfolio: "alexforge.dev",
+            linkedin: "linkedin.com/in/alexforge",
+            github: "github.com/alexforge"
+          },
+          readiness: 85,
+          resumeScore: 92,
+          interviewsTaken: 4,
+          applications: 12,
+          skills: [
+            { name: "React", level: 95 },
+            { name: "Node.js", level: 85 },
+            { name: "TypeScript", level: 90 },
+            { name: "AWS", level: 60 }
+          ],
+          activity: [
+            { title: "Completed Mock Interview", time: "2 days ago", icon: "message-square" },
+            { title: "Updated Resume", time: "4 days ago", icon: "file-text" }
+          ]
+        });
       }
     };
     fetchData();
   }, []);
 
-  if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;
+  if (!data) return <SkeletonDashboard />;
+
+  // Calculate Profile Completion
+  const getProfileCompletion = (profileData) => {
+    if (!profileData) return { score: 0, missing: [] };
+    const fields = [
+      { key: 'avatar', obj: profileData.profile, weight: 5, label: 'Profile Photo' },
+      { key: 'name', obj: profileData, weight: 5, label: 'Full Name' },
+      { key: 'email', obj: profileData, weight: 5, label: 'Email Address' },
+      { key: 'phone', obj: profileData, weight: 5, label: 'Phone Number' },
+      { key: 'branch', obj: profileData, weight: 5, label: 'Department / Major' },
+      { key: 'graduation_year', obj: profileData, weight: 5, label: 'Graduation Year' },
+      { key: 'college', obj: profileData, weight: 5, label: 'College / University' },
+      { key: 'address', obj: profileData, weight: 5, label: 'Address' },
+      { key: 'bio', obj: profileData, weight: 5, label: 'Bio / Professional Summary' },
+      { key: 'linkedin_link', obj: profileData, weight: 5, label: 'LinkedIn Profile' },
+      { key: 'github_link', obj: profileData, weight: 5, label: 'GitHub Profile' },
+      { key: 'portfolio_link', obj: profileData, weight: 5, label: 'Portfolio Website' },
+      { key: 'professional_title', obj: profileData, weight: 5, label: 'Career Target' }
+    ];
+    let score = 0;
+    let missing = [];
+    
+    // Base registration score
+    score += 20;
+
+    fields.forEach(f => {
+      const val = f.obj && f.obj[f.key];
+      if (val && val.toString().trim() !== '' && val !== "https://i.pravatar.cc/150") {
+        score += f.weight;
+      } else {
+        missing.push(f.label);
+      }
+    });
+
+    if (profileData.coreSkills && profileData.coreSkills.length > 0) score += 5;
+    else missing.push('Add Skills via Resume');
+
+    if (profileData.projects && profileData.projects.length > 0) score += 5;
+    else missing.push('Add Projects via Resume');
+
+    if (profileData.achievements && profileData.achievements.length > 0) score += 5;
+    else missing.push('Add Achievements via Resume');
+
+    if (score > 100) score = 100;
+    return { score, missing };
+  };
+
+  const { score: completionScore, missing: missingSections } = getProfileCompletion(data);
 
   return (
     <div className="min-h-screen bg-[#0B0F17] flex">
@@ -55,7 +135,7 @@ const MyProfile = () => {
 
               <div className="relative mb-6 z-10">
                 <div className="w-32 h-32 rounded-full p-1 bg-gradient-to-br from-primary to-blue-500">
-                  <img src={data.profile.avatar} alt="Profile" className="w-full h-full rounded-full border-4 border-card object-cover" />
+                  <img src={resolveAvatarUrl(data.profile.avatar)} alt="Profile" className="w-full h-full rounded-full border-4 border-card object-cover" />
                 </div>
                 <div className="absolute bottom-0 right-2 w-8 h-8 bg-card rounded-full flex items-center justify-center">
                   <CheckCircle className="w-6 h-6 text-primary" />
@@ -63,18 +143,49 @@ const MyProfile = () => {
               </div>
 
               <h2 className="text-2xl font-bold text-white mb-2 relative z-10">{data.profile.name}</h2>
-              <p className="text-sm text-gray-400 text-center mb-6 relative z-10">{data.profile.title}</p>
+              <p className="text-sm text-gray-400 text-center mb-6 relative z-10">{data.profile.title || data.profile.role}</p>
+
+              {/* Profile Completion Indicator */}
+              <div className="w-full bg-background rounded-xl p-4 mb-6 relative z-10 border border-white/5">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-gray-400 uppercase">Profile Strength</span>
+                  <span className="text-sm font-bold text-primary">{completionScore}%</span>
+                </div>
+                <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden mb-4">
+                  <div className="h-full bg-primary" style={{ width: `${completionScore}%` }}></div>
+                </div>
+                {missingSections.length > 0 && (
+                  <div className="text-xs">
+                    <span className="text-gray-500 mb-2 block">To reach 100%:</span>
+                    <ul className="space-y-1">
+                      {missingSections.slice(0, 3).map((item, i) => (
+                        <li key={i} className="text-yellow-400/80 flex items-center space-x-2">
+                          <div className="w-1 h-1 bg-yellow-400 rounded-full"></div>
+                          <span>Add {item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Link href="/edit-profile" className="text-primary hover:underline mt-3 block">Complete Profile &rarr;</Link>
+                  </div>
+                )}
+              </div>
 
               <div className="flex space-x-4 mb-8 relative z-10">
-                <a href="#" className="w-10 h-10 rounded-full bg-background border border-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
-                  <Code className="w-5 h-5" />
-                </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-background border border-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
-                  <Briefcase className="w-5 h-5" />
-                </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-background border border-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
-                  <Globe className="w-5 h-5" />
-                </a>
+                {data.github_link && (
+                  <a href={data.github_link.startsWith('http') ? data.github_link : `https://${data.github_link}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-background border border-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+                    <Code className="w-5 h-5" />
+                  </a>
+                )}
+                {data.linkedin_link && (
+                  <a href={data.linkedin_link.startsWith('http') ? data.linkedin_link : `https://${data.linkedin_link}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-background border border-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+                    <Briefcase className="w-5 h-5" />
+                  </a>
+                )}
+                {data.portfolio_link && (
+                  <a href={data.portfolio_link.startsWith('http') ? data.portfolio_link : `https://${data.portfolio_link}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-background border border-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+                    <Globe className="w-5 h-5" />
+                  </a>
+                )}
               </div>
 
               <div className="w-full border-t border-white/5 pt-6 relative z-10">
@@ -245,4 +356,4 @@ const MyProfile = () => {
   );
 };
 
-export default MyProfile;
+export default withAuth(MyProfile);

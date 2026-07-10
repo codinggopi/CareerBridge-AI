@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import Link from 'next/link';
+import logo from '../../assets/images/CareerBridge-AI.png';
 
 const Footer = () => {
   return (
@@ -9,7 +10,10 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row flex-wrap items-center md:items-start lg:items-center justify-between gap-y-10 md:gap-y-6">
           
           <div className="w-full md:w-1/2 lg:w-auto flex flex-col items-center md:items-start text-center md:text-left order-1">
-            <div className="text-xl md:text-base font-bold text-white mb-2 lg:mb-1">CareerBridge AI</div>
+            <div className="mb-2 lg:mb-1 flex items-center space-x-2">
+              <img src={logo.src} alt="CareerBridge AI" className="h-8 w-auto object-contain" />
+              <div className="text-xl md:text-base font-bold text-white">CareerBridge AI</div>
+            </div>
             
             {/* Mobile-only Description */}
             <div className="text-sm text-gray-500 leading-relaxed md:hidden max-w-[260px]">

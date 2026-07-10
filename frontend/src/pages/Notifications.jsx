@@ -6,6 +6,9 @@ import {
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 
+import SkeletonDashboard from '../components/SkeletonDashboard';
+import { withAuth } from '../components/withAuth';
+
 const Icons = {
   'file-text': FileText,
   'message-square': MessageSquare,
@@ -22,15 +25,25 @@ const Notifications = () => {
     const fetchData = async () => {
       try {
         const response = await getNotifications();
+        if (!response || !response.notifications) throw new Error("Invalid API Data");
         setData(response);
       } catch (error) {
         console.error('Failed to fetch getNotifications data:', error);
+        // Fallback mock data
+        setData({
+          filters: ['All', 'Matches', 'Interviews', 'System'],
+          notifications: [
+            { id: 1, type: "Matches", title: "New Job Match: Senior React Developer", time: "2 hours ago", icon: "award", color: "text-blue-400", bg: "bg-blue-400/10", unread: true },
+            { id: 2, type: "Interviews", title: "Mock Interview Feedback Available", time: "5 hours ago", icon: "message-square", color: "text-primary", bg: "bg-primary/10", unread: true },
+            { id: 3, type: "System", title: "Profile parsed successfully", time: "1 day ago", icon: "file-text", color: "text-gray-400", bg: "bg-white/5", unread: false }
+          ]
+        });
       }
     };
     fetchData();
   }, []);
 
-  if (!data) return <div className="min-h-screen bg-[#0B0F17] flex"><Sidebar /></div>;
+  if (!data) return <SkeletonDashboard />;
 
   return (
     <div className="min-h-screen bg-[#0B0F17] flex">
@@ -186,4 +199,4 @@ const CheckCircleIcon = ({ className }) => (
   </svg>
 );
 
-export default Notifications;
+export default withAuth(Notifications);

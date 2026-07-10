@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useRef } from 'react';
-import { Upload, Download, Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Upload, Download, Loader2, CheckCircle, AlertTriangle, FileText } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import { analyzeResume } from '../services/apiService';
+import { withAuth } from '../components/withAuth';
 
 const ResumeAnalyzer = () => {
   const [file, setFile] = useState(null);
@@ -10,25 +11,31 @@ const ResumeAnalyzer = () => {
   const [result, setResult] = useState(null);
   const fileInputRef = useRef(null);
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
-      setIsAnalyzing(true);
-
-      const formData = new FormData();
-      formData.append('file', selectedFile);
-
-      try {
-        const response = await analyzeResume(formData);
-        setResult(response);
-      } catch (error) {
-        console.error("Failed to analyze resume", error);
-      } finally {
-        setIsAnalyzing(false);
-      }
+      setResult(null); // Reset previous analysis if any
     }
   };
+
+  const handleUpload = async () => {
+    if (!file) return;
+    setIsAnalyzing(true);
+    
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await analyzeResume(formData);
+      setResult(response);
+    } catch (error) {
+      console.error("Failed to analyze resume", error);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0B0F17] flex">
       <Sidebar />
@@ -50,34 +57,70 @@ const ResumeAnalyzer = () => {
         {/* Content area */}
         <div className="flex-1 flex flex-col lg:flex-row gap-8 min-h-0 overflow-y-auto lg:overflow-visible pb-16 lg:pb-0">
           {/* Dropzone Area */}
-          <div className="flex-1 border-2 border-dashed border-white/10 rounded-2xl bg-card flex flex-col items-center justify-center relative hover:border-primary/30 transition-colors">
-            <br></br>
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 text-primary shadow-[0_0_30px_rgba(95,227,160,0.15)]">
-              <Upload className="w-8 h-8" />
-            </div>
+          <div className="flex-1 border-2 border-dashed border-white/10 rounded-2xl bg-card flex flex-col items-center justify-center relative hover:border-primary/30 transition-colors p-8">
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              accept=".pdf,.doc,.docx"
+              onChange={handleFileChange}
+            />
 
-            <h2 className="text-2xl font-bold text-white mb-4">Drop your resume here</h2>
+            {!file ? (
+              <>
+                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 text-primary shadow-[0_0_30px_rgba(95,227,160,0.15)]">
+                  <Upload className="w-8 h-8" />
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-4">Drop your resume here</h2>
+                <p className="text-sm text-gray-400 text-center max-w-sm mb-10 leading-relaxed">
+                  Support for PDF, DOCX formats. AI will automatically scan and provide insights in seconds.
+                </p>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="bg-primary text-[#0B0F17] px-8 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors shadow-[0_0_15px_rgba(95,227,160,0.2)]"
+                >
+                  Select File
+                </button>
+              </>
+            ) : (
+              <div className="flex flex-col items-center w-full max-w-md">
+                <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-6 text-blue-400">
+                  <FileText className="w-8 h-8" />
+                </div>
+                <h2 className="text-xl font-bold text-white mb-2">{file.name}</h2>
+                <p className="text-sm text-gray-400 mb-8">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
 
-            <p className="text-sm text-gray-400 text-center max-w-sm mb-10 leading-relaxed">
-              Support for PDF, DOCX formats. AI will automatically scan and provide insights in seconds.
-            </p>
-            <br></br>
-            <div className="flex items-center space-x-4">
-              <input
-                type="file"
-                ref={fileInputRef}
-                className="hidden"
-                accept=".pdf,.doc,.docx"
-                onChange={handleFileChange}
-              />
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="bg-primary text-[#0B0F17] px-8 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors shadow-[0_0_15px_rgba(95,227,160,0.2)]"
-              >
-                {file ? file.name : "Select File"}
-              </button>
-            </div><br></br>
-
+                <div className="grid grid-cols-2 gap-4 w-full mb-4">
+                  <button 
+                    onClick={() => window.open(URL.createObjectURL(file), "_blank")}
+                    className="bg-card border border-white/10 text-white px-4 py-3 rounded-xl text-sm font-bold hover:bg-white/5 transition-colors"
+                  >
+                    Preview
+                  </button>
+                  <button 
+                    onClick={() => fileInputRef.current?.click()}
+                    className="bg-card border border-white/10 text-white px-4 py-3 rounded-xl text-sm font-bold hover:bg-white/5 transition-colors"
+                  >
+                    Change Resume
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 gap-4 w-full">
+                  <button 
+                    onClick={() => { setFile(null); setResult(null); }}
+                    className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl text-sm font-bold hover:bg-red-500/20 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    onClick={handleUpload}
+                    disabled={isAnalyzing}
+                    className="bg-primary text-[#0B0F17] px-4 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors shadow-[0_0_15px_rgba(95,227,160,0.2)]"
+                  >
+                    {isAnalyzing ? "Analyzing..." : "Upload Resume"}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Loading / Empty State Panel */}
@@ -134,4 +177,4 @@ const ResumeAnalyzer = () => {
   );
 };
 
-export default ResumeAnalyzer;
+export default withAuth(ResumeAnalyzer);

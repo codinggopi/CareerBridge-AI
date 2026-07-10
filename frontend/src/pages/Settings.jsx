@@ -5,10 +5,18 @@ import {
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 
-import { getSettings, saveSettings } from '../services/apiService';
+import { getSettings, saveSettings, updateSecurityQuestion } from '../services/apiService';
+import { withAuth } from '../components/withAuth';
+import PasswordSecurity from '../components/PasswordSecurity';
+import { validatePassword } from '../utils/passwordValidation';
+import { toast } from 'react-hot-toast';
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState('Account');
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [showSecurityQuestion, setShowSecurityQuestion] = useState(false);
+  const [passwordState, setPasswordState] = useState({ current: '', new: '', confirm: '' });
+  const [securityState, setSecurityState] = useState({ currentPassword: '', question: 'What was your first school name?', customQuestion: '', answer: '' });
   const [settings, setSettings] = useState({
     twoFactor: true,
     resumeVisibility: 'public',
@@ -109,12 +117,139 @@ const Settings = () => {
                   <h2 className="text-lg font-bold text-white">Security</h2>
                 </div>
                 
-                <div className="flex justify-between items-center py-4 border-b border-white/5 cursor-pointer group">
-                  <div>
-                    <div className="text-sm font-medium text-white group-hover:text-primary transition-colors">Change Password</div>
-                    <div className="text-[10px] text-gray-500">Last updated 3 months ago</div>
+                <div className="flex flex-col py-4 border-b border-white/5">
+                  <div 
+                    className="flex justify-between items-center cursor-pointer group"
+                    onClick={() => setShowChangePassword(!showChangePassword)}
+                  >
+                    <div>
+                      <div className="text-sm font-medium text-white group-hover:text-primary transition-colors">Change Password</div>
+                      <div className="text-[10px] text-gray-500">Update your security credentials</div>
+                    </div>
+                    <svg className={`w-4 h-4 text-gray-500 group-hover:text-primary transition-transform ${showChangePassword ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                   </div>
-                  <svg className="w-4 h-4 text-gray-500 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+                  
+                  {showChangePassword && (
+                    <div className="mt-4 p-4 bg-background/50 rounded-xl border border-white/5 space-y-4 animate-in fade-in slide-in-from-top-2">
+                      <div>
+                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Current Password</label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <Lock className="w-5 h-5 text-gray-500" />
+                          </div>
+                          <input 
+                            type="password" 
+                            required
+                            value={passwordState.current}
+                            onChange={(e) => setPasswordState({...passwordState, current: e.target.value})}
+                            className="w-full bg-background border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 transition-all"
+                            placeholder="••••••••"
+                          />
+                        </div>
+                      </div>
+                      
+                      <PasswordSecurity
+                        password={passwordState.new}
+                        setPassword={(val) => setPasswordState({...passwordState, new: val})}
+                        confirmPassword={passwordState.confirm}
+                        setConfirmPassword={(val) => setPasswordState({...passwordState, confirm: val})}
+                        label="New Password"
+                        confirmLabel="Confirm New Password"
+                        showConfirm={true}
+                      />
+                      
+                      <button 
+                        disabled={!passwordState.current || !passwordState.new || !validatePassword(passwordState.new).isValid || passwordState.new !== passwordState.confirm}
+                        className="w-full bg-primary text-[#0B0F17] font-bold rounded-lg py-3 hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:shadow-none"
+                      >
+                        Update Password
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex flex-col py-4 border-b border-white/5">
+                  <div 
+                    className="flex justify-between items-center cursor-pointer group"
+                    onClick={() => setShowSecurityQuestion(!showSecurityQuestion)}
+                  >
+                    <div>
+                      <div className="text-sm font-medium text-white group-hover:text-primary transition-colors">Security Question</div>
+                      <div className="text-[10px] text-gray-500">Update your account recovery question</div>
+                    </div>
+                    <svg className={`w-4 h-4 text-gray-500 group-hover:text-primary transition-transform ${showSecurityQuestion ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                  
+                  {showSecurityQuestion && (
+                    <div className="mt-4 p-4 bg-background/50 rounded-xl border border-white/5 space-y-4 animate-in fade-in slide-in-from-top-2">
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Current Password</label>
+                          <input 
+                            type="password" 
+                            value={securityState.currentPassword}
+                            onChange={(e) => setSecurityState({...securityState, currentPassword: e.target.value})}
+                            className="w-full bg-background border border-white/10 rounded-xl py-3.5 px-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 transition-all"
+                            placeholder="Verify it's you"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">New Security Question</label>
+                          <select
+                            value={securityState.question}
+                            onChange={(e) => setSecurityState({...securityState, question: e.target.value})}
+                            className="w-full bg-background border border-white/10 rounded-xl py-3.5 px-4 text-sm text-gray-300 appearance-none focus:outline-none focus:border-primary/50 transition-all"
+                          >
+                            <option value="What was your first school name?">What was your first school name?</option>
+                            <option value="What was your childhood nickname?">What was your childhood nickname?</option>
+                            <option value="What city were you born in?">What city were you born in?</option>
+                            <option value="What was your first pet's name?">What was your first pet's name?</option>
+                            <option value="What was the name of your first best friend?">What was the name of your first best friend?</option>
+                            <option value="custom">Create your own custom question</option>
+                          </select>
+                        </div>
+                        {securityState.question === 'custom' && (
+                          <div>
+                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Custom Question</label>
+                            <input 
+                              type="text" 
+                              value={securityState.customQuestion}
+                              onChange={(e) => setSecurityState({...securityState, customQuestion: e.target.value})}
+                              className="w-full bg-background border border-white/10 rounded-xl py-3.5 px-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 transition-all"
+                              placeholder="Your custom question"
+                            />
+                          </div>
+                        )}
+                        <div>
+                          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">New Answer</label>
+                          <input 
+                            type="password" 
+                            value={securityState.answer}
+                            onChange={(e) => setSecurityState({...securityState, answer: e.target.value})}
+                            className="w-full bg-background border border-white/10 rounded-xl py-3.5 px-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 transition-all"
+                            placeholder="Your answer"
+                          />
+                        </div>
+                      </div>
+                      <button 
+                        onClick={async () => {
+                          try {
+                            const finalQ = securityState.question === 'custom' ? securityState.customQuestion : securityState.question;
+                            await updateSecurityQuestion({ current_password: securityState.currentPassword, new_question: finalQ, new_answer: securityState.answer });
+                            toast.success("Security question updated successfully");
+                            setSecurityState({ currentPassword: '', question: 'What was your first school name?', customQuestion: '', answer: '' });
+                            setShowSecurityQuestion(false);
+                          } catch(err) {
+                            toast.error(err.message || "Failed to update security question");
+                          }
+                        }}
+                        disabled={!securityState.currentPassword || !securityState.answer || (securityState.question === 'custom' && !securityState.customQuestion)}
+                        className="w-full bg-primary text-[#0B0F17] font-bold rounded-lg py-3 hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:shadow-none"
+                      >
+                        Save Security Question
+                      </button>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="flex justify-between items-center py-4 cursor-pointer">
@@ -241,4 +376,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default withAuth(Settings);

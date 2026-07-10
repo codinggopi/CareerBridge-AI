@@ -10,6 +10,7 @@ import {
 import Sidebar from '../components/Sidebar';
 import StatCard from '../components/StatCard';
 import Footer from '../components/Footer';
+import { withAuth } from '../components/withAuth';
 
 // Icons mapping for dynamic rendering
 const Icons = {
@@ -23,7 +24,8 @@ const Icons = {
   'sparkles': Sparkles
 };
 
-import { getStudentDashboard } from '../services/apiService';
+import { getStudentDashboard, resolveAvatarUrl } from '../services/apiService';
+import SkeletonDashboard from '../components/SkeletonDashboard';
 
 const StudentDashboard = () => {
   const [data, setData] = useState(null);
@@ -32,15 +34,38 @@ const StudentDashboard = () => {
     const fetchData = async () => {
       try {
         const response = await getStudentDashboard();
+        if (!response || !response.stats) throw new Error("Invalid API Data");
         setData(response);
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
+        // Fallback data
+        setData({
+          user: { name: "Alex Rivera", role: "Frontend Developer" },
+          stats: [
+            { id: 1, title: "Resume Score", value: "85%", change: "+5%", icon: "file-text" },
+            { id: 2, title: "Mock Interviews", value: "4", change: "+1 this week", icon: "message-square" }
+          ],
+          activityData: [
+            { name: "Mon", score: 65 }, { name: "Tue", score: 70 }, { name: "Wed", score: 85 }
+          ],
+          tasks: [
+            { id: 1, title: "Complete System Design Module", status: "In Progress", icon: "check-square" }
+          ]
+        });
       }
     };
     fetchData();
   }, []);
 
-  if (!data) return <div className="min-h-screen bg-background flex items-center justify-center text-white">Loading...</div>;
+  if (!data) return <SkeletonDashboard />;
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good Morning';
+    if (hour < 17) return 'Good Afternoon';
+    if (hour < 21) return 'Good Evening';
+    return 'Good Night';
+  };
 
   return (
     <div className="min-h-screen bg-[#0B0F17] flex">
@@ -50,13 +75,13 @@ const StudentDashboard = () => {
         {/* Header */}
         <div className="flex flex-col-reverse md:flex-row justify-between md:items-start gap-6 md:gap-0 mb-8">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Good Morning, {data.user.name}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">{getGreeting()}, {data.user.name}</h1>
             <p className="text-gray-400">
               Your career readiness has increased by <span className="text-primary font-bold">12%</span> this week.
             </p>
           </div>
           <div className="flex items-center space-x-3 bg-card border border-white/5 rounded-full py-1.5 px-3">
-            <img src={data.user.avatar} alt="Profile" className="w-12 h-12 md:w-8 md:h-8 rounded-xl md:rounded-full bg-gray-600" />
+            <img src={resolveAvatarUrl(data.user.avatar)} alt="Profile" className="w-12 h-12 md:w-8 md:h-8 rounded-xl md:rounded-full bg-gray-600" />
             <div className="pr-2">
               <div className="text-sm font-bold text-white leading-tight">{data.user.fullName}</div>
               <div className="text-[10px] text-gray-400 uppercase tracking-wider">{data.user.role}</div>
@@ -280,4 +305,4 @@ const StudentDashboard = () => {
   );
 };
 
-export default StudentDashboard;
+export default withAuth(StudentDashboard, ['student']);

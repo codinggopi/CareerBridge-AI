@@ -3,6 +3,10 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Mail, Lock, ShieldCheck, CheckCircle, ArrowRight, RefreshCw, KeyRound } from 'lucide-react';
 import Footer from '../components/Footer';
+import PasswordSecurity from '../components/PasswordSecurity';
+import { validatePassword } from '../utils/passwordValidation';
+import { fetchSecurityQuestion, resetPassword } from '../services/apiService';
+import { toast } from 'react-hot-toast';
 
 const ForgotPassword = () => {
   const [step, setStep] = useState(1);
@@ -10,11 +14,24 @@ const ForgotPassword = () => {
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [securityAnswer, setSecurityAnswer] = useState('');
+  const [fetchedQuestion, setFetchedQuestion] = useState('Loading security question...');
   const [passwords, setPasswords] = useState({ new: '', confirm: '' });
 
-  const handleNextStep = (e) => {
+  const handleNextStep = async (e) => {
     e.preventDefault();
-    setStep((prev) => prev + 1);
+    if (step === 1) {
+      try {
+        const res = await fetchSecurityQuestion(email);
+        if (res.security_question) {
+          setFetchedQuestion(res.security_question);
+        }
+        setStep((prev) => prev + 1);
+      } catch (err) {
+        toast.error("Could not fetch security details for this email.");
+      }
+    } else {
+      setStep((prev) => prev + 1);
+    }
   };
 
   const handleCaptcha = () => {
@@ -156,7 +173,7 @@ const ForgotPassword = () => {
                 <form onSubmit={handleNextStep}>
                   <div className="space-y-6">
                     <div className="bg-background/50 border border-white/5 rounded-xl p-4">
-                      <p className="text-sm font-medium text-primary">What was the name of your first pet?</p>
+                      <p className="text-sm font-medium text-primary">{fetchedQuestion}</p>
                     </div>
                     <div>
                       <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Your Answer</label>
@@ -188,47 +205,31 @@ const ForgotPassword = () => {
                 <h2 className="text-2xl font-bold text-white mb-2">Create New Password</h2>
                 <p className="text-gray-400 text-sm mb-8">Your new password must be different from previous passwords.</p>
                 
-                <form onSubmit={(e) => { e.preventDefault(); alert("Password reset successful!"); window.location.href="/sign-in"; }}>
+                <form onSubmit={async (e) => { 
+                  e.preventDefault(); 
+                  try {
+                    await resetPassword({ email, security_answer: securityAnswer, new_password: passwords.new });
+                    toast.success("Password reset successful!"); 
+                    window.location.href="/sign-in"; 
+                  } catch (err) {
+                    toast.error(err.message || "Failed to reset password.");
+                  }
+                }}>
                   <div className="space-y-5">
-                    <div>
-                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">New Password</label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                          <Lock className="w-5 h-5 text-gray-500" />
-                        </div>
-                        <input 
-                          type="password" 
-                          required
-                          value={passwords.new}
-                          onChange={(e) => setPasswords({...passwords, new: e.target.value})}
-                          className="w-full bg-background border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
-                          placeholder="••••••••"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Confirm New Password</label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                          <KeyRound className="w-5 h-5 text-gray-500" />
-                        </div>
-                        <input 
-                          type="password" 
-                          required
-                          value={passwords.confirm}
-                          onChange={(e) => setPasswords({...passwords, confirm: e.target.value})}
-                          className="w-full bg-background border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
-                          placeholder="••••••••"
-                        />
-                      </div>
-                      {passwords.confirm && passwords.new !== passwords.confirm && (
-                        <p className="text-xs text-red-400 mt-2">Passwords do not match.</p>
-                      )}
-                    </div>
+                    <PasswordSecurity
+                      password={passwords.new}
+                      setPassword={(val) => setPasswords({...passwords, new: val})}
+                      confirmPassword={passwords.confirm}
+                      setConfirmPassword={(val) => setPasswords({...passwords, confirm: val})}
+                      email={email}
+                      label="New Password"
+                      confirmLabel="Confirm New Password"
+                      showConfirm={true}
+                    />
                   </div>
                   <button 
                     type="submit"
-                    disabled={!passwords.new || passwords.new !== passwords.confirm}
+                    disabled={!passwords.new || !validatePassword(passwords.new, "", email).isValid || passwords.new !== passwords.confirm}
                     className="w-full bg-primary text-background font-bold rounded-xl py-4 hover:bg-primary/90 transition-colors mt-8 shadow-[0_4px_14px_0_rgba(95,227,160,0.39)] disabled:opacity-50 disabled:shadow-none flex items-center justify-center space-x-2"
                   >
                     <span>Reset Password</span>

@@ -57,7 +57,7 @@ def get_learning_resources(current_user: models.Student = Depends(get_current_us
             {"date": "Sun", "value": 50}
         ],
         "saved": [
-            {"title": "Advanced React Patterns", "type": "Course", "duration": "4h 20m"}
+            {"title": "Advanced React Patterns", "type": "Course", "duration": "4h 20m", "icon": "code", "meta": "Course • 4h 20m"}
         ],
         "recommendations": [
             {"title": "System Design for Beginners", "type": "Interactive Course", "icon": "box", "time": "6h 45m", "rating": 4.8},

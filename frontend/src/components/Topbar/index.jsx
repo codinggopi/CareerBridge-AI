@@ -2,6 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import logo from '../../assets/images/CareerBridge-AI.png';
 
 const useLocation = () => ({ pathname: usePathname() });
 
@@ -15,13 +16,13 @@ const Topbar = () => {
   ];
 
   return (
-    <header className="flex items-center justify-between px-8 py-5 border-b border-white/5">
+    <header className="flex items-center justify-between px-4 md:px-8 py-5 border-b border-white/5">
       <div className="flex items-center space-x-12">
-        <Link href="/" className="text-xl font-bold">
-          <span className="text-white">CareerBridge </span>
-          <span className="text-primary">AI</span>
+        <Link href="/" className="flex items-center space-x-2">
+          <img src={logo.src} alt="CareerBridge AI" className="h-8 w-auto object-contain" />
+          <div className="text-xl font-bold"><span className="text-white">CareerBridge </span><span className="text-primary">AI</span></div>
         </Link>
-        <nav className="hidden md:flex space-x-8">
+        <nav className="hidden lg:flex space-x-8">
           {navLinks.map((link) => (
             <Link
               key={link.name}
@@ -36,13 +37,13 @@ const Topbar = () => {
           ))}
         </nav>
       </div>
-      <div className="flex items-center space-x-6">
+      <div className="flex items-center space-x-4 md:space-x-6">
         <Link href="/sign-in" className="text-sm text-gray-300 hover:text-white transition-colors">
           Sign In
         </Link>
         <Link
           href="/register"
-          className="bg-primary text-background px-5 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors"
+          className="hidden sm:inline-block bg-primary text-background px-5 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors"
         >
           Get Started
         </Link>

@@ -2,9 +2,12 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { User, Mail, GraduationCap, Calendar, Lock } from 'lucide-react';
+import { User, Mail, GraduationCap, Calendar, Lock, Eye, EyeOff } from 'lucide-react';
+import PasswordSecurity from '../components/PasswordSecurity';
+import { validatePassword } from '../utils/passwordValidation';
 import Footer from '../components/Footer';
 import { registerStudent } from '../services/apiService';
+import logo from '../assets/images/CareerBridge-AI.png';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -13,15 +16,20 @@ const Register = () => {
   const [year, setYear] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [securityQuestion, setSecurityQuestion] = useState('What was your first school name?');
+  const [securityAnswer, setSecurityAnswer] = useState('');
+  const [customQuestion, setCustomQuestion] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // Try to use Next.js router, but fallback gracefully if not in Next environment
   let router;
   try {
-      router = useRouter();
-  } catch(e) {
-      router = null;
+    router = useRouter();
+  } catch (e) {
+    router = null;
   }
   return (
     <div className="min-h-screen bg-[#0B0F17] flex flex-col relative overflow-hidden">
@@ -31,8 +39,9 @@ const Register = () => {
 
       {/* Simplified Topbar for Register */}
       <header className="flex items-center justify-between px-12 py-6 relative z-10">
-        <Link href="/" className="text-xl font-bold font-serif tracking-wide text-primary">
-          CareerBridge AI
+        <Link href="/" className="flex items-center space-x-2">
+          <img src={logo.src} alt="CareerBridge AI Logo" className="h-8 w-auto object-contain" />
+          <div className="text-xl font-bold font-serif tracking-wide text-primary">CareerBridge AI</div>
         </Link>
         <div className="text-sm text-gray-400">
           Already have an account? <Link href="/sign-in" className="text-primary font-semibold hover:text-primary/80 transition-colors ml-1">Sign In</Link>
@@ -52,9 +61,11 @@ const Register = () => {
             }
             setIsLoading(true);
             try {
-              const response = await registerStudent({ name, email, password, branch, year });
+              const finalQuestion = securityQuestion === 'custom' ? customQuestion : securityQuestion;
+              const response = await registerStudent({ name, email, password, branch, year, security_question: finalQuestion, security_answer: securityAnswer });
               if (response.access_token) {
                 localStorage.setItem('careerbridge_token', response.access_token);
+                if (response.user) localStorage.setItem('careerbridge_user', JSON.stringify(response.user));
                 window.location.href = "/dashboard";
               } else {
                 setError('Registration failed, no token received.');
@@ -75,7 +86,7 @@ const Register = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  placeholder="Alex Rivera"
+                  placeholder="Enter your full name"
                   className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 pl-12 pr-4 text-sm text-white placeholder-gray-300 focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all"
                 />
               </div>
@@ -90,7 +101,7 @@ const Register = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="alex.rivera@enggcollege.edu"
+                  placeholder="Enter your university email"
                   className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 pl-12 pr-4 text-sm text-white placeholder-gray-300 focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all"
                 />
               </div>
@@ -101,14 +112,35 @@ const Register = () => {
                 <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Academic Branch</label>
                 <div className="relative">
                   <GraduationCap className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <select 
+                  <select
                     value={branch}
                     onChange={(e) => setBranch(e.target.value)}
                     className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 pl-12 pr-4 text-sm text-gray-300 appearance-none focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all cursor-pointer"
                   >
-                    <option>Select Branch</option>
-                    <option>Computer Science and Engineering</option>
-                    <option>Information Technology</option>
+                    <option value="">Select Branch</option>
+                    <option value="Computer Science Engineering">Computer Science Engineering</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science</option>
+                    <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning</option>
+                    <option value="Cyber Security">Cyber Security</option>
+                    <option value="Electronics & Communication">Electronics & Communication</option>
+                    <option value="Electrical & Electronics">Electrical & Electronics</option>
+                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                    <option value="Civil Engineering">Civil Engineering</option>
+                    <option value="Biomedical Engineering">Biomedical Engineering</option>
+                    <option value="Chemical Engineering">Chemical Engineering</option>
+                    <option value="Agricultural Engineering">Agricultural Engineering</option>
+                    <option value="Mechatronics">Mechatronics</option>
+                    <option value="Robotics">Robotics</option>
+                    <option value="Aeronautical">Aeronautical</option>
+                    <option value="Automobile">Automobile</option>
+                    <option value="Marine">Marine</option>
+                    <option value="Textile">Textile</option>
+                    <option value="Food Technology">Food Technology</option>
+                    <option value="MBA">MBA</option>
+                    <option value="MCA">MCA</option>
+                    <option value="BCA">BCA</option>
+                    <option value="BSc Computer Science">BSc Computer Science</option>
                   </select>
                   <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -120,7 +152,7 @@ const Register = () => {
                 <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Current Year</label>
                 <div className="relative">
                   <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <select 
+                  <select
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
                     className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 pl-12 pr-4 text-sm text-gray-300 appearance-none focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all cursor-pointer"
@@ -138,33 +170,70 @@ const Register = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="col-span-1 md:col-span-2">
+              <PasswordSecurity
+                password={password}
+                setPassword={setPassword}
+                confirmPassword={confirmPassword}
+                setConfirmPassword={setConfirmPassword}
+                name={name}
+                email={email}
+                label="Password"
+                confirmLabel="Confirm Password"
+                showConfirm={true}
+              />
+            </div>
+
+            {/* Security Verification */}
+            <div className="col-span-1 md:col-span-2 space-y-6 pt-4 border-t border-white/5">
+              <h2 className="text-[13px] font-bold text-white uppercase tracking-wider">Security Verification</h2>
+              
               <div>
-                <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Password</label>
+                <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Security Question</label>
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    placeholder="••••••••"
-                    className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 pl-12 pr-4 text-sm text-white placeholder-gray-300 focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all"
-                  />
+                  <select
+                    value={securityQuestion}
+                    onChange={(e) => setSecurityQuestion(e.target.value)}
+                    className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 px-4 text-sm text-gray-300 appearance-none focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all cursor-pointer"
+                  >
+                    <option value="What was your first school name?">What was your first school name?</option>
+                    <option value="What was your childhood nickname?">What was your childhood nickname?</option>
+                    <option value="What city were you born in?">What city were you born in?</option>
+                    <option value="What was your first pet's name?">What was your first pet's name?</option>
+                    <option value="What was the name of your first best friend?">What was the name of your first best friend?</option>
+                    <option value="custom">Create your own custom question</option>
+                  </select>
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
                 </div>
               </div>
 
+              {securityQuestion === 'custom' && (
+                <div>
+                  <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Custom Question</label>
+                  <input
+                    type="text"
+                    value={customQuestion}
+                    onChange={(e) => setCustomQuestion(e.target.value)}
+                    required
+                    placeholder="Enter your custom question"
+                    className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 px-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all"
+                  />
+                </div>
+              )}
+
               <div>
-                <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Confirm Password</label>
+                <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Security Answer</label>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
                   <input
                     type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    value={securityAnswer}
+                    onChange={(e) => setSecurityAnswer(e.target.value)}
                     required
-                    placeholder="••••••••"
-                    className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 pl-12 pr-4 text-sm text-white placeholder-gray-300 focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all"
+                    placeholder="Enter your security answer"
+                    className="w-full bg-[#0B0F17] border border-transparent rounded-lg py-3.5 pl-12 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/30 transition-all"
                   />
                 </div>
               </div>
@@ -179,11 +248,11 @@ const Register = () => {
               </div>
             </div>
 
-            <div className="block w-full">
+            <div className="block w-full mt-8">
               <button
                 type="submit"
-                disabled={isLoading}
-                className={`w-full ${isLoading ? 'bg-primary/50 cursor-not-allowed' : 'bg-primary hover:bg-primary/90'} text-[#0B0F17] font-bold text-[15px] rounded-lg py-4 transition-all shadow-[0_4px_20px_-5px_rgba(95,227,160,0.4)] flex items-center justify-center space-x-2`}
+                disabled={isLoading || !password || !validatePassword(password, name, email).isValid || password !== confirmPassword || !securityAnswer || (securityQuestion === 'custom' && !customQuestion)}
+                className={`w-full ${isLoading || !password || !validatePassword(password, name, email).isValid || password !== confirmPassword || !securityAnswer || (securityQuestion === 'custom' && !customQuestion) ? 'bg-primary/50 cursor-not-allowed' : 'bg-primary hover:bg-primary/90'} text-[#0B0F17] font-bold text-[15px] rounded-lg py-4 transition-all shadow-[0_4px_20px_-5px_rgba(95,227,160,0.4)] flex items-center justify-center space-x-2`}
               >
                 <span>{isLoading ? 'Registering...' : 'Register Account'}</span>
                 {!isLoading && <span className="text-xl leading-none">→</span>}

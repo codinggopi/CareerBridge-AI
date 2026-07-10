@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
+import { withAuth } from '../components/withAuth';
+import logo from '../assets/images/CareerBridge-AI.png';
 
 const Icons = {
   'box': Box,
@@ -120,7 +122,7 @@ const LearningResources = () => {
 
               <div className="flex-1 space-y-4">
                 {data.saved.map((item, i) => {
-                  const Icon = Icons[item.icon];
+                  const Icon = Icons[item.icon] || Box;
                   return (
                     <div key={i} className="flex items-center justify-between group">
                       <div className="flex items-center space-x-3">
@@ -260,10 +262,12 @@ const LearningResources = () => {
             </div>
           </div>
 
-          <div className="border-t border-white/5 pt-8 mt-8 pb-4 flex justify-between items-center text-xs text-gray-500">
+          <div className="border-t border-white/5 pt-8 mt-16 pb-4 flex justify-between items-center text-xs text-gray-500">
             <div>
-              <span className="font-bold text-gray-300">CareerBridge AI</span>
-              <br />
+              <div className="flex items-center space-x-2 mb-2">
+                <img src={logo.src} alt="CareerBridge AI Logo" className="h-6 w-auto object-contain" />
+                <span className="font-bold text-gray-300">CareerBridge AI</span>
+              </div>
               © 2026 CareerBridge AI. Empowering the next generation of talent.
             </div>
             <div className="flex flex-col lg:flex-row lg:space-x-6 space-y-6 lg:space-y-0">
@@ -279,4 +283,4 @@ const LearningResources = () => {
   );
 };
 
-export default LearningResources;
+export default withAuth(LearningResources);

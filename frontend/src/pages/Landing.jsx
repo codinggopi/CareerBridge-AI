@@ -7,8 +7,20 @@ import {
   MessageSquare, User, TrendingUp, Compass, Target, BadgeCheck
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const Landing = () => {
+  const router = useRouter();
+
+  const handleUploadResume = () => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('careerbridge_token') : null;
+    if (token) {
+      router.push('/resume/analyze');
+    } else {
+      router.push('/sign-in?redirect=/resume/analyze');
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Topbar />
@@ -35,11 +47,11 @@ const Landing = () => {
               <Link href="/register" className="bg-primary text-background px-8 py-3.5 rounded-xl font-semibold hover:bg-primary/90 transition-colors">
                 Get Started
               </Link>
-              <button className="bg-card border border-white/10 text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-white/5 transition-colors">
+              <button
+                onClick={handleUploadResume}
+                className="bg-card border border-white/10 text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-white/5 transition-colors"
+              >
                 Upload Resume
-              </button>
-              <button className="flex items-center justify-center w-12 h-12 rounded-full border border-white/10 text-white hover:bg-white/5 transition-colors">
-                <Play className="w-5 h-5 fill-current" />
               </button>
             </div>
           </div>
