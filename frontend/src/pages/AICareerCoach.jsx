@@ -62,27 +62,6 @@ const AICareerCoach = () => {
       <Sidebar />
 
       <main className="flex-1 md:ml-64 flex flex-col min-h-screen lg:h-screen lg:overflow-hidden">
-        {/* Top Navbar / Header area */}
-        <div className="flex flex-wrap lg:flex-nowrap justify-between items-center px-4 sm:px-8 py-4 border-b border-white/5 bg-background shrink-0 gap-4">
-          <div className="flex items-center space-x-2">
-            <img src={logo.src} alt="CareerBridge AI Logo" className="h-8 w-auto object-contain" />
-            <div className="text-xl font-bold font-serif tracking-wide text-primary">CareerBridge AI</div>
-          </div>
-
-          <div className="hidden lg:flex items-center space-x-6 text-sm font-semibold">
-            <span className="text-gray-400 hover:text-white cursor-pointer transition-colors">Dashboard</span>
-            <span className="text-gray-400 hover:text-white cursor-pointer transition-colors">Resume</span>
-            <span className="text-gray-400 hover:text-white cursor-pointer transition-colors">Interviews</span>
-            <span className="text-primary border-b-2 border-primary pb-4 -mb-4">AI Coach</span>
-          </div>
-
-          <div className="flex items-center space-x-4 ml-auto lg:ml-0">
-            <button className="text-sm font-semibold text-gray-300 hover:text-white transition-colors">Sign In</button>
-            <button className="bg-primary text-[#0B0F17] px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors">
-              Get Started
-            </button>
-          </div>
-        </div>
 
         <div className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
 
@@ -95,13 +74,13 @@ const AICareerCoach = () => {
 
             <div className="flex-1 overflow-y-auto p-8 custom-scrollbar space-y-8 pb-32">
               {data.chat.map((msg, i) => (
-                <ChatBubble 
+                <ChatBubble
                   key={i}
                   isUser={msg.sender === 'user'}
                   message={msg.text}
                   avatar={msg.sender === 'user' ? "https://i.pravatar.cc/150?u=alex" : <Bot className="w-5 h-5 text-primary" />}
                   options={msg.options}
-                  actions={msg.actions?.map(action => ({ label: action, onClick: () => {} }))}
+                  actions={msg.actions?.map(action => ({ label: action, onClick: () => { } }))}
                 />
               ))}
             </div>
@@ -124,7 +103,7 @@ const AICareerCoach = () => {
                 <button className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white transition-colors shrink-0">
                   <Mic className="w-5 h-5" />
                 </button>
-                <button 
+                <button
                   onClick={handleSendMessage}
                   disabled={isSending}
                   className={`w-12 h-12 rounded-xl flex items-center justify-center text-[#0B0F17] transition-colors shrink-0 ${isSending ? 'bg-primary/50 cursor-not-allowed' : 'bg-primary hover:bg-primary/90'}`}
@@ -206,7 +185,7 @@ const AICareerCoach = () => {
                   <div className="bg-primary h-full" style={{ width: `${data.marketReadiness.score}%` }}></div>
                 </div>
               </div>
-              
+
               <div className="mt-8 -mx-6 -mb-6">
                 <Footer />
               </div>
