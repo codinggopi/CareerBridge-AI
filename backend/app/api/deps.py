@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from jose import jwt, JWTError
+import jwt
 from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.database.connection import get_db
@@ -22,7 +22,7 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
         email: str = payload.get("sub")
         if email is None:
             raise credentials_exception
-    except JWTError:
+    except jwt.InvalidTokenError:
         raise credentials_exception
         
     user = db.query(Student).filter(Student.email == email).first()
