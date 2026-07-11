@@ -5,7 +5,8 @@
 
 import { toast } from 'react-hot-toast';
 
-export const API_BASE_URL = "http://localhost:8000";
+//export const API_BASE_URL = "http://localhost:8000";
+export const API_BASE_URL = "https://career-bridge-ai-six.vercel.app";
 
 /**
  * Resolves an avatar URL. If it's a relative path (e.g. /uploads/avatars/x.jpg),
