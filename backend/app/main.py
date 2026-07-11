@@ -1,11 +1,11 @@
 from fastapi import FastAPI, Request, APIRouter
-from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import time
 import os
 from app.database.connection import engine
 from app.database.base import Base
 from app.core.config import settings
+from app.services.cloudinary_service import init_cloudinary
 
 # Import models to ensure they are registered with SQLAlchemy
 from app import models
@@ -15,13 +15,21 @@ try:
     Base.metadata.create_all(bind=engine)
 except Exception as e:
     print("Error creating tables:", e)
-app = FastAPI(title="CareerBridge AI", version="2.0.0")
+
+# Initialize Cloudinary
+init_cloudinary()
+
+app = FastAPI(title="CareerBridge AI Backend", version="2.0.0")
 
 from fastapi.responses import JSONResponse
 
+origins = settings.CORS_ORIGINS
+if settings.FRONTEND_URL and settings.FRONTEND_URL not in origins:
+    origins.append(settings.FRONTEND_URL)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -64,11 +72,31 @@ api_router.include_router(profile.router)
 
 app.include_router(api_router)
 
-# Serve uploaded files (avatars, etc.) as static assets
-uploads_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "uploads")
-os.makedirs(os.path.join(uploads_dir, "avatars"), exist_ok=True)
-app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
-
 @app.get("/")
 def read_root():
-    return {"status": "ok", "message": "CareerBridge AI API is running successfully"}
+    return {
+        "status": "running",
+        "service": "CareerBridge AI Backend"
+    }
+
+@app.get("/health")
+def health_check():
+    # Attempt a simple db connect check and cloudinary config check
+    db_status = "connected"
+    cloudinary_status = "connected"
+    
+    try:
+        with engine.connect() as connection:
+            pass
+    except Exception as e:
+        db_status = f"disconnected ({str(e)})"
+        
+    import cloudinary
+    if not cloudinary.config().cloud_name:
+         cloudinary_status = "disconnected (missing config)"
+
+    return {
+        "status": "healthy" if db_status == "connected" and cloudinary_status == "connected" else "degraded",
+        "database": db_status,
+        "cloudinary": cloudinary_status
+    }

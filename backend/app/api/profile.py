@@ -4,15 +4,12 @@ from app.database.connection import get_db
 from app import models, schemas
 from app.api.deps import get_current_user
 from app.core.security import verify_password, get_password_hash
-import uuid
-import os
-import shutil
+from app.services import cloudinary_service
 
 router = APIRouter(tags=["profile"])
 
 ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"]
 MAX_IMAGE_SIZE = 2 * 1024 * 1024  # 2 MB
-UPLOADS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads", "avatars")
 
 @router.get("/profile")
 def get_profile(
@@ -126,29 +123,20 @@ async def upload_avatar(
     if file.content_type not in ALLOWED_IMAGE_TYPES:
         raise HTTPException(status_code=400, detail="Only JPEG, PNG, and WebP images are allowed.")
     
-    # Read file and validate size
-    contents = await file.read()
-    if len(contents) > MAX_IMAGE_SIZE:
-        raise HTTPException(status_code=400, detail="Image must be smaller than 2 MB.")
+    # Delete old avatar file from Cloudinary if it exists and is a Cloudinary URL
+    if current_user.avatar and "res.cloudinary.com" in current_user.avatar:
+        try:
+            # Extract public ID from cloudinary URL
+            # Format: https://res.cloudinary.com/.../careerbridge/avatars/<public_id>.<ext>
+            public_id = current_user.avatar.split("/")[-1].rsplit(".", 1)[0]
+            cloudinary_service.delete_file(f"careerbridge/avatars/{public_id}")
+        except Exception:
+            pass # Ignore errors in deletion of old avatar
     
-    # Generate unique filename
-    ext = file.filename.rsplit(".", 1)[-1] if "." in file.filename else "jpg"
-    filename = f"{current_user.id}_{uuid.uuid4().hex[:8]}.{ext}"
-    filepath = os.path.join(UPLOADS_DIR, filename)
+    # Upload to Cloudinary
+    upload_result = await cloudinary_service.upload_file(file, folder="careerbridge/avatars")
     
-    # Delete old avatar file if it exists on disk
-    if current_user.avatar and "/uploads/avatars/" in current_user.avatar:
-        old_filename = current_user.avatar.rsplit("/", 1)[-1]
-        old_path = os.path.join(UPLOADS_DIR, old_filename)
-        if os.path.exists(old_path):
-            os.remove(old_path)
-    
-    # Save the new file
-    with open(filepath, "wb") as f:
-        f.write(contents)
-    
-    # Build the public URL
-    avatar_url = f"/uploads/avatars/{filename}"
+    avatar_url = upload_result["secure_url"]
     
     # Update database
     current_user.avatar = avatar_url
